@@ -3,62 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>لوحة تحكم الأدمن - World Of Anime</title>
+  <link rel="stylesheet" href="../Css/style.css">
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #0f0c1b; color: #fff; margin: 0; padding: 20px; }
-    h1, h2 { color: #a855f7; margin-top: 0; }
-    .container { max-width: 1100px; margin: 0 auto; }
+    h1, h2, h3 { color: #a855f7; margin-top: 0; }
+    .container { max-width: 1200px; margin: 0 auto; }
     .card { background: #1a162e; padding: 20px; border-radius: 12px; border: 1px solid rgba(168,85,247,0.3); margin-bottom: 25px; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; color: #c084fc; font-weight: bold; }
-    input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #332d56; background: #0d0a1a; color: #fff; outline: none; }
-    input:focus, select:focus { border-color: #a855f7; }
-    
-    button { background: linear-gradient(135deg, #a855f7, #6366f1); border: none; color: #fff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-    button:hover { opacity: 0.9; }
-    button.danger { background: #ef4444; }
-    button.edit { background: #eab308; color: #000; }
-    
+    .form-group { margin-bottom: 14px; }
+    label { display: block; margin-bottom: 5px; color: #c084fc; font-weight: bold; font-size: 0.9rem; }
+    input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #332d56; background: #0d0a1a; color: #fff; outline: none; font-family: inherit; }
+    input:focus, select:focus, textarea:focus { border-color: #a855f7; box-shadow: 0 0 6px rgba(168,85,247,0.3); }
+    textarea { resize: vertical; min-height: 60px; }
+
+    .btn-main { background: linear-gradient(135deg, #a855f7, #6366f1); border: none; color: #fff; padding: 10px 22px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.95rem; transition: 0.2s; }
+    .btn-main:hover { opacity: 0.9; box-shadow: 0 4px 16px rgba(168,85,247,0.4); }
+    .btn-danger { background: #ef4444; border: none; color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.82rem; transition: 0.2s; }
+    .btn-danger:hover { opacity: 0.85; }
+    .btn-edit { background: #eab308; border: none; color: #000; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.82rem; transition: 0.2s; }
+    .btn-edit:hover { opacity: 0.85; }
+    .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); border: none; color: #fff; padding: 10px 22px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.95rem; transition: 0.2s; width: 100%; }
+    .btn-success:hover { opacity: 0.9; }
+
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { border: 1px solid rgba(168,85,247,0.2); padding: 12px; text-align: right; }
+    th, td { border: 1px solid rgba(168,85,247,0.2); padding: 10px 12px; text-align: right; font-size: 0.88rem; }
     th { background: #251f42; color: #c084fc; }
     tr:nth-child(even) { background: #131024; }
-    .nav-btn { display: inline-block; background: #332d56; color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; margin-bottom: 15px; }
+    tr:hover { background: rgba(168,85,247,0.06); }
+
+    .nav-btn { display: inline-block; background: #332d56; color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; margin-bottom: 15px; margin-left: 8px; transition: 0.2s; }
+    .nav-btn:hover { opacity: 0.85; }
     .img-preview { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
 
-    /* Modal للتعديل */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-    .modal-content { background: #18132b; width: 90%; max-width: 500px; border-radius: 16px; border: 1px solid #a855f7; padding: 20px; position: relative; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+    .or-divider { text-align: center; color: #888; margin: 10px 0; font-size: 0.85rem; }
+    .stock-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .stock-ok { background: rgba(74,222,128,0.15); color: #4ade80; }
+    .stock-low { background: rgba(234,179,8,0.15); color: #eab308; }
+    .stock-out { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+    .modal-content { background: #18132b; width: 92%; max-width: 550px; border-radius: 16px; border: 1px solid #a855f7; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; }
     .close-btn { position: absolute; left: 15px; top: 15px; font-size: 1.5rem; color: #aaa; cursor: pointer; }
     .close-btn:hover { color: #fff; }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      body { padding: 10px; }
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <a href="index.html" class="nav-btn">⬅️ العودة للمتجر الرئيسي</a>
+  <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+    <a href="index.html" class="nav-btn">⬅️ العودة للمتجر</a>
+    <a href="#" class="nav-btn" onclick="localStorage.removeItem('anime-admin');window.location.href='admin-login.html';" style="background:#ef4444;">🚪 تسجيل خروج</a>
+  </div>
   <h1>⚡ لوحة تحكم الإدارة - World Of Anime</h1>
 
-  <!-- 1. إضافة منتج جديد -->
+  <!-- ==================== 1. إضافة منتج جديد ==================== -->
   <div class="card">
     <h2>➕ إضافة منتج جديد للمتجر</h2>
     <form id="add-product-form">
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+      <div class="grid-2">
         <div class="form-group">
-          <label>اسم المنتج (عربي):</label>
+          <label>اسم المنتج (عربي) *</label>
           <input type="text" id="p-name-ar" required placeholder="مثال: مجسم غوجو ساتورو">
         </div>
         <div class="form-group">
-          <label>اسم المنتج (إنجليزي):</label>
+          <label>اسم المنتج (إنجليزي)</label>
           <input type="text" id="p-name-en" placeholder="Gojo Satoru Figure">
         </div>
+      </div>
+
+      <div class="form-group">
+        <label>وصف المنتج (عربي)</label>
+        <textarea id="p-desc-ar" placeholder="وصف مختصر للمنتج..."></textarea>
+      </div>
+
+      <div class="grid-3">
         <div class="form-group">
-          <label>السعر (ج.م):</label>
-          <input type="number" id="p-price" required placeholder="650">
+          <label>السعر (ج.م) *</label>
+          <input type="number" id="p-price" required placeholder="650" step="0.01">
         </div>
         <div class="form-group">
-          <label>التصنيف:</label>
+          <label>السعر قبل الخصم (اختياري)</label>
+          <input type="number" id="p-old-price" placeholder="850" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>المخزون</label>
+          <input type="number" id="p-stock" placeholder="10" value="10">
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="form-group">
+          <label>التصنيف</label>
           <select id="p-category">
             <option value="swords">⚔️ سيوف</option>
             <option value="figures">🗿 مجسمات</option>
@@ -68,20 +114,39 @@
             <option value="manga">📚 مانجا</option>
           </select>
         </div>
+        <div class="form-group">
+          <label>المقاسات (مفصولة بفاصلة)</label>
+          <input type="text" id="p-sizes" placeholder="S, M, L, XL">
+        </div>
+        <div class="form-group">
+          <label>الشارة (Badge)</label>
+          <select id="p-badge">
+            <option value="">بدون</option>
+            <option value="bestseller">🔥 الأكثر مبيعاً</option>
+            <option value="new">✨ جديد</option>
+            <option value="sale">🏷️ عرض</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
-        <label>🖼️ اختر صورة المنتج من جهازك:</label>
-        <input type="file" id="p-image-file" accept="image/*" required style="padding: 6px;">
+        <label>🖼️ صورة المنتج - اختر من جهازك:</label>
+        <input type="file" id="p-image-file" accept="image/*" style="padding: 6px;">
+      </div>
+      <div class="or-divider">— أو أدخل رابط الصورة —</div>
+      <div class="form-group">
+        <input type="url" id="p-image-url" placeholder="https://example.com/image.jpg">
       </div>
 
-      <button type="submit">إضافة المنتج إلى المتجر 🚀</button>
+      <button type="submit" class="btn-main" style="width:100%; padding:12px; font-size:1rem; margin-top:8px;">
+        ➕ إضافة المنتج إلى المتجر 🚀
+      </button>
     </form>
   </div>
 
-  <!-- 2. جدول الطلبات الواردة -->
+  <!-- ==================== 2. جدول الطلبات ==================== -->
   <div class="card">
-    <h2>📦 جدول الطلبات الواردة والتفاصيل</h2>
+    <h2>📦 جدول الطلبات الواردة <span id="orders-count" style="font-size:0.8rem; color:#aaa;"></span></h2>
     <div style="overflow-x:auto;">
       <table>
         <thead>
@@ -90,8 +155,8 @@
             <th>اسم العميل</th>
             <th>رقم الهاتف</th>
             <th>العنوان</th>
-            <th>المنتجات المطلوبة والكمية</th>
-            <th>إجمالي الحساب</th>
+            <th>المنتجات</th>
+            <th>الإجمالي</th>
             <th>التاريخ</th>
             <th>إجراءات</th>
           </tr>
@@ -101,9 +166,9 @@
     </div>
   </div>
 
-  <!-- 3. جدول إدارة المنتجات (يحتوي على التعديل والحذف) -->
+  <!-- ==================== 3. جدول المنتجات ==================== -->
   <div class="card">
-    <h2>🗑️ المنتجات الحالية بالمتجر</h2>
+    <h2>📋 المنتجات الحالية بالمتجر <span id="products-count" style="font-size:0.8rem; color:#aaa;"></span></h2>
     <div style="overflow-x:auto;">
       <table>
         <thead>
@@ -112,6 +177,8 @@
             <th>الاسم</th>
             <th>السعر</th>
             <th>التصنيف</th>
+            <th>المخزون</th>
+            <th>المباع</th>
             <th>إجراءات</th>
           </tr>
         </thead>
@@ -121,68 +188,109 @@
   </div>
 </div>
 
-<!-- نافذة التعديل (Edit Modal) -->
+<!-- ==================== نافذة التعديل ==================== -->
 <div class="modal" id="edit-modal">
   <div class="modal-content">
     <span class="close-btn" onclick="closeEditModal()">&times;</span>
     <h2 style="margin-bottom: 15px;">✏️ تعديل بيانات المنتج</h2>
     <form id="edit-product-form">
       <input type="hidden" id="edit-index">
-      
-      <div class="form-group">
-        <label>اسم المنتج (عربي):</label>
-        <input type="text" id="edit-name-ar" required>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>اسم المنتج (عربي) *</label>
+          <input type="text" id="edit-name-ar" required>
+        </div>
+        <div class="form-group">
+          <label>اسم المنتج (إنجليزي)</label>
+          <input type="text" id="edit-name-en">
+        </div>
       </div>
 
       <div class="form-group">
-        <label>السعر (ج.م):</label>
-        <input type="number" id="edit-price" required>
+        <label>الوصف (عربي)</label>
+        <textarea id="edit-desc-ar"></textarea>
+      </div>
+
+      <div class="grid-3">
+        <div class="form-group">
+          <label>السعر (ج.م)</label>
+          <input type="number" id="edit-price" required step="0.01">
+        </div>
+        <div class="form-group">
+          <label>السعر قبل الخصم</label>
+          <input type="number" id="edit-old-price" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>المخزون</label>
+          <input type="number" id="edit-stock">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>التصنيف</label>
+          <select id="edit-category">
+            <option value="swords">⚔️ سيوف</option>
+            <option value="figures">🗿 مجسمات</option>
+            <option value="posters">🖼️ بوسترات</option>
+            <option value="tshirts">👕 ملابس</option>
+            <option value="accessories">💎 إكسسوارات</option>
+            <option value="manga">📚 مانجا</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الشارة (Badge)</label>
+          <select id="edit-badge">
+            <option value="">بدون</option>
+            <option value="bestseller">🔥 الأكثر مبيعاً</option>
+            <option value="new">✨ جديد</option>
+            <option value="sale">🏷️ عرض</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
-        <label>التصنيف:</label>
-        <select id="edit-category">
-          <option value="swords">⚔️ سيوف</option>
-          <option value="figures">🗿 مجسمات</option>
-          <option value="posters">🖼️ بوسترات</option>
-          <option value="tshirts">👕 ملابس</option>
-          <option value="accessories">💎 إكسسوارات</option>
-          <option value="manga">📚 مانجا</option>
-        </select>
+        <label>المقاسات (مفصولة بفاصلة)</label>
+        <input type="text" id="edit-sizes" placeholder="S, M, L, XL">
       </div>
 
       <div class="form-group">
-        <label>🖼️ تغيير الصورة (اختياري - اتركها كما هي للابقاء على الحالية):</label>
+        <label>🖼️ تغيير الصورة (اختياري - اتركها فارغة للإبقاء):</label>
         <input type="file" id="edit-image-file" accept="image/*" style="padding: 6px;">
       </div>
+      <div class="or-divider">— أو أدخل رابط الصورة الجديد —</div>
+      <div class="form-group">
+        <input type="url" id="edit-image-url" placeholder="https://example.com/new-image.jpg">
+      </div>
 
-      <button type="submit" style="width: 100%; padding: 10px; font-size: 1rem;">حفظ التغييرات 💾</button>
+      <button type="submit" class="btn-success" style="margin-top:8px; padding:12px; font-size:1rem;">
+        💾 حفظ التغييرات
+      </button>
     </form>
   </div>
 </div>
 
-<script src="js/data.js"></script>
+<!-- استدعاء ملف البيانات الموحد -->
+<script src="../js/data.js"></script>
 
 <script>
-  // 🔒 1. حماية لوحة التحكم
-  const ADMIN_PASSWORD = "admin123";
-  const enteredPass = prompt("🔐 أدخل كلمة سر الأدمن للوصول لـ لوحة التحكم:");
-
-  if (enteredPass !== ADMIN_PASSWORD) {
-    alert("❌ كلمة المرور غير صحيحة! سيتم تحويلك للمتجر.");
-    window.location.href = "index.html";
+  // 🔒 حماية لوحة التحكم
+  if (localStorage.getItem('anime-admin') !== 'true') {
+    window.location.href = "admin-login.html";
   }
 
-  // 🔄 2. تشغيل الأكواد عند التحميل
+  // 🔄 تشغيل عند التحميل
   document.addEventListener('DOMContentLoaded', () => {
     initProductsStorage();
     loadAdminOrders();
     loadAdminProducts();
   });
 
+  // 📦 تهيئة المنتجات
   function initProductsStorage() {
-    const savedProducts = localStorage.getItem('anime-products');
-    if (!savedProducts && typeof PRODUCTS !== 'undefined' && PRODUCTS.length > 0) {
+    const saved = localStorage.getItem('anime-products');
+    if (!saved && typeof PRODUCTS !== 'undefined' && PRODUCTS.length > 0) {
       localStorage.setItem('anime-products', JSON.stringify(PRODUCTS));
     }
   }
@@ -196,35 +304,44 @@
     return typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
   }
 
-  // 🛒 3. عرض جدول الطلبات
+  // ═══════════════════════════════════════
+  // 🛒 عرض الطلبات
+  // ═══════════════════════════════════════
   function loadAdminOrders() {
     const orders = JSON.parse(localStorage.getItem('anime-orders') || '[]');
     const tbody = document.getElementById('orders-table-body');
+    const countEl = document.getElementById('orders-count');
     if (!tbody) return;
     tbody.innerHTML = '';
+    if (countEl) countEl.textContent = `(${orders.length} طلب)`;
 
     if (orders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color:#aaa;">لا توجد طلبات جديدة حتى الآن 📭</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color:#aaa;">لا توجد طلبات جديدة 📭</td></tr>';
       return;
     }
 
     orders.forEach((ord, index) => {
-      let itemsSummary = ord.items && ord.items.length > 0 ? 
-        ord.items.map(item => `• ${item.title} (العدد: ${item.quantity || 1})`).join('<br>') : 
-        (ord.productName || 'طلب متنوع');
+      let itemsSummary = '';
+      if (ord.items && ord.items.length > 0) {
+        itemsSummary = ord.items.map(item => {
+          const name = (item.title && item.title.ar) ? item.title.ar : (typeof item.title === 'string' ? item.title : 'منتج');
+          return `• ${name} (×${item.quantity || 1})`;
+        }).join('<br>');
+      } else {
+        itemsSummary = ord.productName || ord.name || 'طلب متنوع';
+      }
 
       tbody.innerHTML += `
         <tr>
           <td><b>#${ord.id || index + 1001}</b></td>
-          <td>${ord.customerName || 'عميل'}</td>
-          <td><a href="tel:${ord.phone}" style="color:#38bdf8; text-decoration:none;">${ord.phone || 'غير مدخل'}</a></td>
-          <td>${ord.address || '-'}</td>
-          <td style="font-size:0.85rem; color:#e9d5ff;">${itemsSummary}</td>
-          <td><b style="color:#4ade80;">${ord.totalPrice || 0} ج.م</b></td>
-          <td>${new Date(ord.createdAt || Date.now()).toLocaleDateString('ar-EG')}</td>
-          <td><button class="danger" onclick="deleteOrder(${index})">حذف</button></td>
-        </tr>
-      `;
+          <td>${ord.customerName || ord.name || 'عميل'}</td>
+          <td><a href="tel:${ord.phone}" style="color:#38bdf8; text-decoration:none;">${ord.phone || '—'}</a></td>
+          <td>${ord.address || '—'}</td>
+          <td style="font-size:0.82rem; color:#e9d5ff;">${itemsSummary}</td>
+          <td><b style="color:#4ade80;">${ord.totalPrice || ord.total || 0} ج.م</b></td>
+          <td style="font-size:0.82rem;">${new Date(ord.createdAt || ord.created_at || Date.now()).toLocaleDateString('ar-EG')}</td>
+          <td><button class="btn-danger" onclick="deleteOrder(${index})">🗑️ حذف</button></td>
+        </tr>`;
     });
   }
 
@@ -237,38 +354,48 @@
     }
   }
 
-  // 🖼️ 4. عرض المنتجات في الأدمن مع زرار التعديل
+  // ═══════════════════════════════════════
+  // 📋 عرض المنتجات
+  // ═══════════════════════════════════════
   function loadAdminProducts() {
     const tbody = document.getElementById('products-admin-body');
+    const countEl = document.getElementById('products-count');
     if (!tbody) return;
     tbody.innerHTML = '';
 
     const products = getStoredProducts();
+    if (countEl) countEl.textContent = `(${products.length} منتج)`;
 
     if (products && products.length > 0) {
       products.forEach((p, index) => {
         const imgSrc = (p.images && p.images[0]) ? p.images[0] : 'https://via.placeholder.com/50';
-        const titleAr = (p.title && p.title.ar) ? p.title.ar : (typeof p.title === 'string' ? p.title : 'منتج بدون اسم');
+        const titleAr = (p.title && p.title.ar) ? p.title.ar : (typeof p.title === 'string' ? p.title : 'بدون اسم');
+        const stock = p.stock != null ? p.stock : '—';
+        const stockClass = stock === '—' || stock > 5 ? 'stock-ok' : stock > 0 ? 'stock-low' : 'stock-out';
+        const stockText = stock === '—' ? '—' : (stock > 5 ? stock : stock > 0 ? stock + ' ⚠️' : 'نفذ ❌');
 
         tbody.innerHTML += `
           <tr>
             <td><img src="${imgSrc}" class="img-preview" alt="product"></td>
             <td><b>${titleAr}</b></td>
             <td><b style="color:#4ade80;">${p.price} ج.م</b></td>
-            <td><span style="background:#251f42; padding:3px 8px; border-radius:4px;">${p.category || 'عام'}</span></td>
-            <td>
-              <button class="edit" onclick="openEditModal(${index})">✏️ تعديل</button>
-              <button class="danger" onclick="deleteProduct(${index})">🗑️ حذف</button>
+            <td>${p.category || 'عام'}</td>
+            <td><span class="stock-badge ${stockClass}">${stockText}</span></td>
+            <td>${p.sold || 0}</td>
+            <td style="white-space:nowrap;">
+              <button class="btn-edit" onclick="openEditModal(${index})">✏️ تعديل</button>
+              <button class="btn-danger" onclick="deleteProduct(${index})" style="margin-top:4px;">🗑️ حذف</button>
             </td>
-          </tr>
-        `;
+          </tr>`;
       });
     } else {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:#aaa;">لا توجد منتجات!</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:24px; color:#aaa;">لا توجد منتجات — أضف منتج جديد من الأعلى 🚀</td></tr>';
     }
   }
 
-  // ✏️ 5. فتح نافذة التعديل وتنزيل البيانات فيها
+  // ═══════════════════════════════════════
+  // ✏️ نافذة التعديل
+  // ═══════════════════════════════════════
   function openEditModal(index) {
     const products = getStoredProducts();
     const p = products[index];
@@ -276,8 +403,16 @@
 
     document.getElementById('edit-index').value = index;
     document.getElementById('edit-name-ar').value = (p.title && p.title.ar) ? p.title.ar : p.title;
+    document.getElementById('edit-name-en').value = (p.title && p.title.en) ? p.title.en : '';
+    document.getElementById('edit-desc-ar').value = (p.description && p.description.ar) ? p.description.ar : '';
     document.getElementById('edit-price').value = p.price;
+    document.getElementById('edit-old-price').value = p.oldPrice || '';
+    document.getElementById('edit-stock').value = p.stock != null ? p.stock : 10;
     document.getElementById('edit-category').value = p.category || 'figures';
+    document.getElementById('edit-badge').value = p.badge || '';
+    document.getElementById('edit-sizes').value = (p.sizes || []).join(', ');
+    document.getElementById('edit-image-url').value = '';
+    document.getElementById('edit-image-file').value = '';
 
     document.getElementById('edit-modal').style.display = 'flex';
   }
@@ -286,40 +421,50 @@
     document.getElementById('edit-modal').style.display = 'none';
   }
 
-  // 💾 6. حفظ التعديلات
+  // 💾 حفظ التعديلات
   document.getElementById('edit-product-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const index = document.getElementById('edit-index').value;
     let products = getStoredProducts();
-    
+
     const fileInput = document.getElementById('edit-image-file');
     const file = fileInput.files[0];
+    const urlVal = document.getElementById('edit-image-url').value.trim();
 
     const applySave = (imgSrc) => {
-      products[index].title.ar = document.getElementById('edit-name-ar').value;
+      const nameAr = document.getElementById('edit-name-ar').value;
+      const nameEn = document.getElementById('edit-name-en').value || nameAr;
+
+      products[index].title = { ar: nameAr, en: nameEn };
+      products[index].description = products[index].description || {};
+      products[index].description.ar = document.getElementById('edit-desc-ar').value || products[index].description.ar || '';
       products[index].price = parseFloat(document.getElementById('edit-price').value);
+      products[index].oldPrice = parseFloat(document.getElementById('edit-old-price').value) || null;
+      products[index].stock = parseInt(document.getElementById('edit-stock').value) || 0;
       products[index].category = document.getElementById('edit-category').value;
-      
-      if (imgSrc) {
-        products[index].images = [imgSrc];
-      }
+      products[index].badge = document.getElementById('edit-badge').value || null;
+      products[index].sizes = document.getElementById('edit-sizes').value.split(',').map(s => s.trim()).filter(Boolean);
+
+      if (imgSrc) products[index].images = [imgSrc];
 
       localStorage.setItem('anime-products', JSON.stringify(products));
       loadAdminProducts();
       closeEditModal();
-      alert('✅ تم حفظ التعديلات بنجاح وتحديث المتجر!');
+      alert('✅ تم حفظ التعديلات بنجاح!');
     };
 
     if (file) {
       const reader = new FileReader();
       reader.onload = (evt) => applySave(evt.target.result);
       reader.readAsDataURL(file);
+    } else if (urlVal) {
+      applySave(urlVal);
     } else {
-      applySave(null); // الابقاء على الصورة القديمة
+      applySave(null);
     }
   });
 
-  // 🗑️ 7. حذف منتج
+  // 🗑️ حذف منتج
   function deleteProduct(index) {
     if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
       let products = getStoredProducts();
@@ -329,25 +474,34 @@
     }
   }
 
-  // ➕ 8. إضافة منتج جديد
+  // ═══════════════════════════════════════
+  // ➕ إضافة منتج جديد
+  // ═══════════════════════════════════════
   document.getElementById('add-product-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const fileInput = document.getElementById('p-image-file');
     const file = fileInput ? fileInput.files[0] : null;
+    const urlVal = document.getElementById('p-image-url').value.trim();
 
     const saveNewProduct = (imgSrc) => {
       const nameAr = document.getElementById('p-name-ar').value;
       const nameEn = document.getElementById('p-name-en').value || nameAr;
+      const descAr = document.getElementById('p-desc-ar').value || 'منتج ممتاز عالي الجودة متوفر الآن بمتجرنا';
 
       const newProduct = {
         id: Date.now(),
         title: { ar: nameAr, en: nameEn },
-        description: { ar: 'منتج ممتاز عالي الجودة متوفر الآن بمتجرنا', en: 'High quality product' },
+        description: { ar: descAr, en: 'High quality product available in our store' },
         price: parseFloat(document.getElementById('p-price').value),
+        oldPrice: parseFloat(document.getElementById('p-old-price').value) || null,
         category: document.getElementById('p-category').value,
         rating: 5.0,
-        reviewsCount: 1,
-        images: [imgSrc],
+        reviews: 1,
+        stock: parseInt(document.getElementById('p-stock').value) || 10,
+        sold: 0,
+        sizes: document.getElementById('p-sizes').value.split(',').map(s => s.trim()).filter(Boolean),
+        badge: document.getElementById('p-badge').value || null,
+        images: [imgSrc || 'https://via.placeholder.com/300'],
         reviewsList: [{ author: 'عميل مميز', rating: 5, comment: 'منتج رائع جداً وخامة عالية!' }]
       };
 
@@ -356,16 +510,18 @@
       localStorage.setItem('anime-products', JSON.stringify(products));
 
       loadAdminProducts();
-      alert('🎉 تم إضافة المنتج بنجاح!');
-      this.reset();
+      alert('🎉 تم إضافة المنتج بنجاح وظهر بالمتجر!');
+      document.getElementById('add-product-form').reset();
     };
 
     if (file) {
       const reader = new FileReader();
       reader.onload = (evt) => saveNewProduct(evt.target.result);
       reader.readAsDataURL(file);
+    } else if (urlVal) {
+      saveNewProduct(urlVal);
     } else {
-      saveNewProduct('https://via.placeholder.com/150');
+      saveNewProduct(null);
     }
   });
 </script>

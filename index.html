@@ -3,109 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="World Of Anime - أضخم متجر لمنتجات ومجسمات الأنمي">
   <link rel="stylesheet" href="../Css/style.css">
   <title>World Of Anime | متجر أنمي احترافي</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root {
-      --primary: #a855f7;
-      --primary-dark: #7e22ce;
-      --bg: #0b0813;
-      --card-bg: #151026;
-      --text: #f3e8ff;
-      --accent: #eab308;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
-
-    /* Header & Navigation */
-    header { background: #110c21; border-bottom: 1px solid rgba(168,85,247,0.3); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; }
-    .logo { font-size: 1.6rem; font-weight: bold; color: var(--primary); text-shadow: 0 0 10px rgba(168,85,247,0.5); }
-    
-    /* Search Bar */
-    .search-box { flex: 1; max-width: 500px; position: relative; }
-    .search-box input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid #332d56; background: #1a162e; color: #fff; outline: none; font-size: 0.95rem; }
-    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(168,85,247,0.4); }
-
-    .admin-link { color: #aaa; text-decoration: none; font-size: 0.85rem; }
-
-    /* Hero Banner */
-    .hero-banner { background: linear-gradient(135deg, #2e0854, #110c21); padding: 30px 5%; text-align: center; border-bottom: 2px solid var(--primary); margin-bottom: 25px; }
+    /* === Index-specific styles === */
+    .hero-banner { background: linear-gradient(135deg, #2e0854, #110c21); padding: 30px 5%; text-align: center; border-bottom: 2px solid var(--primary, #a855f7); margin-bottom: 25px; }
     .hero-banner h1 { font-size: 2rem; margin-bottom: 8px; color: #fff; }
     .hero-banner p { color: #c084fc; font-size: 1rem; }
 
-    /* Layout With Sidebar (قائمة تصنيفات رأسية على اليمين) */
     .main-wrapper { width: 92%; max-width: 1300px; margin: 0 auto; display: flex; gap: 25px; align-items: flex-start; }
-    
-    /* Sidebar Style */
+
     .sidebar { width: 240px; background: #151026; border: 1px solid rgba(168,85,247,0.2); border-radius: 12px; padding: 15px; flex-shrink: 0; position: sticky; top: 90px; }
-    .sidebar h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid rgba(168,85,247,0.3); padding-bottom: 8px; }
+    .sidebar h3 { color: var(--primary, #a855f7); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid rgba(168,85,247,0.3); padding-bottom: 8px; }
     .category-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
     .category-item { padding: 10px 12px; border-radius: 8px; background: #1a162e; color: #ddd; cursor: pointer; font-size: 0.95rem; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
-    .category-item:hover, .category-item.active { background: var(--primary); color: #fff; font-weight: bold; }
+    .category-item:hover, .category-item.active { background: var(--primary, #a855f7); color: #fff; font-weight: bold; }
 
-    /* Content Area */
     .content-area { flex: 1; }
-    .section-title { font-size: 1.3rem; color: #fff; margin-bottom: 15px; border-right: 4px solid var(--primary); padding-right: 10px; }
+    .index-section-title { font-size: 1.3rem; color: #fff; margin-bottom: 15px; border-right: 4px solid var(--primary, #a855f7); padding-right: 10px; }
 
-    /* Product Cards Grid */
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
-    .product-card { background: var(--card-bg); border-radius: 12px; border: 1px solid rgba(168,85,247,0.2); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
-    .product-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .product-card { background: #151026; border-radius: 12px; border: 1px solid rgba(168,85,247,0.2); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
+    .product-card:hover { transform: translateY(-5px); border-color: var(--primary, #a855f7); }
     .product-img { width: 100%; height: 200px; object-fit: cover; background: #000; cursor: pointer; }
     .product-info { padding: 12px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
     .product-title { font-size: 1rem; font-weight: bold; margin-bottom: 6px; color: #fff; height: 2.5em; overflow: hidden; cursor: pointer; }
-    .rating-box { color: var(--accent); font-size: 0.85rem; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+    .rating-box { color: #eab308; font-size: 0.85rem; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
     .price { font-size: 1.15rem; font-weight: bold; color: #4ade80; margin-bottom: 10px; }
 
-    /* Buttons */
     .btn-group { display: flex; gap: 6px; margin-top: auto; }
-    .btn-cart { flex: 1; background: #251f42; border: 1px solid var(--primary); color: #fff; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
-    .btn-cart:hover { background: var(--primary); }
-    .btn-buy { flex: 1; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; color: #fff; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+    .btn-cart { flex: 1; background: #251f42; border: 1px solid var(--primary, #a855f7); color: #fff; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
+    .btn-cart:hover { background: var(--primary, #a855f7); }
+    .btn-buy { flex: 1; background: linear-gradient(135deg, #a855f7, #7e22ce); border: none; color: #fff; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-buy:hover { opacity: 0.9; }
 
-    /* Responsive Sidebar */
     @media (max-width: 850px) {
       .main-wrapper { flex-direction: column; }
       .sidebar { width: 100%; position: static; }
       .category-list { flex-direction: row; overflow-x: auto; padding-bottom: 5px; }
       .category-item { white-space: nowrap; }
     }
-
-    /* Modal */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-    .modal-content { background: #18132b; width: 90%; max-width: 600px; border-radius: 16px; border: 1px solid var(--primary); padding: 20px; max-height: 90vh; overflow-y: auto; }
-    .close-modal { float: left; font-size: 1.5rem; color: #aaa; cursor: pointer; }
-    .comment-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 0.88rem; }
   </style>
 </head>
 <body>
 
-  <!-- Header مع البحث المباشر -->
+  <!-- ===== Standard Header ===== -->
   <header>
-    <div class="logo">⚡ World Of Anime</div>
-    
-    <div class="search-box">
-      <input type="text" id="search-input" placeholder="🔍 ابحث باسم المنتج، الأنمي، أو القسم..." onkeyup="filterProducts()">
+    <div class="header-top">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">⛩️</span>
+        <span>World Of Anime</span>
+      </a>
+      <div class="search-bar">
+        <select id="search-category">
+          <option value="" data-i18n="all-categories">كل التصنيفات</option>
+          <option value="swords">⚔️ السيوف</option>
+          <option value="figures">🗿 المجسمات</option>
+          <option value="posters">🖼️ البوسترات</option>
+          <option value="tshirts">👕 الملابس</option>
+          <option value="accessories">💎 الإكسسوارات</option>
+          <option value="manga">📚 المانجا</option>
+        </select>
+        <input type="text" id="search-input" data-i18n-placeholder="search-placeholder" placeholder="ابحث عن منتجات أنمي...">
+        <button id="search-btn">🔍</button>
+      </div>
+      <div class="header-actions">
+        <a href="wishlist.html" class="header-btn">❤️ <span data-i18n="nav-wishlist">المفضلة</span></a>
+        <a href="cart.html" class="header-btn">🛒 <span data-i18n="nav-cart">السلة</span><span class="cart-count empty">0</span></a>
+        <a href="profile.html" class="header-btn">👤 <span data-i18n="nav-profile">حسابي</span></a>
+      </div>
     </div>
-
-    <div style="display:flex; align-items:center; gap:12px;">
-      <a href="cart.html" style="color:#4ade80; text-decoration:none; font-weight:bold; position:relative;">🛒 السلة <span id="cart-badge" style="background:#ef4444; color:#fff; font-size:0.7rem; padding:1px 6px; border-radius:50%; position:absolute; top:-8px; right:-12px;">0</span></a>
-      <a href="wishlist.html" style="color:#f472b6; text-decoration:none;">❤️ المفضلة</a>
-      <a href="profile.html" style="color:#38bdf8; text-decoration:none;">👤 حسابي</a>
+    <div class="header-nav">
+      <ul class="nav-links">
+        <li><a href="index.html" class="active" data-i18n="nav-home">الرئيسية</a></li>
+        <li><a href="products.html" data-i18n="nav-products">المنتجات</a></li>
+        <li><a href="products.html?category=swords">⚔️ السيوف</a></li>
+        <li><a href="products.html?category=figures">🗿 المجسمات</a></li>
+        <li><a href="products.html?category=manga">📚 المانجا</a></li>
+        <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
+      </ul>
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="ar">العربية</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
     </div>
   </header>
 
-  <!-- Hero Banner -->
+  <!-- ===== Hero Banner ===== -->
   <div class="hero-banner">
     <h1>🚀 أضخم متجر لمنتجات ومجسمات الأنمي</h1>
     <p>شحن سريع لجميع المحافظات • دفع عند الاستلام • خامات عالية الجودة</p>
   </div>
 
-  <!-- Main Container -->
+  <!-- ===== Main Content ===== -->
   <div class="main-wrapper">
-    
-    <!-- القائمة الجانبية للتصنيفات (على اليمين) -->
+
+    <!-- Sidebar: التصنيفات -->
     <aside class="sidebar">
       <h3>📁 التصنيفات</h3>
       <ul class="category-list">
@@ -119,50 +114,52 @@
       </ul>
     </aside>
 
-    <!-- منطقة عرض المنتجات -->
+    <!-- Products Grid -->
     <main class="content-area">
-      <h2 class="section-title" id="section-heading">🔥 جميع المنتجات المتاحة</h2>
-      <div class="products-grid" id="products-container">
-        <!-- يتم تحميل المنتجات هنا -->
-      </div>
+      <h2 class="index-section-title" id="section-heading">🔥 جميع المنتجات المتاحة</h2>
+      <div class="products-grid" id="products-container"></div>
     </main>
 
   </div>
 
-  <!-- نافذة التفاصيل الشراء -->
-  <div class="modal" id="product-modal">
-    <div class="modal-content">
-      <span class="close-modal" id="close-modal">&times;</span>
-      <div id="modal-details"></div>
+  <!-- ===== Standard Footer ===== -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-contact"><span>📱 واتساب: <a href="https://wa.me/201149243249" target="_blank" rel="noopener">01149243249</a></span></div>
+      <div class="footer-links">
+        <a href="index.html" data-i18n="nav-home">الرئيسية</a>
+        <a href="products.html" data-i18n="nav-products">المنتجات</a>
+        <a href="cart.html" data-i18n="nav-cart">السلة</a>
+        <a href="login.html" data-i18n="nav-login">تسجيل الدخول</a>
+        <a href="signup.html" data-i18n="nav-signup">إنشاء حساب</a>
+      </div>
+      <p>© 2026 World Of Anime — All Rights Reserved</p>
     </div>
-  </div>
+  </footer>
 
-  <script src="../js/data.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/script.js"></script>
 <script>
- let allProducts = [];
-let currentCategory = 'all';
+  let allProducts = [];
+  let currentCategory = 'all';
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 🔄 بيجيب المنتجات اللي ضفتها في الأدمن الأول، ولو فاضية يقرأ من data.js
-  const saved = localStorage.getItem('anime-products');
-  allProducts = saved ? JSON.parse(saved) : (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []);
-  
-  renderProducts(allProducts);
-  updateCartBadge();
-});
-  // 1. فلترة المنتجات (تدمج بين التصنيف والبحث)
+  document.addEventListener('DOMContentLoaded', () => {
+    // Load admin-added products first, fallback to PRODUCTS from data.js
+    const saved = localStorage.getItem('anime-products');
+    allProducts = saved ? JSON.parse(saved) : (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []);
+    renderProducts(allProducts);
+  });
+
+  // ===== Search & Filter =====
   function filterProducts() {
     const query = document.getElementById('search-input').value.trim().toLowerCase();
     const heading = document.getElementById('section-heading');
-
     let filtered = allProducts;
 
-    // فلترة بالتصنيف أولاً
     if (currentCategory !== 'all') {
       filtered = filtered.filter(p => p.category === currentCategory);
     }
 
-    // فلترة بنص البحث
     if (query !== '') {
       filtered = filtered.filter(p => {
         const arName = (p.title && p.title.ar) ? p.title.ar.toLowerCase() : '';
@@ -170,190 +167,107 @@ document.addEventListener('DOMContentLoaded', () => {
         const cat = p.category ? p.category.toLowerCase() : '';
         return arName.includes(query) || enName.includes(query) || cat.includes(query);
       });
-      heading.innerText = `🔍 نتائج البحث عن: "${query}" (${filtered.length})`;
+      heading.innerText = '🔍 نتائج البحث عن: "' + query + '" (' + filtered.length + ')';
     } else {
-      heading.innerText = currentCategory === 'all' ? '🔥 جميع المنتجات المتاحة' : `📁 قسم: ${currentCategory}`;
+      heading.innerText = currentCategory === 'all' ? '🔥 جميع المنتجات المتاحة' : '📁 قسم: ' + currentCategory;
     }
-
     renderProducts(filtered);
   }
 
-  // 2. اختيار التصنيف من القائمة الجانبية
+  // ===== Category Selection =====
   function selectCategory(cat, element) {
     currentCategory = cat;
-
-    // تحديث الشكل النشط (Active)
     document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
-
     filterProducts();
   }
 
-  // 3. طباعة كروت المنتجات
+  // ===== Render Product Cards =====
   function renderProducts(list) {
     const container = document.getElementById('products-container');
     container.innerHTML = '';
 
     if (!list || list.length === 0) {
-      container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color:#aaa;">لا توجد منتجات تطابق اختيارك حالياً 😅</p>';
+      container.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa;">لا توجد منتجات تطابق اختيارك حالياً 😅</p>';
       return;
     }
 
     list.forEach((p) => {
-      const originalIndex = allProducts.findIndex(item => item.id === p.id);
       const imgSrc = p.images && p.images[0] ? p.images[0] : '';
       const stars = '★'.repeat(Math.floor(p.rating || 5)) + '☆'.repeat(5 - Math.floor(p.rating || 5));
+      const nameAr = (p.title && p.title.ar) ? p.title.ar : (typeof p.title === 'string' ? p.title : 'منتج');
 
       container.innerHTML += `
         <div class="product-card">
-          <img src="${imgSrc}" class="product-img" onclick="openProductDetails(${originalIndex})" alt="${p.title.ar}">
+          <a href="product-detail.html?id=${p.id}">
+            <img src="${imgSrc}" class="product-img" alt="${nameAr}">
+          </a>
           <div class="product-info">
             <div>
-              <div class="product-title" onclick="openProductDetails(${originalIndex})">${p.title.ar}</div>
+              <a href="product-detail.html?id=${p.id}" style="text-decoration:none;color:inherit;">
+                <div class="product-title">${nameAr}</div>
+              </a>
               <div class="rating-box">
                 <span>${stars}</span>
-                <span style="color:#aaa; font-size:0.78rem;">(${p.reviews || p.reviewsCount || 8})</span>
+                <span style="color:#aaa;font-size:0.78rem;">(${p.reviews || p.reviewsCount || 8})</span>
               </div>
-              <div class="price">${p.price} ج.م</div>
+              <div class="price">${p.price} ج.م ${p.oldPrice ? '<span style="text-decoration:line-through;color:#888;font-size:0.85rem;margin-right:6px;">' + p.oldPrice + ' ج.م</span>' : ''}</div>
             </div>
-
             <div class="btn-group">
-              <button class="btn-cart" onclick="addToCart('${p.title.ar}', ${p.id}, ${p.price})">🛒 السلة</button>
-              <button class="btn-buy" onclick="openProductDetails(${originalIndex})">⚡ شراء الآن</button>
+              <button class="btn-cart" onclick="handleAddToCart(${p.id})">🛒 السلة</button>
+              <a href="product-detail.html?id=${p.id}" class="btn-buy">⚡ شراء الآن</a>
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
     });
   }
 
-  function addToCart(productName, productId, price) {
-    // استخدام نظام السلة المشترك (متوافق مع cart.html و script.js)
+  // ===== Add to Cart (uses shared localStorage format) =====
+  function handleAddToCart(productId) {
     let cart = [];
     try { cart = JSON.parse(localStorage.getItem('anime-cart')) || []; } catch(e) {}
     const existing = cart.find(i => i.id === productId);
-    if (existing) { existing.quantity += 1; }
-    else { cart.push({ id: productId, quantity: 1, size: '' }); }
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ id: productId, quantity: 1, size: '' });
+    }
     localStorage.setItem('anime-cart', JSON.stringify(cart));
-    updateCartBadge();
-    // إشعار بسيط بدلاً من alert
+
+    // Update cart badge
+    const count = cart.reduce((s, i) => s + i.quantity, 0);
+    document.querySelectorAll('.cart-count').forEach(el => {
+      el.textContent = count;
+      el.classList.toggle('empty', count === 0);
+    });
+
+    // Toast notification
+    const p = allProducts.find(x => x.id === productId);
+    const pName = p && p.title && p.title.ar ? p.title.ar : 'المنتج';
     const notif = document.createElement('div');
     notif.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:12px 24px;border-radius:10px;z-index:9999;font-weight:bold;box-shadow:0 4px 20px rgba(0,0,0,0.4);';
-    notif.textContent = `✅ تمت إضافة "${productName}" للسلة!`;
+    notif.textContent = '✅ تمت إضافة "' + pName + '" للسلة!';
     document.body.appendChild(notif);
     setTimeout(() => notif.remove(), 2500);
   }
 
-  function updateCartBadge() {
-    let cart = [];
-    try { cart = JSON.parse(localStorage.getItem('anime-cart')) || []; } catch(e) {}
-    const count = cart.reduce((s, i) => s + i.quantity, 0);
-    const badge = document.getElementById('cart-badge');
-    if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none'; }
-  }
-
-  // 4. فتح الشراء المباشر والتقييمات
-  function openProductDetails(index) {
-    const p = allProducts[index];
-    if (!p) return;
-
-    const modal = document.getElementById('product-modal');
-    const detailsDiv = document.getElementById('modal-details');
-
-    const reviews = p.reviewsList || [
-      { author: 'أحمد محمود', rating: 5, comment: 'المنتج ممتاز والتوصيل سريع جداً!' },
-      { author: 'عمر خالد', rating: 4, comment: 'خامة ممتازة وشكل المنتج تحفة.' }
-    ];
-
-    let reviewsHTML = reviews.map(r => `
-      <div class="comment-item">
-        <b style="color:#c084fc;">${r.author}</b> <span style="color:#eab308;">★ ${r.rating}</span>
-        <p style="margin-top:4px; color:#ddd;">${r.comment}</p>
-      </div>
-    `).join('');
-
-    detailsDiv.innerHTML = `
-      <h2 style="color:#a855f7; margin-bottom:10px;">${p.title.ar}</h2>
-      <img src="${p.images[0]}" style="width:100%; max-height:240px; object-fit:cover; border-radius:10px; margin-bottom:12px;">
-      <p style="color:#ccc; margin-bottom:10px;">${p.description.ar}</p>
-      <h3 style="color:#4ade80; margin-bottom:15px;">السعر: ${p.price} ج.م</h3>
-
-      <div style="background:rgba(168,85,247,0.1); padding:15px; border-radius:10px; margin-bottom:15px;">
-        <h4 style="color:#fff; margin-bottom:10px;">📋 تأكيد الطلب المباشر:</h4>
-        <input type="text" id="cust-name" placeholder="الاسم بالكامل" style="width:100%; padding:10px; border-radius:8px; border:1px solid #332d56; background:#0d0a1a; color:#fff; margin-bottom:8px;">
-        <input type="text" id="cust-phone" placeholder="رقم الهاتف للتواصل" style="width:100%; padding:10px; border-radius:8px; border:1px solid #332d56; background:#0d0a1a; color:#fff; margin-bottom:8px;">
-        <input type="text" id="cust-address" placeholder="العنوان بالتفصيل" style="width:100%; padding:10px; border-radius:8px; border:1px solid #332d56; background:#0d0a1a; color:#fff; margin-bottom:10px;">
-        <button class="btn-buy" style="width:100%; padding:12px; font-size:1rem;" onclick="submitOrder('${p.title.ar}', ${p.price})">تأكيد الطلب (الدفع عند الاستلام) 🚀</button>
-      </div>
-
-      <div style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
-        <h3 style="margin-bottom:8px;">💬 آراء العملاء:</h3>
-        ${reviewsHTML}
-      </div>
-    `;
-
-    modal.style.display = 'flex';
-  }
-
-  document.getElementById('close-modal').onclick = function() {
-    document.getElementById('product-modal').style.display = 'none';
-  };
-
-  function submitOrder(prodName, price) {
-    const name = document.getElementById('cust-name').value.trim();
-    const phone = document.getElementById('cust-phone').value.trim();
-    const address = document.getElementById('cust-address').value.trim();
-
-    if (!name || !phone) {
-      alert('الرجاء كتابة الاسم ورقم الهاتف!');
-      return;
-    }
-
-    const orderData = {
-      id: 'ORD-' + Date.now(),
-      name: name,
-      customerName: name,
-      phone: phone,
-      address: address,
-      productName: prodName,
-      items: [{ title: { ar: prodName, en: prodName }, quantity: 1, price: price }],
-      total: price,
-      totalPrice: price,
-      status: 'pending',
-      created_at: new Date().toISOString(),
-      createdAt: new Date().toISOString()
-    };
-
-    const orders = JSON.parse(localStorage.getItem('anime-orders') || '[]');
-    orders.unshift(orderData);
-    localStorage.setItem('anime-orders', JSON.stringify(orders));
-
-    // إشعار نجاح بدلاً من alert
-    const notif = document.createElement('div');
-    notif.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:14px 28px;border-radius:10px;z-index:9999;font-weight:bold;box-shadow:0 4px 20px rgba(0,0,0,0.4);font-size:1rem;';
-    notif.textContent = '🎉 تم استلام طلبك بنجاح! وسنتواصل معك فوراً لتأكيد الشحن.';
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 3500);
-    document.getElementById('product-modal').style.display = 'none';
-  }
-  // 1. اختصار الكيبورد: Ctrl + Shift + A للدخول السرّي
+  // ===== Secret Admin Access =====
   document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.shiftKey && e.key === 'A') {
       window.location.href = 'admin.html';
     }
   });
-
-  // 2. الضغط 3 مرات متتالية على اللوجو للدخول السرّي
-  const logo = document.querySelector('.logo');
-  if (logo) {
+  const brandLogo = document.querySelector('.brand');
+  if (brandLogo) {
     let clickCount = 0;
-    logo.addEventListener('click', () => {
+    brandLogo.addEventListener('click', (e) => {
       clickCount++;
       if (clickCount === 3) {
+        e.preventDefault();
         window.location.href = 'admin.html';
         clickCount = 0;
       }
-      setTimeout(() => clickCount = 0, 1000); // إعادة التصفير بعد ثانية
+      setTimeout(() => clickCount = 0, 1000);
     });
   }
 </script>
