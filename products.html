@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المنتجات - World Of Anime | سيوف، مجسمات، ملابس، بوسترات</title>
+  <meta name="description" content="تصفح كل منتجات الأنمي: سيوف كاتانا، مجسمات، ملابس، بوسترات، إكسسوارات ومانجا">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="../Css/style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link">تخطي للمحتوى</a>
+<div class="loader hidden" id="app-loader">
+  <div class="loader-core"></div>
+</div>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">⛩️</span>
+      <span>World Of Anime</span>
+    </a>
+    <div class="search-bar">
+      <select id="search-category">
+        <option value="" data-i18n="all-categories">كل التصنيفات</option>
+        <option value="swords">⚔️ السيوف</option>
+        <option value="figures">🗿 المجسمات</option>
+        <option value="posters">🖼️ البوسترات</option>
+        <option value="tshirts">👕 الملابس</option>
+        <option value="accessories">💎 الإكسسوارات</option>
+        <option value="manga">📚 المانجا</option>
+      </select>
+      <input type="text" id="search-input" data-i18n-placeholder="search-placeholder" placeholder="ابحث عن منتجات أنمي...">
+      <button id="search-btn">🔍</button>
+    </div>
+    <div class="header-actions">
+      <a href="wishlist.html" class="header-btn">❤️ <span data-i18n="nav-wishlist">المفضلة</span></a>
+      <a href="cart.html" class="header-btn">🛒 <span data-i18n="nav-cart">السلة</span><span class="cart-count empty">0</span></a>
+      <a href="profile.html" class="header-btn">👤 <span data-i18n="nav-profile">حسابي</span></a>
+    </div>
+  </div>
+  <div class="header-nav">
+    <ul class="nav-links">
+      <li><a href="index.html" data-i18n="nav-home">الرئيسية</a></li>
+      <li><a href="products.html" class="active" data-i18n="nav-products">المنتجات</a></li>
+      <li><a href="products.html?category=swords">⚔️ السيوف</a></li>
+      <li><a href="products.html?category=figures">🗿 المجسمات</a></li>
+      <li><a href="products.html?category=manga">📚 المانجا</a></li>
+      <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
+    </ul>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="ar">العربية</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </div>
+</header>
+
+<main id="main-content">
+  <div class="section-title">
+    <h2 data-i18n="nav-products">المنتجات</h2>
+  </div>
+
+  <div class="products-layout">
+    <!-- FILTERS SIDEBAR -->
+    <aside class="filter-sidebar" id="filter-sidebar">
+      <div class="filter-group">
+        <h3 data-i18n="filter-category">التصنيف</h3>
+        <label class="filter-option">
+          <input type="radio" name="category" value="" checked> <span data-i18n="all-categories">كل التصنيفات</span>
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="category" value="swords"> ⚔️ السيوف
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="category" value="figures"> 🗿 المجسمات
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="category" value="posters"> 🖼️ البوسترات
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="category" value="tshirts"> 👕 الملابس
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="category" value="accessories"> 💎 الإكسسوارات
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="category" value="manga"> 📚 المانجا
+        </label>
+      </div>
+
+      <div class="filter-group">
+        <h3 data-i18n="filter-price">السعر</h3>
+        <div class="price-range-inputs">
+          <input type="number" id="price-min" placeholder="من" data-i18n-placeholder="from">
+          <span>—</span>
+          <input type="number" id="price-max" placeholder="إلى" data-i18n-placeholder="to">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h3 data-i18n="filter-rating">التقييم</h3>
+        <label class="filter-option">
+          <input type="radio" name="rating" value="0" checked> الكل
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="rating" value="4"> <span class="stars">★★★★☆</span> <span data-i18n="up">وأعلى</span>
+        </label>
+        <label class="filter-option">
+          <input type="radio" name="rating" value="4.5"> <span class="stars">★★★★★</span> <span data-i18n="up">وأعلى</span>
+        </label>
+      </div>
+
+      <button class="btn block" onclick="applyFilters()" data-i18n="apply">تطبيق</button>
+    </aside>
+
+    <!-- PRODUCTS GRID -->
+    <div>
+      <div class="sort-bar">
+        <select id="sort-select">
+          <option value="popular" data-i18n="sort-popular">الأكثر شعبية</option>
+          <option value="price-low" data-i18n="sort-price-low">السعر: الأقل</option>
+          <option value="price-high" data-i18n="sort-price-high">السعر: الأعلى</option>
+          <option value="newest" data-i18n="sort-newest">الأحدث</option>
+        </select>
+        <span class="results-count" id="results-count"></span>
+        <button class="btn sm outline" onclick="toggleFilters()" data-i18n="filter-btn">الفلاتر</button>
+      </div>
+      <div class="products-grid" id="products-container"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-contact"><span>📱 واتساب: <a href="https://wa.me/201149243249" target="_blank" rel="noopener">01149243249</a></span></div>
+    <div class="footer-links">
+      <a href="index.html" data-i18n="nav-home">الرئيسية</a>
+      <a href="products.html" data-i18n="nav-products">المنتجات</a>
+      <a href="cart.html" data-i18n="nav-cart">السلة</a>
+      <a href="login.html" data-i18n="nav-login">تسجيل الدخول</a>
+      <a href="signup.html" data-i18n="nav-signup">إنشاء حساب</a>
+    </div>
+    <p>© 2026 World Of Anime — All Rights Reserved</p>
+  </div>
+</footer>
+
+<script src="../js/data.js"></script>
+<script>
+  let filteredProducts = [...PRODUCTS];
+
+  // Load admin-saved products from localStorage
+  (function() {
+    const saved = localStorage.getItem('anime-products');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.length > 0) {
+          PRODUCTS.length = 0;
+          PRODUCTS.push(...parsed);
+          filteredProducts = [...PRODUCTS];
+        }
+      } catch {}
+    }
+  })();
+
+  function renderProducts() {
+    const container = document.getElementById('products-container');
+    if (!container) return;
+
+    // Apply search
+    const searchQuery = getUrlParam('search');
+    if (searchQuery) {
+      filteredProducts = PRODUCTS.filter(p =>
+        p.title.ar.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.title.en.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply category filter
+    const categoryFilter = getUrlParam('category');
+    if (categoryFilter) {
+      filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
+      const catRadio = document.querySelector(`input[name="category"][value="${categoryFilter}"]`);
+      if (catRadio) catRadio.checked = true;
+    }
+
+    // Apply sort
+    const sort = document.getElementById('sort-select')?.value || 'popular';
+    if (sort === 'price-low') filteredProducts.sort((a, b) => a.price - b.price);
+    else if (sort === 'price-high') filteredProducts.sort((a, b) => b.price - a.price);
+    else if (sort === 'newest') filteredProducts.sort((a, b) => b.id - a.id);
+    else filteredProducts.sort((a, b) => (b.reviews || b.reviewsCount || 0) - (a.reviews || a.reviewsCount || 0));
+
+    container.innerHTML = filteredProducts.map(renderProductCard).join('');
+    document.getElementById('results-count').textContent = `${filteredProducts.length} ${t('results')}`;
+  }
+
+  function applyFilters() {
+    const category = document.querySelector('input[name="category"]:checked')?.value || '';
+    const minPrice = parseFloat(document.getElementById('price-min')?.value) || 0;
+    const maxPrice = parseFloat(document.getElementById('price-max')?.value) || Infinity;
+    const minRating = parseFloat(document.querySelector('input[name="rating"]:checked')?.value) || 0;
+
+    filteredProducts = PRODUCTS.filter(p => {
+      if (category && p.category !== category) return false;
+      if (p.price < minPrice || p.price > maxPrice) return false;
+      if (p.rating < minRating) return false;
+      return true;
+    });
+
+    renderProducts();
+  }
+
+  function toggleFilters() {
+    document.getElementById('filter-sidebar').classList.toggle('open');
+  }
+
+  document.getElementById('sort-select')?.addEventListener('change', renderProducts);
+
+  window.renderProducts = renderProducts;
+</script>
+<script src="../js/script.js"></script>
+</body>
+</html>
