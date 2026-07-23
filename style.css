@@ -1782,3 +1782,232 @@ main .section-title {
 [dir="ltr"] .auth-card form {
   text-align: left;
 }
+
+/* ==============================
+   NEON ANIME DECORATIONS & ANIMATIONS
+   ============================== */
+
+/* Neon breathing glow for header */
+header {
+  animation: neonHeader 4s ease-in-out infinite;
+}
+@keyframes neonHeader {
+  0%, 100% { border-bottom-color: rgba(168,85,247,0.4); box-shadow: 0 2px 15px rgba(168,85,247,0.1); }
+  50% { border-bottom-color: rgba(168,85,247,0.8); box-shadow: 0 2px 25px rgba(168,85,247,0.25); }
+}
+
+/* Neon card hover with animated glow */
+.product-card {
+  position: relative;
+}
+.product-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(74,222,128,0.2), rgba(234,179,8,0.2));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s;
+  filter: blur(8px);
+}
+.product-card:hover::before {
+  opacity: 1;
+}
+
+/* Hero banner animated gradient */
+.hero-banner {
+  background: linear-gradient(135deg, rgba(46,8,84,0.8), rgba(17,12,33,0.9), rgba(88,12,132,0.6));
+  background-size: 300% 300%;
+  animation: heroShift 8s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(168,85,247,0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 50%, rgba(74,222,128,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+@keyframes heroShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Neon title glow */
+.hero-banner h1 {
+  animation: neonText 3s ease-in-out infinite;
+}
+@keyframes neonText {
+  0%, 100% { text-shadow: 0 0 10px rgba(168,85,247,0.5), 0 0 30px rgba(168,85,247,0.2); }
+  50% { text-shadow: 0 0 20px rgba(168,85,247,0.8), 0 0 50px rgba(168,85,247,0.3), 0 0 80px rgba(168,85,247,0.1); }
+}
+
+/* Brand logo neon pulse */
+.brand, .logo {
+  animation: brandGlow 3s ease-in-out infinite;
+}
+@keyframes brandGlow {
+  0%, 100% { text-shadow: 0 0 12px rgba(168,85,247,0.5); }
+  50% { text-shadow: 0 0 20px rgba(168,85,247,0.9), 0 0 40px rgba(168,85,247,0.3); }
+}
+
+/* Button neon hover effect */
+.btn:hover, .btn-buy:hover {
+  box-shadow: 0 0 15px rgba(168,85,247,0.6), 0 0 30px rgba(168,85,247,0.2);
+}
+.btn-cart:hover {
+  box-shadow: 0 0 12px rgba(168,85,247,0.4);
+}
+
+/* Neon price glow */
+.product-price, .price, .cart-item-price {
+  text-shadow: 0 0 8px rgba(74,222,128,0.3);
+}
+.product-detail .product-info .product-price {
+  text-shadow: 0 0 12px rgba(74,222,128,0.4);
+}
+
+/* Cart count neon pulse */
+.cart-count {
+  animation: cartPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(255,122,162,0.4);
+}
+@keyframes cartPulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(255,122,162,0.3); }
+  50% { box-shadow: 0 0 12px rgba(255,122,162,0.7); }
+}
+
+/* Badge neon styles */
+.product-badge.bestseller { box-shadow: 0 0 10px rgba(234,179,8,0.4); }
+.product-badge.new { box-shadow: 0 0 10px rgba(74,222,128,0.4); }
+.product-badge.sale { box-shadow: 0 0 10px rgba(255,122,162,0.4); animation: salePulse 1.5s ease-in-out infinite; }
+@keyframes salePulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255,122,162,0.3); transform: scale(1); }
+  50% { box-shadow: 0 0 16px rgba(255,122,162,0.7); transform: scale(1.05); }
+}
+
+/* Footer neon line */
+footer {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--primary), var(--neon-green), var(--primary), transparent) 1;
+}
+
+/* Sidebar neon accent */
+.sidebar {
+  position: relative;
+}
+.sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  border-radius: 2px;
+}
+
+/* WhatsApp button animation */
+.whatsapp-btn {
+  font-size: 1.8rem;
+  animation: whatsappFloat 3s ease-in-out infinite;
+}
+@keyframes whatsappFloat {
+  0%, 100% { transform: translateY(0); box-shadow: 0 4px 16px rgba(37,211,102,0.4); }
+  50% { transform: translateY(-5px); box-shadow: 0 8px 24px rgba(37,211,102,0.5); }
+}
+.whatsapp-btn:hover {
+  animation: none;
+  transform: scale(1.15);
+}
+
+/* Auth card neon border */
+.auth-card {
+  position: relative;
+}
+.auth-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.4), transparent, rgba(74,222,128,0.3));
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* Neon stat cards */
+.stat-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 20px rgba(168,85,247,0.2);
+}
+.stat-value {
+  text-shadow: 0 0 8px rgba(168,85,247,0.3);
+}
+
+/* Toast neon flash */
+.toast {
+  animation: toastIn 0.3s ease-out, neonToast 2s ease-in-out 0.3s infinite;
+}
+@keyframes neonToast {
+  0%, 100% { box-shadow: 0 4px 20px rgba(168,85,247,0.4); }
+  50% { box-shadow: 0 4px 30px rgba(168,85,247,0.7); }
+}
+
+/* Sakura petals floating */
+.sakura-petal {
+  position: fixed;
+  pointer-events: none;
+  z-index: 998;
+  font-size: 14px;
+  opacity: 0;
+  animation: sakuraFall linear forwards;
+}
+@keyframes sakuraFall {
+  0% { opacity: 0; transform: translateY(-20px) rotate(0deg) translateX(0); }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg) translateX(80px); }
+}
+
+/* Countdown neon */
+.countdown-item .number {
+  text-shadow: 0 0 10px rgba(234,179,8,0.4);
+}
+
+/* Smooth page entrance */
+main, .auth-card, .cart-layout, .checkout-layout {
+  animation: fadeInUp 0.5s ease-out;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Category items neon hover */
+.category-item:hover, .category-item.active {
+  box-shadow: 0 0 15px rgba(168,85,247,0.5), inset 0 0 8px rgba(168,85,247,0.1);
+}
+
+/* Order status neon */
+.order-status.pending { box-shadow: 0 0 8px rgba(234,179,8,0.2); }
+.order-status.shipped { box-shadow: 0 0 8px rgba(56,189,248,0.2); }
+.order-status.delivered { box-shadow: 0 0 8px rgba(74,222,128,0.2); }
+.order-status.cancelled { box-shadow: 0 0 8px rgba(239,68,68,0.2); }
+
+/* Loader neon */
+.loader-core {
+  border-top-color: var(--primary);
+  border-right-color: var(--neon-green);
+  box-shadow: 0 0 15px rgba(168,85,247,0.3);
+}
+
+/* Star rating neon on hover */
+.star-input button:hover {
+  text-shadow: 0 0 10px rgba(234,179,8,0.5);
+}
+.star-input button.active {
+  text-shadow: 0 0 8px rgba(234,179,8,0.4);
+}

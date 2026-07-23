@@ -218,6 +218,15 @@
   document.getElementById('sort-select')?.addEventListener('change', renderProducts);
 
   window.renderProducts = renderProducts;
+
+  // Safety net: ensure page renders even if script.js is delayed
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof renderProductCard === 'undefined') return; // script.js hasn't loaded yet
+    const saved = localStorage.getItem('anime-products');
+    if (saved) { try { const parsed = JSON.parse(saved); if (parsed.length) { PRODUCTS.length = 0; PRODUCTS.push(...parsed); filteredProducts = [...PRODUCTS]; } } catch {} }
+    const container = document.getElementById('products-container');
+    if (container && !container.innerHTML.trim()) renderProducts();
+  });
 </script>
 <script src="script.js"></script>
 </body>

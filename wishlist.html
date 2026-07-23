@@ -121,6 +121,12 @@
   }
 
   window.renderWishlist = renderWishlist;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof getWishlist === 'undefined') return;
+    const main = document.getElementById('main-content');
+    if (main && !main.innerHTML.trim()) renderWishlist();
+  });
 </script>
 <script src="script.js"></script>
 </body>

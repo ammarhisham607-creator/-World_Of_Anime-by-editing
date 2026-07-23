@@ -63,7 +63,15 @@ const translations = {
     'product-desc-ar': 'الوصف (عربي)', 'product-desc-en': 'الوصف (إنجليزي)',
     'product-price': 'السعر', 'product-old-price': 'السعر القديم', 'product-category': 'التصنيف',
     'product-stock': 'المخزون', 'product-image': 'رابط الصورة', 'product-sizes': 'المقاسات',
-    'product-badge': 'الشارة', 'save': 'حفظ'
+    'product-badge': 'الشارة', 'save': 'حفظ',
+    'hero-main-title': '🚀 أضخم متجر لمنتجات ومجسمات الأنمي',
+    'hero-subtitle': 'شحن سريع لجميع المحافظات • دفع عند الاستلام • خامات عالية الجودة',
+    'sidebar-categories': '📁 التصنيفات', 'cat-all': '🔥 الكل',
+    'cat-swords': '⚔️ سيوف', 'cat-figures': '🗿 مجسمات', 'cat-posters': '🖼️ بوسترات',
+    'cat-clothing': '👕 ملابس', 'cat-accessories': '💎 إكسسوارات', 'cat-manga': '📚 مانجا',
+    'all-products': '🔥 جميع المنتجات المتاحة',
+    'nav-swords': '⚔️ السيوف', 'nav-figures': '🗿 المجسمات', 'nav-manga': '📚 المانجا',
+    'search-results': '🔍 نتائج البحث عن'
   },
   en: {
     'nav-home': 'Home', 'nav-products': 'Products', 'nav-login': 'Login',
@@ -121,7 +129,15 @@ const translations = {
     'product-desc-ar': 'Description (AR)', 'product-desc-en': 'Description (EN)',
     'product-price': 'Price', 'product-old-price': 'Old Price', 'product-category': 'Category',
     'product-stock': 'Stock', 'product-image': 'Image URL', 'product-sizes': 'Sizes',
-    'product-badge': 'Badge', 'save': 'Save'
+    'product-badge': 'Badge', 'save': 'Save',
+    'hero-main-title': '🚀 The Biggest Anime Store',
+    'hero-subtitle': 'Fast shipping nationwide • Cash on delivery • Premium quality',
+    'sidebar-categories': '📁 Categories', 'cat-all': '🔥 All',
+    'cat-swords': '⚔️ Swords', 'cat-figures': '🗿 Figures', 'cat-posters': '🖼️ Posters',
+    'cat-clothing': '👕 Clothing', 'cat-accessories': '💎 Accessories', 'cat-manga': '📚 Manga',
+    'all-products': '🔥 All Products',
+    'nav-swords': '⚔️ Swords', 'nav-figures': '🗿 Figures', 'nav-manga': '📚 Manga',
+    'search-results': '🔍 Search results for'
   }
 };
 
@@ -721,8 +737,26 @@ function addWhatsAppBtn() {
 }
 
 // ==============================
-// INIT
+// SAKURA PETALS ANIMATION
 // ==============================
+function initSakuraPetals() {
+  const petals = ['🌸', '✿', '❀'];
+  let count = 0;
+  const maxPetals = 10;
+  setInterval(() => {
+    document.querySelectorAll('.sakura-petal').forEach(p => { if (parseFloat(getComputedStyle(p).opacity) < 0.05) { p.remove(); count--; } });
+    if (count >= maxPetals) return;
+    const petal = document.createElement('span');
+    petal.className = 'sakura-petal';
+    petal.textContent = petals[Math.floor(Math.random() * petals.length)];
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.animationDuration = (7 + Math.random() * 5) + 's';
+    petal.style.fontSize = (11 + Math.random() * 8) + 'px';
+    document.body.appendChild(petal);
+    count++;
+    setTimeout(() => { petal.remove(); count = Math.max(0, count - 1); }, 13000);
+  }, 2500);
+}
 document.addEventListener('DOMContentLoaded', () => {
   // Language switcher click handlers
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -744,4 +778,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   updateCartCount();
   addWhatsAppBtn();
+  initSakuraPetals();
 });

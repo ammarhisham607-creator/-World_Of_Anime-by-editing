@@ -66,7 +66,7 @@
           <option value="accessories">💎 الإكسسوارات</option>
           <option value="manga">📚 المانجا</option>
         </select>
-        <input type="text" id="search-input" data-i18n-placeholder="search-placeholder" placeholder="ابحث عن منتجات أنمي...">
+        <input type="text" id="search-input" data-i18n-placeholder="search-placeholder" placeholder="ابحث عن منتجات أنمي..." oninput="filterProducts()">
         <button id="search-btn">🔍</button>
       </div>
       <div class="header-actions">
@@ -79,9 +79,9 @@
       <ul class="nav-links">
         <li><a href="index.html" class="active" data-i18n="nav-home">الرئيسية</a></li>
         <li><a href="products.html" data-i18n="nav-products">المنتجات</a></li>
-        <li><a href="products.html?category=swords">⚔️ السيوف</a></li>
-        <li><a href="products.html?category=figures">🗿 المجسمات</a></li>
-        <li><a href="products.html?category=manga">📚 المانجا</a></li>
+        <li><a href="products.html?category=swords" data-i18n="nav-swords">⚔️ السيوف</a></li>
+        <li><a href="products.html?category=figures" data-i18n="nav-figures">🗿 المجسمات</a></li>
+        <li><a href="products.html?category=manga" data-i18n="nav-manga">📚 المانجا</a></li>
         <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
       </ul>
       <div class="lang-switch">
@@ -93,8 +93,8 @@
 
   <!-- ===== Hero Banner ===== -->
   <div class="hero-banner">
-    <h1>🚀 أضخم متجر لمنتجات ومجسمات الأنمي</h1>
-    <p>شحن سريع لجميع المحافظات • دفع عند الاستلام • خامات عالية الجودة</p>
+    <h1 data-i18n="hero-main-title">🚀 أضخم متجر لمنتجات ومجسمات الأنمي</h1>
+    <p data-i18n="hero-subtitle">شحن سريع لجميع المحافظات • دفع عند الاستلام • خامات عالية الجودة</p>
   </div>
 
   <!-- ===== Main Content ===== -->
@@ -102,21 +102,21 @@
 
     <!-- Sidebar: التصنيفات -->
     <aside class="sidebar">
-      <h3>📁 التصنيفات</h3>
+      <h3 data-i18n="sidebar-categories">📁 التصنيفات</h3>
       <ul class="category-list">
-        <li class="category-item active" onclick="selectCategory('all', this)">🔥 الكل</li>
-        <li class="category-item" onclick="selectCategory('swords', this)">⚔️ سيوف</li>
-        <li class="category-item" onclick="selectCategory('figures', this)">🗿 مجسمات</li>
-        <li class="category-item" onclick="selectCategory('posters', this)">🖼️ بوسترات</li>
-        <li class="category-item" onclick="selectCategory('tshirts', this)">👕 ملابس</li>
-        <li class="category-item" onclick="selectCategory('accessories', this)">💎 إكسسوارات</li>
-        <li class="category-item" onclick="selectCategory('manga', this)">📚 مانجا</li>
+        <li class="category-item active" onclick="selectCategory('all', this)" data-i18n="cat-all">🔥 الكل</li>
+        <li class="category-item" onclick="selectCategory('swords', this)" data-i18n="cat-swords">⚔️ سيوف</li>
+        <li class="category-item" onclick="selectCategory('figures', this)" data-i18n="cat-figures">🗿 مجسمات</li>
+        <li class="category-item" onclick="selectCategory('posters', this)" data-i18n="cat-posters">🖼️ بوسترات</li>
+        <li class="category-item" onclick="selectCategory('tshirts', this)" data-i18n="cat-clothing">👕 ملابس</li>
+        <li class="category-item" onclick="selectCategory('accessories', this)" data-i18n="cat-accessories">💎 إكسسوارات</li>
+        <li class="category-item" onclick="selectCategory('manga', this)" data-i18n="cat-manga">📚 مانجا</li>
       </ul>
     </aside>
 
     <!-- Products Grid -->
     <main class="content-area">
-      <h2 class="index-section-title" id="section-heading">🔥 جميع المنتجات المتاحة</h2>
+      <h2 class="index-section-title" id="section-heading" data-i18n="all-products">🔥 جميع المنتجات المتاحة</h2>
       <div class="products-grid" id="products-container"></div>
     </main>
 
@@ -167,9 +167,9 @@
         const cat = p.category ? p.category.toLowerCase() : '';
         return arName.includes(query) || enName.includes(query) || cat.includes(query);
       });
-      heading.innerText = '🔍 نتائج البحث عن: "' + query + '" (' + filtered.length + ')';
+      heading.innerText = (typeof t === 'function' ? t('search-results') : '🔍 نتائج البحث عن') + ': "' + query + '" (' + filtered.length + ')';
     } else {
-      heading.innerText = currentCategory === 'all' ? '🔥 جميع المنتجات المتاحة' : '📁 قسم: ' + currentCategory;
+      heading.innerText = currentCategory === 'all' ? (typeof t === 'function' ? t('all-products') : '🔥 جميع المنتجات المتاحة') : '📁 ' + currentCategory;
     }
     renderProducts(filtered);
   }

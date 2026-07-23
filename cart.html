@@ -140,6 +140,15 @@
   }
 
   window.renderCart = renderCart;
+
+  // Safety net: ensure page renders even if script.js is delayed
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof getCart === 'undefined') return; // script.js hasn't loaded yet
+    const saved = localStorage.getItem('anime-products');
+    if (saved) { try { const parsed = JSON.parse(saved); if (parsed.length) { PRODUCTS.length = 0; PRODUCTS.push(...parsed); } } catch {} }
+    const main = document.getElementById('main-content');
+    if (main && !main.innerHTML.trim()) renderCart();
+  });
 </script>
 <script src="script.js"></script>
 </body>
