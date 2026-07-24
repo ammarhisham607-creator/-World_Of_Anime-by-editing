@@ -75,7 +75,9 @@ const translations = {
     'all-products': '🔥 جميع المنتجات المتاحة',
     'nav-swords': '⚔️ السيوف', 'nav-figures': '🗿 المجسمات', 'nav-manga': '📚 المانجا',
     'search-results': '🔍 نتائج البحث عن',
-        'settings-label': '⚙️ الإعدادات'
+        'settings-label': '⚙️ الإعدادات',
+    'theme-toggle': 'تبديل السمة', 'image-upload': 'أو رفع صورة من الجهاز',
+    'nav-logout': 'تسجيل الخروج'
   },
   en: {
     'nav-home': 'Home', 'nav-products': 'Products', 'nav-login': 'Login',
@@ -145,7 +147,9 @@ const translations = {
     'all-products': '🔥 All Products',
     'nav-swords': '⚔️ Swords', 'nav-figures': '🗿 Figures', 'nav-manga': '📚 Manga',
     'search-results': '🔍 Search results for',
-        'settings-label': '⚙️ Settings'
+    'settings-label': '⚙️ Settings',
+    'theme-toggle': 'Toggle Theme', 'image-upload': 'Or upload image from device',
+    'nav-logout': 'Logout'
   }
 };
 
@@ -171,6 +175,46 @@ function setLanguage(lang) {
   ['renderProducts','renderCart','renderWishlist','renderProductDetail','renderAdminDashboard','renderCheckout']
     .forEach(fn => { if (typeof window[fn] === 'function') window[fn](); });
   updateCartCount();
+  updateAuthNav();
+  applyTheme();
+}
+
+// ==============================
+// THEME SWITCHER
+// ==============================
+function applyTheme() {
+  const theme = localStorage.getItem('anime-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    btn.title = theme === 'dark' ? (currentLang === 'ar' ? 'الوضع الفاتح' : 'Light Mode') : (currentLang === 'ar' ? 'الوضع الداكن' : 'Dark Mode');
+  });
+}
+function toggleTheme() {
+  const current = localStorage.getItem('anime-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('anime-theme', next);
+  applyTheme();
+}
+
+// ==============================
+// AUTH NAV VISIBILITY
+// ==============================
+function getCurrentUser() {
+  try { return JSON.parse(localStorage.getItem('anime-user') || 'null'); } catch { return null; }
+}
+function updateAuthNav() {
+  const user = getCurrentUser();
+  document.querySelectorAll('.nav-login-link, .nav-signup-link').forEach(el => {
+    el.style.display = user ? 'none' : '';
+  });
+  document.querySelectorAll('.nav-logout-link').forEach(el => {
+    el.style.display = user ? '' : 'none';
+  });
+  // Hero signup button
+  document.querySelectorAll('.hero-signup-btn').forEach(el => {
+    el.style.display = user ? 'none' : '';
+  });
 }
 
 // ==============================
@@ -274,17 +318,17 @@ function renderProductCard(product) {
   const badgeText = product.badge === 'bestseller' ? (currentLang==='ar'?'الأكثر مبيعاً':'Best Seller')
     : product.badge === 'new' ? (currentLang==='ar'?'جديد':'New')
     : product.badge === 'sale' ? (currentLang==='ar'?'عرض':'Sale') : '';
-  return `<article class="product-card">
+  return `<article class="product-card" onclick="if(!event.target.closest('button,a'))window.location.href='product-detail.html?id=${product.id}'" style="cursor:pointer;">
     <div class="product-card-img">
       ${product.badge ? `<span class="product-badge ${product.badge}">${badgeText}</span>` : ''}
       <button class="product-wishlist-btn ${w?'active':''}" data-id="${product.id}" aria-label="${t('add-to-wishlist')}"
-        onclick="event.preventDefault();toggleWishlist(${product.id})">${w?'❤️':'🤍'}</button>
-      <a href="product-detail.html?id=${product.id}">
-        <img src="${product.images[0]}" alt="${product.title[currentLang]}" loading="lazy" width="400" height="200">
+        onclick="event.stopPropagation();toggleWishlist(${product.id})">${w?'❤️':'🤍'}</button>
+      <a href="product-detail.html?id=${product.id}" onclick="event.stopPropagation()">
+        <img src="${product.images[0]}" alt="${product.title[currentLang]}" loading="lazy" width="400" height="200" decoding="async">
       </a>
     </div>
     <div class="product-card-body">
-      <a href="product-detail.html?id=${product.id}"><h3 class="product-card-title">${product.title[currentLang]}</h3></a>
+      <a href="product-detail.html?id=${product.id}" onclick="event.stopPropagation()"><h3 class="product-card-title">${product.title[currentLang]}</h3></a>
       <div class="product-rating"><span class="stars" aria-label="${product.rating} stars">${getStars(product.rating)}</span><span class="rating-count">(${product.reviews})</span></div>
       <div class="product-price-row">
         <span class="product-price">${formatPrice(product.price)}</span>
@@ -293,7 +337,7 @@ function renderProductCard(product) {
       <span style="font-size:0.78rem;color:${product.stock>0?'var(--neon-green)':'var(--neon-red)'}">${product.stock > 0 ? t('stock') + ': ' + product.stock : t('out-of-stock')}</span>
     </div>
     <div class="product-card-actions">
-      <button class="btn sm btn-primary" ${product.stock<=0?'disabled':''} onclick="addToCart(${product.id})">🛒 ${t('add-to-cart')}</button>
+      <button class="btn sm btn-primary" ${product.stock<=0?'disabled':''} onclick="event.stopPropagation();addToCart(${product.id})">🛒 ${t('add-to-cart')}</button>
     </div>
   </article>`;
 }
@@ -455,7 +499,7 @@ function deleteAccount() {
   window.location.href = 'index.html';
 }
 
-function logout() { localStorage.removeItem('anime-user'); if(supabaseClient) supabaseClient.auth.signOut(); window.location.href='index.html'; }
+function logout() { localStorage.removeItem('anime-user'); if(supabaseClient) supabaseClient.auth.signOut(); updateAuthNav(); window.location.href='index.html'; }
 
 // ==============================
 // ADMIN
@@ -549,7 +593,12 @@ function renderAdminProducts(tc) {
         <div class="form-group"><label>${t('product-stock')}</label><input type="number" id="ap-stock" value="10" min="0"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>${t('product-image')}</label><input type="text" id="ap-image" placeholder="https://..."></div>
+        <div class="form-group"><label>${t('product-image')}</label><input type="text" id="ap-image" placeholder="https://...">
+          <label style="margin-top:8px;display:block;font-size:0.82rem;color:var(--text-dim);cursor:pointer;">📁 ${t('image-upload')}
+            <input type="file" id="ap-image-file" accept="image/*" style="display:none;" onchange="handleImageUpload(this,'ap-image')">
+          </label>
+          <img id="ap-image-preview" style="display:none;max-width:120px;max-height:80px;border-radius:8px;margin-top:6px;border:1px solid var(--border);">
+        </div>
         <div class="form-group"><label>${t('product-sizes')}</label><input type="text" id="ap-sizes" placeholder="S, M, L, XL"></div>
       </div>
       <div class="form-group"><label>${t('product-badge')}</label>
@@ -698,7 +747,12 @@ function adminEditProduct(id) {
         <div class="form-group"><label>${t('product-stock')}</label><input type="number" id="ep-stock" value="${p.stock}"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>${t('product-image')}</label><input type="text" id="ep-image" value="${p.images?.[0]||''}"></div>
+        <div class="form-group"><label>${t('product-image')}</label><input type="text" id="ep-image" value="${p.images?.[0]||''}">
+          <label style="margin-top:8px;display:block;font-size:0.82rem;color:var(--text-dim);cursor:pointer;">📁 ${t('image-upload')}
+            <input type="file" id="ep-image-file" accept="image/*" style="display:none;" onchange="handleImageUpload(this,'ep-image')">
+          </label>
+          <img id="ep-image-preview" src="${p.images?.[0]||''}" style="max-width:120px;max-height:80px;border-radius:8px;margin-top:6px;border:1px solid var(--border);${p.images?.[0]?'':'display:none;'}">
+        </div>
         <div class="form-group"><label>${t('product-sizes')}</label><input type="text" id="ep-sizes" value="${(p.sizes||[]).join(', ')}"></div>
       </div>
       <div class="form-group"><label>${t('product-badge')}</label>
@@ -732,6 +786,28 @@ function adminSaveProduct(id) {
   localStorage.setItem('anime-products', JSON.stringify(PRODUCTS));
   showToast(currentLang==='ar'?'تم حفظ التعديلات':'Changes saved');
   showAdminTab('products');
+}
+
+// ==============================
+// IMAGE UPLOAD HANDLER
+// ==============================
+function handleImageUpload(input, targetInputId) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    showToast(currentLang === 'ar' ? 'حجم الصورة كبير جداً (الحد 2MB)' : 'Image too large (max 2MB)');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    const targetInput = document.getElementById(targetInputId);
+    if (targetInput) targetInput.value = dataUrl;
+    const previewId = targetInputId + '-preview';
+    const preview = document.getElementById(previewId);
+    if (preview) { preview.src = dataUrl; preview.style.display = 'block'; }
+  };
+  reader.readAsDataURL(file);
 }
 
 function adminAddProduct() {
@@ -851,7 +927,9 @@ function addWhatsAppBtn() {
 function initSakuraPetals() {
   const petals = ['🌸', '✿', '❀'];
   let count = 0;
-  const maxPetals = 10;
+  const maxPetals = 6;
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) return; // Skip sakura on mobile for performance
   setInterval(() => {
     document.querySelectorAll('.sakura-petal').forEach(p => { if (parseFloat(getComputedStyle(p).opacity) < 0.05) { p.remove(); count--; } });
     if (count >= maxPetals) return;
@@ -859,12 +937,12 @@ function initSakuraPetals() {
     petal.className = 'sakura-petal';
     petal.textContent = petals[Math.floor(Math.random() * petals.length)];
     petal.style.left = Math.random() * 100 + 'vw';
-    petal.style.animationDuration = (7 + Math.random() * 5) + 's';
-    petal.style.fontSize = (11 + Math.random() * 8) + 'px';
+    petal.style.animationDuration = (8 + Math.random() * 5) + 's';
+    petal.style.fontSize = (11 + Math.random() * 6) + 'px';
     document.body.appendChild(petal);
     count++;
-    setTimeout(() => { petal.remove(); count = Math.max(0, count - 1); }, 13000);
-  }, 2500);
+    setTimeout(() => { petal.remove(); count = Math.max(0, count - 1); }, 14000);
+  }, 4000);
 }
 document.addEventListener('DOMContentLoaded', () => {
   // Language switcher click handlers
@@ -872,11 +950,18 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
   });
 
+  // Theme toggle click handlers
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', toggleTheme);
+  });
+
   // Load persisted products
   const saved = localStorage.getItem('anime-products');
   if (saved) { try { const parsed = JSON.parse(saved); if (parsed.length) { PRODUCTS.length = 0; PRODUCTS.push(...parsed); } } catch {} }
 
+  applyTheme();
   setLanguage(currentLang);
+  updateAuthNav();
   initSearch();
   initLoginForm();
   initSignupForm();

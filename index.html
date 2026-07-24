@@ -50,11 +50,15 @@
       <li><a href="products.html?category=swords">⚔️ السيوف</a></li>
       <li><a href="products.html?category=figures">🗿 المجسمات</a></li>
       <li><a href="products.html?category=manga">📚 المانجا</a></li>
-      <li><a href="login.html" data-i18n="nav-login">تسجيل الدخول</a></li>
+      <li><a href="login.html" class="nav-login-link" data-i18n="nav-login">تسجيل الدخول</a></li>
+      <li><a href="#" class="nav-logout-link" style="display:none;" onclick="event.preventDefault();logout()" data-i18n="nav-logout">تسجيل الخروج</a></li>
     </ul>
-    <div class="lang-switch">
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="theme-toggle-btn" title="Toggle Theme" style="background:rgba(10,22,32,0.8);border:1px solid rgba(6,182,212,0.25);color:#aaa;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:1rem;transition:0.2s;">☀️</button>
+      <div class="lang-switch">
       <button class="lang-btn" data-lang="ar">العربية</button>
       <button class="lang-btn" data-lang="en">English</button>
+    </div>
     </div>
   </div>
 </header>
@@ -67,7 +71,7 @@
     <p data-i18n="hero-desc">اكتشف أفضل المنتجات المستوحاة من الأنمي: سيوف، مجسمات، ملابس، بوسترات، مانجا وأكثر بأسعار مميزة.</p>
     <div class="hero-actions">
       <a class="btn" href="products.html" data-i18n="browse-products">تصفح المنتجات</a>
-      <a class="btn secondary" href="signup.html" data-i18n="create-account">إنشاء حساب</a>
+      <a class="btn secondary hero-signup-btn" href="signup.html" data-i18n="create-account">إنشاء حساب</a>
     </div>
   </section>
 
@@ -136,8 +140,8 @@
       <a href="index.html" data-i18n="nav-home">الرئيسية</a>
       <a href="products.html" data-i18n="nav-products">المنتجات</a>
       <a href="cart.html" data-i18n="nav-cart">السلة</a>
-      <a href="login.html" data-i18n="nav-login">تسجيل الدخول</a>
-      <a href="signup.html" data-i18n="nav-signup">إنشاء حساب</a>
+      <a href="login.html" class="nav-login-link" data-i18n="nav-login">تسجيل الدخول</a>
+      <a href="signup.html" class="nav-signup-link" data-i18n="nav-signup">إنشاء حساب</a>
     </div>
     <p>© 2026 World Of Anime — All Rights Reserved</p>
   </div>

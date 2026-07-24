@@ -32,9 +32,12 @@
       <li><a href="products.html" data-i18n="nav-products">المنتجات</a></li>
       <li><a href="cart.html" data-i18n="nav-cart">السلة</a></li>
     </ul>
-    <div class="lang-switch">
-      <button class="lang-btn" data-lang="ar">العربية</button>
-      <button class="lang-btn" data-lang="en">English</button>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="theme-toggle-btn" title="Toggle Theme" style="background:rgba(10,22,32,0.8);border:1px solid rgba(6,182,212,0.25);color:#aaa;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:1rem;transition:0.2s;">☀️</button>
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="ar">العربية</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
     </div>
   </div>
 </header>
@@ -160,7 +163,7 @@
           </div>
           <div class="form-group">
             <label data-i18n="address">${t('address')}</label>
-            <textarea id="checkout-address" required></textarea>
+            <textarea id="checkout-address"></textarea>
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -224,9 +227,14 @@
         const notes = document.getElementById('checkout-notes')?.value?.trim() || '';
         const lat = document.getElementById('checkout-lat')?.value || '';
         const lng = document.getElementById('checkout-lng')?.value || '';
+        const hasLocation = !!(lat && lng);
 
-        if (!name || !phone || !address || !city) {
+        if (!name || !phone || !city) {
           showToast(t('fill-all-fields'));
+          return;
+        }
+        if (!address && !hasLocation) {
+          showToast(currentLang === 'ar' ? 'اكتب العنوان أو حدد موقعك على الخريطة' : 'Enter address or pick location on map');
           return;
         }
 

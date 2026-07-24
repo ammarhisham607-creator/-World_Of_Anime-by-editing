@@ -194,7 +194,7 @@ async function getGojoReply(userQuery) {
 // ==========================================================================
 
 const GOJO_SVG_AVATAR = `
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;border-radius:50%;background:#090514;">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;border-radius:50%;background:#0a1620;">
   <!-- الشعر الأبيض -->
   <path d="M15,45 Q20,10 50,10 Q80,10 85,45 Q90,25 75,15 Q50,0 25,15 Q10,25 15,45 Z" fill="#ffffff"/>
   <path d="M10,40 Q25,20 40,15 Q20,35 15,55 Z" fill="#e2e8f0"/>
@@ -217,10 +217,10 @@ const GOJO_SVG_AVATAR = `
   <path d="M20,40 Q50,30 80,40 L82,48 Q50,38 18,48 Z" fill="#1e1b4b"/>
   
   <!-- الابتسامة الشقية -->
-  <path d="M42,68 Q50,75 58,68" stroke="#a855f7" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M42,68 Q50,75 58,68" stroke="#06b6d4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
   
-  <!-- إطار التوهج البنفسجي Hollow Purple -->
-  <circle cx="50" cy="50" r="48" fill="none" stroke="#a855f7" stroke-width="3" opacity="0.8"/>
+  <!-- إطار التوهج -->
+  <circle cx="50" cy="50" r="48" fill="none" stroke="#06b6d4" stroke-width="3" opacity="0.8"/>
 </svg>
 `;
 
@@ -231,38 +231,38 @@ function initGojoBotUI() {
   botContainer.id = 'gojo-bot-widget';
   botContainer.innerHTML = `
     <!-- زر فتح البوت بأيقونة SVG غوجو -->
-    <button id="gojo-bot-toggle" title="المعلم غوجو ساتورو" style="position:fixed;bottom:85px;right:20px;z-index:9999;width:65px;height:65px;border-radius:50%;background:#0f0c1b;border:2px solid #a855f7;box-shadow:0 0 20px rgba(168,85,247,0.8);cursor:pointer;padding:0;overflow:hidden;transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    <button id="gojo-bot-toggle" title="المعلم غوجو ساتورو" style="position:fixed;bottom:85px;right:20px;z-index:9999;width:65px;height:65px;border-radius:50%;background:#0c1824;border:2px solid #06b6d4;box-shadow:0 0 20px rgba(6,182,212,0.6);cursor:pointer;padding:0;overflow:hidden;transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
       ${GOJO_SVG_AVATAR}
     </button>
     
-    <!-- نافذة الشات بستايل Hollow Purple -->
-    <div id="gojo-bot-window" style="display:none;position:fixed;bottom:160px;right:20px;z-index:10000;width:330px;height:450px;background:#0d0a1a;border:1px solid #a855f7;border-radius:20px;box-shadow:0 0 30px rgba(168,85,247,0.35);flex-direction:column;overflow:hidden;font-family:sans-serif;">
+    <!-- نافذة الشات بستايل teal neon -->
+    <div id="gojo-bot-window" style="display:none;position:fixed;bottom:160px;right:20px;z-index:10000;width:330px;height:450px;background:#0a1620;border:1px solid #06b6d4;border-radius:20px;box-shadow:0 0 30px rgba(6,182,212,0.25);flex-direction:column;overflow:hidden;font-family:sans-serif;">
       
       <!-- هيدر الشات مع صورة غوجو المباشرة -->
-      <div style="background:linear-gradient(135deg, #1e1b3a, #0f0c1b);padding:14px;color:#fff;font-weight:bold;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(168,85,247,0.3);">
+      <div style="background:linear-gradient(135deg, #0c2d3f, #081828);padding:14px;color:#fff;font-weight:bold;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(6,182,212,0.3);">
         <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:40px;height:40px;border-radius:50%;border:2px solid #a855f7;overflow:hidden;box-shadow:0 0 10px #a855f7;flex-shrink:0;">
+          <div style="width:40px;height:40px;border-radius:50%;border:2px solid #06b6d4;overflow:hidden;box-shadow:0 0 10px #06b6d4;flex-shrink:0;">
             ${GOJO_SVG_AVATAR}
           </div>
           <div>
-            <div style="font-size:0.95rem;color:#c084fc;font-weight:bold;">المعلم غوجو</div>
-            <div style="font-size:0.7rem;color:#38bdf8;">World Of Anime AI Bot ⚡</div>
+            <div style="font-size:0.95rem;color:#67e8f9;font-weight:bold;">المعلم غوجو</div>
+            <div style="font-size:0.7rem;color:#4ade80;">World Of Anime AI Bot ⚡</div>
           </div>
         </div>
         <button id="gojo-bot-close" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.3rem;">✕</button>
       </div>
 
       <!-- منطقة الرسائل -->
-      <div id="gojo-bot-messages" style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;font-size:0.88rem;background:#131024;">
-        <div style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);padding:10px 14px;border-radius:14px;align-self:flex-start;color:#f3e8ff;line-height:1.5;">
+      <div id="gojo-bot-messages" style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;font-size:0.88rem;background:#0d1a24;">
+        <div style="background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.25);padding:10px 14px;border-radius:14px;align-self:flex-start;color:#e0f2fe;line-height:1.5;">
           أهلاً بك في <b>World Of Anime</b>! 👋<br>أنا المعلم <b>غوجو ساتورو</b> 😎.. اسألني عن أي حاجة في الدنيا، منتج، أنمي، أو دراسة وسأجيبك فوراً بذكائي الخارق!
         </div>
       </div>
 
       <!-- خانة الكتابة والإرسال -->
-      <div style="padding:10px;display:flex;gap:8px;background:#0f0c1b;border-top:1px solid rgba(168,85,247,0.2);">
-        <input type="text" id="gojo-bot-input" placeholder="اسأل المعلم غوجو أي شيء..." style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(168,85,247,0.3);background:#1a162e;color:#fff;font-size:0.85rem;outline:none;" />
-        <button id="gojo-bot-send" style="background:linear-gradient(135deg, #a855f7, #6366f1);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;box-shadow:0 0 10px rgba(168,85,247,0.4);">إرسال</button>
+      <div style="padding:10px;display:flex;gap:8px;background:#081828;border-top:1px solid rgba(6,182,212,0.2);">
+        <input type="text" id="gojo-bot-input" placeholder="اسأل المعلم غوجو أي شيء..." style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(6,182,212,0.3);background:#0a1620;color:#fff;font-size:0.85rem;outline:none;" />
+        <button id="gojo-bot-send" style="background:linear-gradient(135deg, #06b6d4, #0891b2);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;box-shadow:0 0 10px rgba(6,182,212,0.3);">إرسال</button>
       </div>
 
     </div>
@@ -289,7 +289,7 @@ function initGojoBotUI() {
 
     // عرض رسالة المستخدم
     const userMsg = document.createElement('div');
-    userMsg.style.cssText = 'background:#a855f7;color:#fff;padding:8px 14px;border-radius:12px;align-self:flex-end;max-width:82%;word-break:break-word;font-weight:500;box-shadow:0 2px 8px rgba(168,85,247,0.3);';
+    userMsg.style.cssText = 'background:#06b6d4;color:#fff;padding:8px 14px;border-radius:12px;align-self:flex-end;max-width:82%;word-break:break-word;font-weight:500;box-shadow:0 2px 8px rgba(6,182,212,0.3);';
     userMsg.textContent = txt;
     messagesBox.appendChild(userMsg);
 
@@ -298,7 +298,7 @@ function initGojoBotUI() {
 
     // مؤشر جاري التفكير / الرد
     const loadingMsg = document.createElement('div');
-    loadingMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(168,85,247,0.2);color:#e9d5ff;padding:8px 14px;border-radius:12px;align-self:flex-start;max-width:82%;font-style:italic;';
+    loadingMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(6,182,212,0.2);color:#e0f2fe;padding:8px 14px;border-radius:12px;align-self:flex-start;max-width:82%;font-style:italic;';
     loadingMsg.textContent = "غوجو يفكر بعين السادسة (Six Eyes)... 👁️✨";
     messagesBox.appendChild(loadingMsg);
     messagesBox.scrollTop = messagesBox.scrollHeight;
@@ -309,7 +309,7 @@ function initGojoBotUI() {
     // إزالة مؤشر التفكير وعرض الرد النهائي
     messagesBox.removeChild(loadingMsg);
     const botMsg = document.createElement('div');
-    botMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(168,85,247,0.2);color:#e9d5ff;padding:10px 14px;border-radius:12px;align-self:flex-start;max-width:82%;white-space:pre-line;line-height:1.5;';
+    botMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(6,182,212,0.2);color:#e0f2fe;padding:10px 14px;border-radius:12px;align-self:flex-start;max-width:82%;white-space:pre-line;line-height:1.5;';
     botMsg.textContent = replyTxt;
     messagesBox.appendChild(botMsg);
     messagesBox.scrollTop = messagesBox.scrollHeight;
