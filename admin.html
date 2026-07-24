@@ -16,7 +16,22 @@
   <div class="header-top">
     <a href="admin.html" class="brand"><span class="brand-mark">⛩️</span><span>World Of Anime - Admin</span></a>
     <div class="header-actions">
-      <a href="index.html" class="header-btn">🏠 الرئيسية</a>
+      <a href="index.html" class="header-btn">🏠 <span data-i18n="nav-home">الرئيسية</span></a>
+      <a href="products.html" class="header-btn">📦 <span data-i18n="nav-products">المنتجات</span></a>
+    </div>
+  </div>
+  <div class="header-nav">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn sm btn-primary" onclick="showAdminTab('products')">📦 <span data-i18n="admin-products">المنتجات</span></button>
+      <button class="btn sm secondary" onclick="showAdminTab('orders')">📋 <span data-i18n="orders-title">الطلبات</span></button>
+      <button class="btn sm outline" onclick="showAdminTab('settings')">⚙️ <span data-i18n="settings-label">الإعدادات</span></button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="ar">العربية</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
+      <button class="btn sm btn-danger" onclick="adminLogout()">🚪 <span data-i18n="logout">خروج</span></button>
     </div>
   </div>
 </header>

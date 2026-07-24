@@ -71,7 +71,8 @@ const translations = {
     'cat-clothing': '👕 ملابس', 'cat-accessories': '💎 إكسسوارات', 'cat-manga': '📚 مانجا',
     'all-products': '🔥 جميع المنتجات المتاحة',
     'nav-swords': '⚔️ السيوف', 'nav-figures': '🗿 المجسمات', 'nav-manga': '📚 المانجا',
-    'search-results': '🔍 نتائج البحث عن'
+    'search-results': '🔍 نتائج البحث عن',
+        'settings-label': '⚙️ الإعدادات'
   },
   en: {
     'nav-home': 'Home', 'nav-products': 'Products', 'nav-login': 'Login',
@@ -137,7 +138,8 @@ const translations = {
     'cat-clothing': '👕 Clothing', 'cat-accessories': '💎 Accessories', 'cat-manga': '📚 Manga',
     'all-products': '🔥 All Products',
     'nav-swords': '⚔️ Swords', 'nav-figures': '🗿 Figures', 'nav-manga': '📚 Manga',
-    'search-results': '🔍 Search results for'
+    'search-results': '🔍 Search results for',
+        'settings-label': '⚙️ Settings'
   }
 };
 
@@ -523,40 +525,46 @@ function renderAdminProducts(tc) {
     <div class="admin-form" id="add-product-form">
       <h3>${t('add-product')}</h3>
       <div class="form-row">
-        <div class="form-group"><label>${t('product-name-ar')}</label><input type="text" id="ap-name-ar"></div>
-        <div class="form-group"><label>${t('product-name-en')}</label><input type="text" id="ap-name-en"></div>
+        <div class="form-group"><label>${t('product-name-ar')}</label><input type="text" id="ap-name-ar" placeholder="${currentLang==='ar'?'اسم المنتج بالعربي':'Product name in Arabic'}"></div>
+        <div class="form-group"><label>${t('product-name-en')}</label><input type="text" id="ap-name-en" placeholder="${currentLang==='ar'?'اسم المنتج بالإنجليزي':'Product name in English'}"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>${t('product-desc-ar')}</label><textarea id="ap-desc-ar"></textarea></div>
-        <div class="form-group"><label>${t('product-desc-en')}</label><textarea id="ap-desc-en"></textarea></div>
+        <div class="form-group"><label>${t('product-desc-ar')}</label><textarea id="ap-desc-ar" placeholder="${currentLang==='ar'?'الوصف بالعربي...':'Description in Arabic...'}"></textarea></div>
+        <div class="form-group"><label>${t('product-desc-en')}</label><textarea id="ap-desc-en" placeholder="${currentLang==='ar'?'الوصف بالإنجليزي...':'Description in English...'}"></textarea></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>${t('product-price')}</label><input type="number" id="ap-price"></div>
-        <div class="form-group"><label>${t('product-old-price')}</label><input type="number" id="ap-old-price"></div>
+        <div class="form-group"><label>${t('product-price')} (${t('currency')})</label><input type="number" id="ap-price" placeholder="0"></div>
+        <div class="form-group"><label>${t('product-old-price')} (${t('currency')})</label><input type="number" id="ap-old-price" placeholder="${currentLang==='ar'?'اختياري':'optional'}"></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label>${t('product-category')}</label>
-          <select id="ap-category"><option value="swords">سيوف</option><option value="figures">مجسمات</option><option value="posters">بوسترات</option><option value="tshirts">ملابس</option><option value="accessories">إكسسوارات</option><option value="manga">مانجا</option></select>
+          <select id="ap-category">${CATEGORIES.map(c => `<option value="${c.id}">${c.icon} ${c.name[currentLang]}</option>`).join('')}</select>
         </div>
-        <div class="form-group"><label>${t('product-stock')}</label><input type="number" id="ap-stock" value="10"></div>
+        <div class="form-group"><label>${t('product-stock')}</label><input type="number" id="ap-stock" value="10" min="0"></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label>${t('product-image')}</label><input type="text" id="ap-image" placeholder="https://..."></div>
-        <div class="form-group"><label>${t('product-sizes')}</label><input type="text" id="ap-sizes" placeholder="S, M, L"></div>
+        <div class="form-group"><label>${t('product-sizes')}</label><input type="text" id="ap-sizes" placeholder="S, M, L, XL"></div>
       </div>
       <div class="form-group"><label>${t('product-badge')}</label>
-        <select id="ap-badge"><option value="">بدون</option><option value="bestseller">الأكثر مبيعاً</option><option value="new">جديد</option><option value="sale">عرض</option></select>
+        <select id="ap-badge"><option value="">${currentLang==='ar'?'بدون':'None'}</option><option value="bestseller">${currentLang==='ar'?'الأكثر مبيعاً':'Best Seller'}</option><option value="new">${currentLang==='ar'?'جديد':'New'}</option><option value="sale">${currentLang==='ar'?'عرض':'Sale'}</option></select>
       </div>
-      <button class="btn btn-primary" onclick="adminAddProduct()">✓ ${t('add-product')}</button>
+      <button class="btn btn-primary" onclick="adminAddProduct()">➕ ${t('add-product')}</button>
     </div>
-    <div class="section-title"><h3>${t('admin-products')}</h3></div>
+    <div class="section-title"><h3>${t('admin-products')} (${PRODUCTS.length})</h3></div>
+    <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <input type="text" id="admin-search-input" placeholder="${currentLang==='ar'?'🔍 ابحث عن منتج...':'🔍 Search products...'}"
+        oninput="adminSearchProducts()" style="flex:1;min-width:200px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-input);color:#fff;font-family:inherit;">
+    </div>
     <div style="overflow-x:auto;">
     <table class="admin-table">
-      <thead><tr><th>#</th><th>${currentLang==='ar'?'المنتج':'Product'}</th><th>${t('product-category')}</th><th>${t('product-price')}</th><th>${t('product-stock')}</th><th>${t('sold')}</th><th></th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>${currentLang==='ar'?'المنتج':'Product'}</th><th>${t('product-category')}</th><th>${t('product-price')}</th><th>${t('product-stock')}</th><th>${t('sold')}</th><th colspan="4">${currentLang==='ar'?'إجراءات':'Actions'}</th></tr></thead>
       <tbody>${PRODUCTS.map(p => `<tr>
-        <td>${p.id}</td><td>${p.title[currentLang]}</td><td>${p.category}</td><td>${formatPrice(p.price)}</td><td>${p.stock}</td><td>${p.sold}</td>
-        <td><button class="btn sm outline" onclick="adminEditProduct(${p.id})">${currentLang==='ar'?'تعديل':'Edit'}</button></td>
-        <td><button class="btn sm btn-danger" onclick="adminDeleteProduct(${p.id})">${t('delete-product')}</button></td>
+        <td>${p.id}</td><td>${p.title[currentLang]}</td><td>${p.category}</td><td style="color:var(--neon-green);font-weight:bold;">${formatPrice(p.price)}</td><td>${p.stock}</td><td>${p.sold}</td>
+        <td><button class="btn sm outline" onclick="adminEditProduct(${p.id})">✏️</button></td>
+        <td><button class="btn sm secondary" onclick="adminDuplicateProduct(${p.id})">📋</button></td>
+        <td><button class="btn sm btn-danger" onclick="adminDeleteProduct(${p.id})">🗑️</button></td>
+        <td><a href="product-detail.html?id=${p.id}" target="_blank" class="btn sm secondary" style="text-decoration:none;">👁️</a></td>
       </tr>`).join('')}</tbody>
     </table></div>`;
 }
@@ -718,6 +726,101 @@ function adminSaveProduct(id) {
   localStorage.setItem('anime-products', JSON.stringify(PRODUCTS));
   showToast(currentLang==='ar'?'تم حفظ التعديلات':'Changes saved');
   showAdminTab('products');
+}
+
+function adminAddProduct() {
+  const newId = PRODUCTS.length > 0 ? Math.max(...PRODUCTS.map(p => p.id)) + 1 : 1;
+  const nameAr = document.getElementById('ap-name-ar')?.value?.trim() || '';
+  const nameEn = document.getElementById('ap-name-en')?.value?.trim() || '';
+  const descAr = document.getElementById('ap-desc-ar')?.value?.trim() || '';
+  const descEn = document.getElementById('ap-desc-en')?.value?.trim() || '';
+  const price = parseFloat(document.getElementById('ap-price')?.value) || 0;
+  const oldPrice = parseFloat(document.getElementById('ap-old-price')?.value) || null;
+  const category = document.getElementById('ap-category')?.value || 'swords';
+  const stock = parseInt(document.getElementById('ap-stock')?.value) || 0;
+  const image = document.getElementById('ap-image')?.value?.trim() || '';
+  const sizes = (document.getElementById('ap-sizes')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+  const badge = document.getElementById('ap-badge')?.value || null;
+
+  if (!nameAr || !nameEn) { showToast(currentLang==='ar'?'أدخل اسم المنتج بالعربي والإنجليزي':'Enter product name in AR & EN'); return; }
+  if (!price) { showToast(currentLang==='ar'?'أدخل السعر':'Enter price'); return; }
+
+  const product = {
+    id: newId,
+    title: { ar: nameAr, en: nameEn },
+    description: { ar: descAr, en: descEn },
+    price, oldPrice, category, stock,
+    images: [image || 'https://via.placeholder.com/400x300/1a162e/a855f7?text=Anime+Product'],
+    sizes, badge,
+    rating: 4.5, reviews: 0, sold: 0
+  };
+
+  PRODUCTS.push(product);
+  localStorage.setItem('anime-products', JSON.stringify(PRODUCTS));
+  showToast(currentLang==='ar'?'تم إضافة المنتج بنجاح!':'Product added successfully!');
+
+  // Clear form
+  ['ap-name-ar','ap-name-en','ap-desc-ar','ap-desc-en','ap-price','ap-old-price','ap-image','ap-sizes'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('ap-stock').value = '10';
+
+  showAdminTab('products');
+}
+
+function adminDeleteProduct(id) {
+  if (!confirm(currentLang==='ar'?'هل أنت متأكد من حذف هذا المنتج؟':'Are you sure you want to delete this product?')) return;
+  const idx = PRODUCTS.findIndex(p => p.id === id);
+  if (idx > -1) {
+    PRODUCTS.splice(idx, 1);
+    localStorage.setItem('anime-products', JSON.stringify(PRODUCTS));
+    showToast(currentLang==='ar'?'تم حذف المنتج':'Product deleted');
+    showAdminTab('products');
+  }
+}
+
+function adminDuplicateProduct(id) {
+  const p = getProductById(id); if (!p) return;
+  const newId = PRODUCTS.length > 0 ? Math.max(...PRODUCTS.map(x => x.id)) + 1 : 1;
+  const dup = JSON.parse(JSON.stringify(p));
+  dup.id = newId;
+  dup.title.ar = dup.title.ar + ' (نسخة)';
+  dup.title.en = dup.title.en + ' (copy)';
+  dup.sold = 0; dup.reviews = 0;
+  PRODUCTS.push(dup);
+  localStorage.setItem('anime-products', JSON.stringify(PRODUCTS));
+  showToast(currentLang==='ar'?'تم نسخ المنتج!':'Product duplicated!');
+  showAdminTab('products');
+}
+
+function adminSearchProducts() {
+  const query = document.getElementById('admin-search-input')?.value?.trim().toLowerCase() || '';
+  const tc = document.getElementById('admin-tab-content');
+  if (!tc) return;
+  const filtered = query ? PRODUCTS.filter(p =>
+    p.title.ar.toLowerCase().includes(query) ||
+    p.title.en.toLowerCase().includes(query) ||
+    p.category.toLowerCase().includes(query)
+  ) : PRODUCTS;
+
+  tc.innerHTML = `
+    <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <input type="text" id="admin-search-input" placeholder="${currentLang==='ar'?'ابحث عن منتج...':'Search products...'}" value="${query}"
+        oninput="adminSearchProducts()" style="flex:1;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-input);color:#fff;font-family:inherit;">
+      <button class="btn sm" onclick="showAdminTab('products')">${currentLang==='ar'?'عرض الكل':'Show All'}</button>
+      <span style="color:var(--text-dim);font-size:0.85rem;">${filtered.length} ${t('results')}</span>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="admin-table">
+      <thead><tr><th>#</th><th>${currentLang==='ar'?'المنتج':'Product'}</th><th>${t('product-category')}</th><th>${t('product-price')}</th><th>${t('product-stock')}</th><th>${t('sold')}</th><th colspan="4">${currentLang==='ar'?'إجراءات':'Actions'}</th></tr></thead>
+      <tbody>${filtered.map(p => `<tr>
+        <td>${p.id}</td><td>${p.title[currentLang]}</td><td>${p.category}</td><td>${formatPrice(p.price)}</td><td>${p.stock}</td><td>${p.sold}</td>
+        <td><button class="btn sm outline" onclick="adminEditProduct(${p.id})">✏️ ${currentLang==='ar'?'تعديل':'Edit'}</button></td>
+        <td><button class="btn sm secondary" onclick="adminDuplicateProduct(${p.id})">📋 ${currentLang==='ar'?'نسخ':'Copy'}</button></td>
+        <td><button class="btn sm btn-danger" onclick="adminDeleteProduct(${p.id})">🗑️ ${t('delete-product')}</button></td>
+        <td><a href="product-detail.html?id=${p.id}" target="_blank" class="btn sm secondary" style="text-decoration:none;">👁️</a></td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
 }
 
 function adminLogout() { localStorage.removeItem('anime-admin'); window.location.href = 'admin-login.html'; }

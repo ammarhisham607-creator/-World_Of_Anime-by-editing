@@ -129,6 +129,66 @@
           </div>
         </div>
       </div>`;
+
+    // Attach form submit handler
+    const form = document.getElementById('checkoutForm');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('checkout-name')?.value?.trim();
+        const phone = document.getElementById('checkout-phone')?.value?.trim();
+        const address = document.getElementById('checkout-address')?.value?.trim();
+        const city = document.getElementById('checkout-city')?.value?.trim();
+        const notes = document.getElementById('checkout-notes')?.value?.trim() || '';
+
+        if (!name || !phone || !address || !city) {
+          showToast(t('fill-all-fields'));
+          return;
+        }
+
+        const cart = getCart();
+        const total = getCartTotal();
+        const user = JSON.parse(localStorage.getItem('anime-user') || 'null');
+        const orderId = 'ORD-' + Date.now().toString(36).toUpperCase();
+
+        const order = {
+          id: orderId,
+          userId: user?.id || null,
+          email: user?.email || '',
+          name, phone, address, city, notes,
+          items: cart.map(item => {
+            const p = getProductById(item.id);
+            return { id: item.id, title: p?.title || {}, price: p?.price || 0, quantity: item.quantity, size: item.size };
+          }),
+          total,
+          status: 'pending',
+          created_at: new Date().toISOString()
+        };
+
+        // Save order
+        const orders = getOrders();
+        orders.push(order);
+        saveOrders(orders);
+
+        // Clear cart
+        saveCart([]);
+
+        // Show success
+        main.innerHTML = `
+          <div style="text-align:center;padding:60px 20px;">
+            <div style="font-size:4rem;margin-bottom:16px;">✅</div>
+            <h2 style="color:var(--neon-green);margin-bottom:12px;">${t('order-success')}</h2>
+            <p style="color:var(--text-dim);margin-bottom:8px;">${t('order-success-desc')}</p>
+            <p style="color:var(--neon-yellow);font-weight:bold;font-size:1.1rem;margin-bottom:24px;">${t('order-id')}: ${orderId}</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+              <a href="index.html" class="btn">${t('back-to-home')}</a>
+              <a href="products.html" class="btn secondary">${t('continue-shopping')}</a>
+            </div>
+          </div>`;
+
+        showToast(t('order-success'));
+      });
+    }
   }
 
   window.renderCheckout = renderCheckout;
