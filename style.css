@@ -207,6 +207,75 @@
   color: #1e293b;
   border-color: #e2e8f0;
 }
+/* Light theme: kill ALL white text on light backgrounds */
+[data-theme="light"] .product-title,
+[data-theme="light"] .hero-banner h1,
+[data-theme="light"] .hero-banner p,
+[data-theme="light"] .section-title,
+[data-theme="light"] .btn.secondary,
+[data-theme="light"] .cart-item-title,
+[data-theme="light"] .order-items-list,
+[data-theme="light"] .wishlist-card-title,
+[data-theme="light"] .product-card-body span,
+[data-theme="light"] .product-card-body a h3,
+[data-theme="light"] p,
+[data-theme="light"] span,
+[data-theme="light"] label,
+[data-theme="light"] td,
+[data-theme="light"] th,
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] li a,
+[data-theme="light"] .admin-table td,
+[data-theme="light"] .admin-table th,
+[data-theme="light"] #admin-content,
+[data-theme="light"] #profile-content,
+[data-theme="light"] .header-top,
+[data-theme="light"] .header-nav {
+  color: #1e293b;
+}
+/* Keep white text on colored buttons only */
+[data-theme="light"] .btn,
+[data-theme="light"] .btn-primary,
+[data-theme="light"] .btn-danger,
+[data-theme="light"] .btn.outline:hover,
+[data-theme="light"] .btn.secondary:hover,
+[data-theme="light"] .btn.secondary.active,
+[data-theme="light"] .product-card-actions .btn,
+[data-theme="light"] .hero-actions .btn,
+[data-theme="light"] .cart-count,
+[data-theme="light"] .category-item:hover,
+[data-theme="light"] .category-item.active,
+[data-theme="light"] .lang-btn.active,
+[data-theme="light"] .product-badge {
+  color: #fff;
+}
+[data-theme="light"] .btn.outline {
+  color: #0891b2;
+}
+[data-theme="light"] .btn.secondary {
+  color: #1e293b;
+  background: rgba(241,245,249,0.9);
+  border-color: #e2e8f0;
+}
+
+/* Dark theme: kill any black text */
+:root {
+  --text-safe: #e0f2fe;
+}
+body, p, span, label, td, th, h1, h2, h3, h4, h5, h6, li, a, div {
+  color: var(--text);
+}
+/* Override for elements that need specific colors */
+.btn, .btn-primary, .btn-danger { color: #fff; }
+.btn.outline { color: var(--primary); }
+.btn.secondary { color: #ddd; }
+.product-badge.bestseller { color: #1a1a2e; }
+.product-badge.new { color: #1a1a2e; }
+.product-badge.sale { color: #1a1a2e; }
+a { color: inherit; }
 
 /* Neon Decorations - subtle green-blue glow */
 @keyframes neonPulse {
@@ -834,8 +903,8 @@ header {
   color: #fff;
   text-transform: uppercase;
 }
-.product-badge.bestseller { background: var(--neon-yellow); color: #000; }
-.product-badge.new { background: var(--neon-green); color: #000; }
+.product-badge.bestseller { background: var(--neon-yellow); color: #1a1a2e; }
+.product-badge.new { background: var(--neon-green); color: #1a1a2e; }
 .product-badge.sale { background: var(--neon-red); }
 .product-card-body {
   padding: 12px;
@@ -964,6 +1033,63 @@ header {
   background: rgba(6,182,212,0.2);
   border-color: var(--primary);
   color: #fff;
+}
+
+/* Button Interactivity - all buttons */
+button, .btn, input[type="submit"], .header-btn, .lang-btn, .theme-toggle-btn,
+.product-wishlist-btn, .category-item, .admin-table button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+button:active, .btn:active, .header-btn:active, .lang-btn:active {
+  transform: scale(0.95);
+}
+.header-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6,182,212,0.3);
+  border-color: var(--primary);
+}
+.lang-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(6,182,212,0.2);
+}
+.theme-toggle-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 2px 8px rgba(6,182,212,0.3);
+}
+.product-wishlist-btn:hover {
+  transform: scale(1.2);
+}
+.product-wishlist-btn:active {
+  transform: scale(0.9);
+}
+.admin-table button {
+  transition: all 0.15s ease;
+}
+.admin-table button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(6,182,212,0.3);
+}
+.category-item:active {
+  transform: scale(0.97);
+}
+/* Ripple effect on click */
+@keyframes btnRipple {
+  0% { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  transform: scale(0);
+  pointer-events: none;
+}
+.btn:active::after {
+  animation: btnRipple 0.4s ease-out;
 }
 
 /* ==============================
