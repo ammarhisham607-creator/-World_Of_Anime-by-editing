@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="The%20Web%20Logo.png">
+  <link rel="apple-touch-icon" href="The%20Web%20Logo.png">
+  <meta property="og:title" content="المنتجات - World Of Anime">
+  <meta property="og:description" content="تصفح كل منتجات الأنمي: سيوف كاتانا، مجسمات، ملابس، بوسترات">
+  <meta property="og:image" content="The%20Web%20Logo.png">
+  <meta property="og:type" content="website">
   <title>المنتجات - World Of Anime | سيوف، مجسمات، ملابس، بوسترات</title>
   <meta name="description" content="تصفح كل منتجات الأنمي: سيوف كاتانا، مجسمات، ملابس، بوسترات، إكسسوارات ومانجا">
   <link rel="stylesheet" href="style.css">
@@ -23,12 +29,12 @@
     <div class="search-bar">
       <select id="search-category">
         <option value="" data-i18n="all-categories">كل التصنيفات</option>
-        <option value="swords">⚔️ السيوف</option>
-        <option value="figures">🗿 المجسمات</option>
-        <option value="posters">🖼️ البوسترات</option>
-        <option value="tshirts">👕 الملابس</option>
-        <option value="accessories">💎 الإكسسوارات</option>
-        <option value="manga">📚 المانجا</option>
+        <option value="swords" data-i18n="cat-swords">⚔️ السيوف</option>
+        <option value="figures" data-i18n="cat-figures">🗿 المجسمات</option>
+        <option value="posters" data-i18n="cat-posters">🖼️ البوسترات</option>
+        <option value="tshirts" data-i18n="cat-clothing">👕 الملابس</option>
+        <option value="accessories" data-i18n="cat-accessories">💎 الإكسسوارات</option>
+        <option value="manga" data-i18n="cat-manga">📚 المانجا</option>
       </select>
       <input type="text" id="search-input" data-i18n-placeholder="search-placeholder" placeholder="ابحث عن منتجات أنمي...">
       <button id="search-btn">🔍</button>
@@ -43,9 +49,9 @@
     <ul class="nav-links">
       <li><a href="index.html" data-i18n="nav-home">الرئيسية</a></li>
       <li><a href="products.html" class="active" data-i18n="nav-products">المنتجات</a></li>
-      <li><a href="products.html?category=swords">⚔️ السيوف</a></li>
-      <li><a href="products.html?category=figures">🗿 المجسمات</a></li>
-      <li><a href="products.html?category=manga">📚 المانجا</a></li>
+      <li><a href="products.html?category=swords" data-i18n="nav-swords">⚔️ السيوف</a></li>
+      <li><a href="products.html?category=figures" data-i18n="nav-figures">🗿 المجسمات</a></li>
+      <li><a href="products.html?category=manga" data-i18n="nav-manga">📚 المانجا</a></li>
       <li><a href="login.html" class="nav-login-link" data-i18n="nav-login">تسجيل الدخول</a></li>
       <li><a href="#" class="nav-logout-link" style="display:none;" onclick="event.preventDefault();logout()" data-i18n="nav-logout">تسجيل الخروج</a></li>
     </ul>

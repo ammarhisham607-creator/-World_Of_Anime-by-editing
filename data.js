@@ -143,7 +143,7 @@ ${langInstruction}مهمتك: الإجابة على أي سؤال بأسلوب �
 // 6. واجهة غوجو ساتورو (رسم SVG مباشر ومضمون 100%)
 // ==========================================================================
 
-const GOJO_AVATAR = `<img src="1273638.png" alt="Gojo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+const GOJO_AVATAR = `<img src="The%20Boot%20Logo.png" alt="Gojo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
 
 function initGojoBotUI() {
   if (document.getElementById('gojo-bot-widget')) return;

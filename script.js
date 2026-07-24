@@ -418,13 +418,46 @@ function initSignupForm() {
     const pw = document.getElementById('signup-password')?.value||'';
     if (!name||!email||!pw) { if(msg){msg.style.color='var(--neon-red)';msg.textContent=t('fill-all-fields');} return; }
     if (msg) { msg.style.color = 'var(--neon-yellow)'; msg.textContent=t('signup-loading'); }
-    if (!supabaseClient) { localStorage.setItem('anime-user',JSON.stringify({email,name})); if(msg){msg.style.color='var(--neon-green)';msg.textContent=t('signup-success');} setTimeout(()=>window.location.href='index.html',800); return; }
+    if (!supabaseClient) {
+      localStorage.setItem('anime-user',JSON.stringify({email,name}));
+      registerUserToList({email,name,joinedAt:new Date().toISOString()});
+      if(msg){msg.style.color='var(--neon-green)';msg.textContent=t('signup-success');} setTimeout(()=>window.location.href='index.html',800); return;
+    }
     try {
       const {data,error} = await supabaseClient.auth.signUp({email,password:pw,options:{data:{full_name:name}}});
       if (error) { if(msg){msg.style.color='var(--neon-red)';msg.textContent=error.message;} }
-      else { localStorage.setItem('anime-user',JSON.stringify({email,name,id:data.user?.id})); if(msg){msg.style.color='var(--neon-green)';msg.textContent=t('signup-success');} setTimeout(()=>window.location.href='index.html',800); }
+      else {
+        localStorage.setItem('anime-user',JSON.stringify({email,name,id:data.user?.id}));
+        registerUserToList({email,name,id:data.user?.id,joinedAt:new Date().toISOString()});
+        if(msg){msg.style.color='var(--neon-green)';msg.textContent=t('signup-success');} setTimeout(()=>window.location.href='index.html',800);
+      }
     } catch { if(msg){msg.style.color='var(--neon-red)';msg.textContent=t('generic-error');} }
   });
+}
+
+// Track users in a list for admin management
+function getUsersList() { try { return JSON.parse(localStorage.getItem('anime-users-list') || '[]'); } catch { return []; } }
+function saveUsersList(list) { localStorage.setItem('anime-users-list', JSON.stringify(list)); }
+function registerUserToList(user) {
+  const list = getUsersList();
+  const exists = list.findIndex(u => u.email === user.email);
+  if (exists >= 0) { list[exists] = { ...list[exists], ...user }; }
+  else { list.push(user); }
+  saveUsersList(list);
+}
+function adminDeleteUser(email) {
+  if (!confirm(currentLang==='ar'?`هل أنت متأكد من حذف حساب ${email}؟`:`Are you sure you want to delete ${email}?`)) return;
+  let list = getUsersList();
+  list = list.filter(u => u.email !== email);
+  saveUsersList(list);
+  showToast(currentLang==='ar'?'تم حذف الحساب':'Account deleted');
+  showAdminTab('users');
+}
+function adminDeleteAllUsers() {
+  if (!confirm(currentLang==='ar'?'هل أنت متأكد من حذف جميع حسابات اليوزرز؟':'Are you sure you want to delete all user accounts?')) return;
+  saveUsersList([]);
+  showToast(currentLang==='ar'?'تم حذف جميع الحسابات':'All accounts deleted');
+  showAdminTab('users');
 }
 
 // ==============================
@@ -549,8 +582,8 @@ function renderAdminDashboard() {
   const totalOrders = orders.length;
 
   // Tab buttons
-  const tabAr = { products: 'المنتجات', orders: 'الطلبات', settings: 'الإعدادات' };
-  const tabEn = { products: 'Products', orders: 'Orders', settings: 'Settings' };
+  const tabAr = { products: 'المنتجات', orders: 'الطلبات', users: '👥 اليوزرز', settings: 'الإعدادات' };
+  const tabEn = { products: 'Products', orders: 'Orders', users: '👥 Users', settings: 'Settings' };
   const tabLabels = currentLang === 'ar' ? tabAr : tabEn;
 
   c.innerHTML = `
@@ -563,6 +596,7 @@ function renderAdminDashboard() {
     <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
       <button class="btn sm" onclick="showAdminTab('products')">${tabLabels.products}</button>
       <button class="btn sm secondary" onclick="showAdminTab('orders')">${tabLabels.orders}</button>
+      <button class="btn sm outline" onclick="showAdminTab('users')">${tabLabels.users}</button>
       <button class="btn sm outline" onclick="showAdminTab('settings')">${tabLabels.settings}</button>
     </div>
     <div id="admin-tab-content"></div>`;
@@ -573,7 +607,46 @@ function showAdminTab(tab) {
   const tc = document.getElementById('admin-tab-content'); if (!tc) return;
   if (tab === 'products') renderAdminProducts(tc);
   else if (tab === 'orders') renderAdminOrders(tc);
+  else if (tab === 'users') renderAdminUsers(tc);
   else if (tab === 'settings') renderAdminSettings(tc);
+}
+
+function renderAdminUsers(tc) {
+  const users = getUsersList();
+  const usersRows = users.length === 0
+    ? `<tr><td colspan="4" style="text-align:center;color:var(--text-dim);padding:20px;">${currentLang==='ar'?'لا توجد حسابات يوزرز':'No user accounts yet'}</td></tr>`
+    : users.map((u, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${u.name || '-'}</td>
+        <td>${u.email}</td>
+        <td>
+          <button class="btn sm btn-danger" onclick="adminDeleteUser('${u.email}')">🗑️ ${t('delete-product')}</button>
+        </td>
+      </tr>
+    `).join('');
+
+  tc.innerHTML = `
+    <div class="admin-form">
+      <h3>${currentLang==='ar'?'👥 إدارة حسابات اليوزرز':'👥 User Account Management'}</h3>
+      <p style="color:var(--text-dim);margin-bottom:12px;">${currentLang==='ar'?`إجمالي الحسابات: ${users.length}`:`Total accounts: ${users.length}`}</p>
+      <div style="margin-bottom:12px;">
+        <button class="btn sm btn-danger" onclick="adminDeleteAllUsers()">🗑️ ${currentLang==='ar'?'حذف جميع الحسابات':'Delete All Accounts'}</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="padding:10px;text-align:start;">#</th>
+              <th style="padding:10px;text-align:start;">${currentLang==='ar'?'الاسم':'Name'}</th>
+              <th style="padding:10px;text-align:start;">${currentLang==='ar'?'البريد الإلكتروني':'Email'}</th>
+              <th style="padding:10px;text-align:start;">${currentLang==='ar'?'إجراء':'Action'}</th>
+            </tr>
+          </thead>
+          <tbody>${usersRows}</tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
 function renderAdminProducts(tc) {
@@ -979,4 +1052,52 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartCount();
   addWhatsAppBtn();
   initSakuraPetals();
+  initMouseFollower();
 });
+
+// ==============================
+// MOUSE FOLLOWER
+// ==============================
+function initMouseFollower() {
+  // Don't show on touch devices
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
+  const follower = document.createElement('div');
+  follower.className = 'mouse-follower';
+  document.body.appendChild(follower);
+
+  let mouseX = 0, mouseY = 0;
+  let followerX = 0, followerY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  // Smooth follow animation
+  function animate() {
+    followerX += (mouseX - followerX) * 0.15;
+    followerY += (mouseY - followerY) * 0.15;
+    follower.style.left = followerX + 'px';
+    follower.style.top = followerY + 'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Hover effect on interactive elements
+  const hoverTargets = 'a, button, .btn, input, textarea, select, .product-card, .category-item, .lang-btn, .theme-toggle-btn';
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(hoverTargets)) {
+      follower.classList.add('hover');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(hoverTargets)) {
+      follower.classList.remove('hover');
+    }
+  });
+
+  // Hide when mouse leaves window
+  document.addEventListener('mouseleave', () => { follower.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { follower.style.opacity = '0.8'; });
+}
