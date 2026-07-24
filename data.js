@@ -1,5 +1,5 @@
 /* ==========================================================================
-   World Of Anime - بيانات المنتجات + Supabase + Gojo Satoru AI Assistant (Gemini)
+   World Of Anime - بيانات المنتجات + Supabase + Gojo Satoru AI Assistant (OpenRouter)
    ========================================================================== */
 
 // 1. Supabase Config
@@ -11,8 +11,8 @@ if (typeof supabase !== 'undefined') {
   supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
-// 🔑 مفتاح Gemini API الخاص بك مفعل ومربوط جاهز
-const GEMINI_API_KEY = "AQ.Ab8RN6LZdKHgdLiTjzVJeRb4q4wivjvyGuU5vpVqLvSLy0S1sA";
+// 🔑 مفتاح OpenRouter API الخاص بك
+const OPENROUTER_API_KEY = "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";
 
 // 2. التصنيفات
 const CATEGORIES = [
@@ -128,13 +128,14 @@ async function saveOrder(orderData) {
 }
 
 // ==========================================================================
-// 5. محرك الذكاء الاصطناعي الخارق للمعلم غوجو ساتورو (Gemini AI Integration)
+// 5. محرك الذكاء الاصطناعي الخارق للمعلم غوجو ساتورو (OpenRouter AI Integration)
 // ==========================================================================
 
 async function getGojoReply(userQuery) {
   const queryLower = userQuery.toLowerCase().trim();
+  const currentLang = typeof window.currentLang !== 'undefined' ? window.currentLang : 'ar';
 
-  // أ) فحص سريع وسريع جداً لو كان السؤال عن منتج موجود في المتجر
+  // أ) فحص سريع لو كان السؤال عن منتج موجود في المتجر
   let currentProducts = PRODUCTS;
   try {
     const localProds = localStorage.getItem('anime-products');
@@ -156,46 +157,49 @@ async function getGojoReply(userQuery) {
     return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matchedProduct.price} ${curr}\n📦 الحالة: ${matchedProduct.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
   }
 
-  // ب) إرسال أي سؤال آخر في العالم إلى Gemini AI ليجيب بشخصية غوجو ساتورو
-  if (!GEMINI_API_KEY) {
+  // ب) إرسال أي سؤال إلى OpenRouter AI ليجيب بشخصية غوجو ساتورو
+  if (!OPENROUTER_API_KEY) {
     return currentLang === 'en'
       ? "Oops! Cursed energy seems down, contact us on WhatsApp: 01149243249 💬"
       : "يوه! يبدو أن الطاقة الملعونة منقطعة، يمكنك مراسلتنا عبر الواتساب: 01149243249 💬";
   }
 
   try {
-    const langInstruction = currentLang === 'en'
-      ? 'Respond in English. '
-      : 'أجب بالعربية/المصرية. ';
+    const langInstruction = currentLang === 'en' ? 'Respond in English. ' : 'أجب بالعربية/المصرية. ';
     const systemPrompt = `أنت المعلم غوجو ساتورو (Gojo Satoru) من أنمي Jujutsu Kaisen، المساعد الذكي والمرح لمتجر World Of Anime.
 شخصيتك: واثق جداً بنفسك، مرح، تستخدم عبارات مثل "أنا الأقوى" و"Six Eyes"، وتتحدث باللهجة المصرية/العربية الودودة الممتعة.
 ${langInstruction}مهمتك: الإجابة على أي سؤال في العالم يقدمه المستخدم (سواء كان في الأنمي، علوم، تاريخ، برمجة، دراسة، ثقافة، أو دردشة عادية) بأسلوب غوجو ساتورو، وإذا كان السؤال متعلقاً بالشحن والدفع بالمتجر: الشحن خلال 2-5 أيام والدفع عند الاستلام والدعم عبر واتساب 01149243249. أجب باختصار ووضوح وبطريقة ممتعة.`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "HTTP-Referer": window.location.href,
+        "X-Title": "World Of Anime",
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { text: `${systemPrompt}\n\nسؤال المستخدم: ${userQuery}` }
-            ]
-          }
+        model: "meta-llama/llama-3.3-70b-instruct:free",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userQuery }
         ]
       })
     });
 
     const data = await response.json();
-    if (data.candidates && data.candidates[0].content.parts[0].text) {
-      return data.candidates[0].content.parts[0].text;
+    if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+      return data.choices[0].message.content;
+    } else if (data.error) {
+      console.error("OpenRouter Error Detail:", data.error);
+      return `يوه! حدث خطأ من السيرفر: ${data.error.message || 'المفتاح يتطلب تفعيل'}`;
     } else {
       return currentLang === 'en'
         ? "Yo! My Six Eyes encountered a small glitch, ask again champ! 😎✨"
         : "يوه! عين السادسة (Six Eyes) واجهت تشويشاً بسيطاً، أعد سؤالك مرة أخرى يا بطل! 😎✨";
     }
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("OpenRouter Error:", error);
     return currentLang === 'en'
       ? "The Infinity technique seems to have glitched, try again and I'll answer right away! 😎⚡"
       : "يبدو أن تقنية العزلة تعطلت لحظياً، جرب السؤال مرة أخرى وسأجيبك فوراً! 😎⚡";
@@ -240,6 +244,7 @@ const GOJO_SVG_AVATAR = `
 function initGojoBotUI() {
   if (document.getElementById('gojo-bot-widget')) return;
 
+  const currentLang = typeof window.currentLang !== 'undefined' ? window.currentLang : 'ar';
   const isEn = currentLang === 'en';
   const welcomeMsg = isEn
     ? 'Welcome to <b>World Of Anime</b>! 👋<br>I am <b>Gojo Satoru</b> 😎.. Ask me anything about anime, products, or studies and I\'ll answer with my super intelligence!'
