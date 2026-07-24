@@ -114,6 +114,7 @@ async function saveReview(productId, review) {
 async function saveOrder(orderData) {
   const orders = JSON.parse(localStorage.getItem('anime-orders') || '[]');
   orderData.id = orderData.id || 'ORD-' + Date.now();
+  orderData.status = 'pending';
   orders.push(orderData);
   localStorage.setItem('anime-orders', JSON.stringify(orders));
 
@@ -184,6 +185,12 @@ const GOJO_KNOWLEDGE_BASE = [
     ]
   },
   {
+    keywords: ['خصم', 'عروض', 'عرض', 'رخيص', 'تخفيض'],
+    replies: [
+      '🏷️ جميع عروضنا مميزة وخاصة بـ World Of Anime! انظر المنتجات المكتوب عليها شارة "عرض" للاستفادة منها الآن ⚡'
+    ]
+  },
+  {
     keywords: ['مانجا', 'كتب', 'كتاب', 'مجلد', 'روايات', 'manga'],
     replies: [
       '📚 مجلدات المانجا المترجمة بالعربية متوفرة بوضوح ممتاز وطباعة غلاف فاخرة!'
@@ -207,15 +214,23 @@ function getGojoReply(userQuery) {
     }
   }
 
-  const matchedProducts = PRODUCTS.filter(p => 
-    p.title.ar.toLowerCase().includes(query) || 
-    p.title.en.toLowerCase().includes(query) ||
-    query.split(' ').some(word => word.length > 2 && p.title.ar.toLowerCase().includes(word))
-  );
+  // البحث في المنتجات المحدثة بالـ localStorage أولاً
+  let currentProducts = PRODUCTS;
+  try {
+    const localProds = localStorage.getItem('anime-products');
+    if (localProds) currentProducts = JSON.parse(localProds);
+  } catch (e) {}
+
+  const matchedProducts = currentProducts.filter(p => {
+    const titleAr = p.title && p.title.ar ? p.title.ar.toLowerCase() : '';
+    const titleEn = p.title && p.title.en ? p.title.en.toLowerCase() : '';
+    return titleAr.includes(query) || titleEn.includes(query) || query.split(' ').some(word => word.length > 2 && titleAr.includes(word));
+  });
 
   if (matchedProducts.length > 0) {
     const p = matchedProducts[0];
-    return `بحثت لك بعيني السحرية ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${p.title.ar}\n💰 السعر: ${p.price} ج.م\n📦 الحالة: ${p.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
+    const title = p.title && p.title.ar ? p.title.ar : p.title;
+    return `بحثت لك بعيني السحرية ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${p.price} ج.م\n📦 الحالة: ${p.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
   }
 
   const fallbackReplies = [
@@ -228,10 +243,9 @@ function getGojoReply(userQuery) {
 }
 
 // ==========================================================================
-// 6. واجهة غوجو ساتورو (رسم SVG مباشر ومضمون 100% لغوجو و Six Eyes)
+// 6. واجهة غوجو ساتورو (SVG Avatar)
 // ==========================================================================
 
-// كود SVG احترافي يرسم وجه غوجو ساتورو مع النظارة والنظرة الزرقاء المتوهجة
 const GOJO_SVG_AVATAR = `
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;border-radius:50%;background:#090514;">
   <!-- الشعر الأبيض -->
@@ -252,13 +266,13 @@ const GOJO_SVG_AVATAR = `
   <circle cx="62" cy="52" r="4" fill="#0284c7"/>
   <circle cx="62" cy="52" r="2" fill="#ffffff"/>
 
-  <!-- عصابة العين السوداء المرفوعة جزئياً / النظارة -->
+  <!-- النظارة/العصابة -->
   <path d="M20,40 Q50,30 80,40 L82,48 Q50,38 18,48 Z" fill="#1e1b4b"/>
   
-  <!-- الابتسامة الشقية -->
+  <!-- الابتسامة -->
   <path d="M42,68 Q50,75 58,68" stroke="#a855f7" stroke-width="2.5" fill="none" stroke-linecap="round"/>
   
-  <!-- إطار التوهج البنفسجي Hollow Purple -->
+  <!-- إطار Hollow Purple -->
   <circle cx="50" cy="50" r="48" fill="none" stroke="#a855f7" stroke-width="3" opacity="0.8"/>
 </svg>
 `;
@@ -269,15 +283,15 @@ function initGojoBotUI() {
   const botContainer = document.createElement('div');
   botContainer.id = 'gojo-bot-widget';
   botContainer.innerHTML = `
-    <!-- زر فتح البوت بأيقونة SVG غوجو -->
+    <!-- زر فتح البوت -->
     <button id="gojo-bot-toggle" title="المعلم غوجو ساتورو" style="position:fixed;bottom:85px;right:20px;z-index:9999;width:65px;height:65px;border-radius:50%;background:#0f0c1b;border:2px solid #a855f7;box-shadow:0 0 20px rgba(168,85,247,0.8);cursor:pointer;padding:0;overflow:hidden;transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
       ${GOJO_SVG_AVATAR}
     </button>
     
-    <!-- نافذة الشات بستايل Hollow Purple -->
+    <!-- نافذة الشات -->
     <div id="gojo-bot-window" style="display:none;position:fixed;bottom:160px;right:20px;z-index:10000;width:330px;height:450px;background:#0d0a1a;border:1px solid #a855f7;border-radius:20px;box-shadow:0 0 30px rgba(168,85,247,0.35);flex-direction:column;overflow:hidden;font-family:sans-serif;">
       
-      <!-- هيدر الشات مع صورة غوجو المباشرة -->
+      <!-- الهيدر -->
       <div style="background:linear-gradient(135deg, #1e1b3a, #0f0c1b);padding:14px;color:#fff;font-weight:bold;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(168,85,247,0.3);">
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="width:40px;height:40px;border-radius:50%;border:2px solid #a855f7;overflow:hidden;box-shadow:0 0 10px #a855f7;flex-shrink:0;">
@@ -291,14 +305,14 @@ function initGojoBotUI() {
         <button id="gojo-bot-close" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.3rem;">✕</button>
       </div>
 
-      <!-- منطقة الرسائل -->
+      <!-- الرسائل -->
       <div id="gojo-bot-messages" style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;font-size:0.88rem;background:#131024;">
         <div style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);padding:10px 14px;border-radius:14px;align-self:flex-start;color:#f3e8ff;line-height:1.5;">
           أهلاً بك في <b>World Of Anime</b>! 👋<br>أنا المعلم <b>غوجو ساتورو</b> 😎.. اسألني، دردش معايا، أو استفسر عن أي منتج وسأساعدك فوراً!
         </div>
       </div>
 
-      <!-- خانة الكتابة والإرسال -->
+      <!-- الإدخال -->
       <div style="padding:10px;display:flex;gap:8px;background:#0f0c1b;border-top:1px solid rgba(168,85,247,0.2);">
         <input type="text" id="gojo-bot-input" placeholder="اسأل المعلم غوجو..." style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(168,85,247,0.3);background:#1a162e;color:#fff;font-size:0.85rem;outline:none;" />
         <button id="gojo-bot-send" style="background:linear-gradient(135deg, #a855f7, #6366f1);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;box-shadow:0 0 10px rgba(168,85,247,0.4);">إرسال</button>

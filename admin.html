@@ -12,6 +12,13 @@
     h1, h2, h3 { color: #a855f7; margin-top: 0; }
     .container { max-width: 1200px; margin: 0 auto; }
     .card { background: #1a162e; padding: 20px; border-radius: 12px; border: 1px solid rgba(168,85,247,0.3); margin-bottom: 25px; }
+    
+    /* Stats Section */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .stat-card { background: #18132b; border: 1px solid rgba(168,85,247,0.4); padding: 16px; border-radius: 12px; text-align: center; }
+    .stat-card h3 { margin: 0 0 8px 0; font-size: 0.9rem; color: #c084fc; }
+    .stat-card .value { font-size: 1.6rem; font-weight: bold; color: #4ade80; }
+
     .form-group { margin-bottom: 14px; }
     label { display: block; margin-bottom: 5px; color: #c084fc; font-weight: bold; font-size: 0.9rem; }
     input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #332d56; background: #0d0a1a; color: #fff; outline: none; font-family: inherit; }
@@ -66,6 +73,26 @@
     <a href="#" class="nav-btn" onclick="localStorage.removeItem('anime-admin');window.location.href='admin-login.html';" style="background:#ef4444;">🚪 تسجيل خروج</a>
   </div>
   <h1>⚡ لوحة تحكم الإدارة - World Of Anime</h1>
+
+  <!-- ==================== 0. كروت الإحصائيات ==================== -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>إجمالي الطلبات</h3>
+      <div class="value" id="stat-total-orders">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>إجمالي المبيعات</h3>
+      <div class="value" id="stat-total-sales">0 ج.م</div>
+    </div>
+    <div class="stat-card">
+      <h3>عدد المنتجات</h3>
+      <div class="value" id="stat-total-products">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>منتجات نفذت</h3>
+      <div class="value" style="color:#ef4444;" id="stat-out-stock">0</div>
+    </div>
+  </div>
 
   <!-- ==================== 1. إضافة منتج جديد ==================== -->
   <div class="card">
@@ -157,6 +184,7 @@
             <th>العنوان</th>
             <th>المنتجات</th>
             <th>الإجمالي</th>
+            <th>الحالة</th>
             <th>التاريخ</th>
             <th>إجراءات</th>
           </tr>
@@ -168,8 +196,11 @@
 
   <!-- ==================== 3. جدول المنتجات ==================== -->
   <div class="card">
-    <h2>📋 المنتجات الحالية بالمتجر <span id="products-count" style="font-size:0.8rem; color:#aaa;"></span></h2>
-    <div style="overflow-x:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <h2>📋 المنتجات الحالية بالمتجر <span id="products-count" style="font-size:0.8rem; color:#aaa;"></span></h2>
+      <input type="text" id="search-product" placeholder="🔍 بحث عن منتج..." oninput="loadAdminProducts()" style="max-width:250px; padding:6px 12px;">
+    </div>
+    <div style="overflow-x:auto; margin-top: 10px;">
       <table>
         <thead>
           <tr>
@@ -285,6 +316,7 @@
     initProductsStorage();
     loadAdminOrders();
     loadAdminProducts();
+    updateDashboardStats();
   });
 
   // 📦 تهيئة المنتجات
@@ -304,6 +336,20 @@
     return typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
   }
 
+  // 📊 إحصائياتDashboard
+  function updateDashboardStats() {
+    const orders = JSON.parse(localStorage.getItem('anime-orders') || '[]');
+    const products = getStoredProducts();
+
+    const totalSales = orders.reduce((sum, o) => sum + parseFloat(o.totalPrice || o.total || 0), 0);
+    const outOfStock = products.filter(p => p.stock === 0).length;
+
+    document.getElementById('stat-total-orders').textContent = orders.length;
+    document.getElementById('stat-total-sales').textContent = totalSales.toLocaleString() + ' ج.م';
+    document.getElementById('stat-total-products').textContent = products.length;
+    document.getElementById('stat-out-stock').textContent = outOfStock;
+  }
+
   // ═══════════════════════════════════════
   // 🛒 عرض الطلبات
   // ═══════════════════════════════════════
@@ -316,7 +362,7 @@
     if (countEl) countEl.textContent = `(${orders.length} طلب)`;
 
     if (orders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px; color:#aaa;">لا توجد طلبات جديدة 📭</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 24px; color:#aaa;">لا توجد طلبات جديدة 📭</td></tr>';
       return;
     }
 
@@ -331,6 +377,9 @@
         itemsSummary = ord.productName || ord.name || 'طلب متنوع';
       }
 
+      const status = ord.status || 'pending';
+      const statusBadge = status === 'completed' ? '🟢 مكتمل' : status === 'shipped' ? '🔵 تم الشحن' : '🟡 قيد الانتظار';
+
       tbody.innerHTML += `
         <tr>
           <td><b>#${ord.id || index + 1001}</b></td>
@@ -339,10 +388,23 @@
           <td>${ord.address || '—'}</td>
           <td style="font-size:0.82rem; color:#e9d5ff;">${itemsSummary}</td>
           <td><b style="color:#4ade80;">${ord.totalPrice || ord.total || 0} ج.م</b></td>
+          <td>
+            <select onchange="changeOrderStatus(${index}, this.value)" style="padding:2px 6px; font-size:0.8rem;">
+              <option value="pending" ${status==='pending'?'selected':''}>⏳ قيد الانتظار</option>
+              <option value="shipped" ${status==='shipped'?'selected':''}>🚚 تم الشحن</option>
+              <option value="completed" ${status==='completed'?'selected':''}>✅ مكتمل</option>
+            </select>
+          </td>
           <td style="font-size:0.82rem;">${new Date(ord.createdAt || ord.created_at || Date.now()).toLocaleDateString('ar-EG')}</td>
           <td><button class="btn-danger" onclick="deleteOrder(${index})">🗑️ حذف</button></td>
         </tr>`;
     });
+  }
+
+  function changeOrderStatus(index, newStatus) {
+    let orders = JSON.parse(localStorage.getItem('anime-orders') || '[]');
+    orders[index].status = newStatus;
+    localStorage.setItem('anime-orders', JSON.stringify(orders));
   }
 
   function deleteOrder(index) {
@@ -351,6 +413,7 @@
       orders.splice(index, 1);
       localStorage.setItem('anime-orders', JSON.stringify(orders));
       loadAdminOrders();
+      updateDashboardStats();
     }
   }
 
@@ -360,10 +423,20 @@
   function loadAdminProducts() {
     const tbody = document.getElementById('products-admin-body');
     const countEl = document.getElementById('products-count');
+    const searchQuery = document.getElementById('search-product')?.value.toLowerCase().trim() || '';
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    const products = getStoredProducts();
+    let products = getStoredProducts();
+
+    if (searchQuery) {
+      products = products.filter(p => {
+        const titleAr = (p.title && p.title.ar) ? p.title.ar.toLowerCase() : '';
+        const titleEn = (p.title && p.title.en) ? p.title.en.toLowerCase() : '';
+        return titleAr.includes(searchQuery) || titleEn.includes(searchQuery);
+      });
+    }
+
     if (countEl) countEl.textContent = `(${products.length} منتج)`;
 
     if (products && products.length > 0) {
@@ -389,7 +462,7 @@
           </tr>`;
       });
     } else {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:24px; color:#aaa;">لا توجد منتجات — أضف منتج جديد من الأعلى 🚀</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:24px; color:#aaa;">لا توجد منتجات مطابقة 🚀</td></tr>';
     }
   }
 
@@ -449,6 +522,7 @@
 
       localStorage.setItem('anime-products', JSON.stringify(products));
       loadAdminProducts();
+      updateDashboardStats();
       closeEditModal();
       alert('✅ تم حفظ التعديلات بنجاح!');
     };
@@ -471,6 +545,7 @@
       products.splice(index, 1);
       localStorage.setItem('anime-products', JSON.stringify(products));
       loadAdminProducts();
+      updateDashboardStats();
     }
   }
 
@@ -510,6 +585,7 @@
       localStorage.setItem('anime-products', JSON.stringify(products));
 
       loadAdminProducts();
+      updateDashboardStats();
       alert('🎉 تم إضافة المنتج بنجاح وظهر بالمتجر!');
       document.getElementById('add-product-form').reset();
     };
