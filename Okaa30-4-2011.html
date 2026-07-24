@@ -11,11 +11,12 @@
     (function checkAdminAccess() {
       const isAuth = sessionStorage.getItem('admin_authenticated');
       if (!isAuth) {
-        const password = prompt("أدخل كلمة سر الإدارة للوصول:");
-        if (password === '1/11/2012') {
+        const email = prompt("أدخل البريد الإلكتروني للأدمن:");
+        const password = prompt("أدخل كلمة سر الإدارة:");
+        if (email === 'ammarhisham607@gmail.com' && password === '1/11/2012') {
           sessionStorage.setItem('admin_authenticated', 'true');
         } else {
-          alert("كلمة السر خاطئة!");
+          alert("بيانات الدخول غير صحيحة!");
           window.location.href = "index.html";
         }
       }

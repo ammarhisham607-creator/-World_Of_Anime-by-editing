@@ -510,7 +510,7 @@ function logout() { localStorage.removeItem('anime-user'); if(supabaseClient) su
 // ==============================
 // ADMIN
 // ==============================
-const ADMIN_USER = 'admin';
+const ADMIN_USER = 'ammarhisham607@gmail.com';
 const ADMIN_PASS = '1/11/2012';
 
 function initAdminLogin() {
