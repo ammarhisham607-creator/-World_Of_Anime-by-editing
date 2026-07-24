@@ -36,11 +36,11 @@ const translations = {
     'signup-title': '✨ إنشاء حساب جديد', 'signup-desc': 'انضم لمجتمع الأنمي وابدأ رحلتك.',
     'name-label': 'الاسم', 'name-placeholder': 'أدخل اسمك', 'signup-button': 'إنشاء الحساب',
     'login-link': 'لديك حساب بالفعل؟ تسجيل الدخول',
-    'signup-success': 'تم إنشاء الحساب بنجاح!', 'signup-loading': 'جاري إنشاء الحساب...',
+    'signup-success': 'تم إنشاء الحساب بنجاح! تحقق من بريدك لو طُلب منك تأكيد الحساب.', 'signup-loading': 'جاري إنشاء الحساب...',
     'fill-all-fields': 'يرجى ملء جميع الحقول', 'generic-error': 'حدث خطأ غير متوقع',
     'profile-title': 'حسابي', 'orders-title': 'طلباتي', 'no-orders': 'لا توجد طلبات بعد',
     'logout': 'تسجيل الخروج', 'order-pending': 'قيد التجهيز',
-    'order-shipped': 'في الطريق', 'order-delivered': 'تم التوصيل', 'order-cancelled': 'ملغي',
+    'order-shipped': 'في الطريق', 'order-delivered': 'تم التوصيل',
     'wishlist-title': 'المفضلة', 'wishlist-empty': 'قائمة المفضلة فاضية',
     'move-to-cart': 'نقل للسلة', 'remove': 'حذف',
     'search-placeholder': 'ابحث عن منتجات أنمي...', 'all-categories': 'كل التصنيفات',
@@ -64,14 +64,13 @@ const translations = {
     'product-price': 'السعر', 'product-old-price': 'السعر القديم', 'product-category': 'التصنيف',
     'product-stock': 'المخزون', 'product-image': 'رابط الصورة', 'product-sizes': 'المقاسات',
     'product-badge': 'الشارة', 'save': 'حفظ',
-    'hero-main-title': '🚀 أضخم متجر لمنتجات ومجسمات الأنمي',
-    'hero-subtitle': 'شحن سريع لجميع المحافظات • دفع عند الاستلام • خامات عالية الجودة',
-    'sidebar-categories': '📁 التصنيفات', 'cat-all': '🔥 الكل',
-    'cat-swords': '⚔️ سيوف', 'cat-figures': '🗿 مجسمات', 'cat-posters': '🖼️ بوسترات',
-    'cat-clothing': '👕 ملابس', 'cat-accessories': '💎 إكسسوارات', 'cat-manga': '📚 مانجا',
-    'all-products': '🔥 جميع المنتجات المتاحة',
-    'nav-swords': '⚔️ السيوف', 'nav-figures': '🗿 المجسمات', 'nav-manga': '📚 المانجا',
-    'search-results': '🔍 نتائج البحث عن'
+    // مفاتيح جديدة لنظام الأدمن/المستخدمين الحقيقي
+    'not-admin-msg': 'هذا الحساب مش أدمن، مينفعش تدخل لوحة التحكم بيه.',
+    'admin-orders': 'إدارة الطلبات', 'update-status': 'تحديث', 'order-status-col': 'الحالة',
+    'login-required-review': 'لازم تسجل دخول الأول عشان تقدر تكتب تقييم',
+    'edit-profile': 'تعديل بياناتي', 'save-changes': 'حفظ التعديلات',
+    'profile-updated': 'تم حفظ بياناتك بنجاح!', 'my-name': 'الاسم', 'my-phone': 'رقم الهاتف',
+    'checking-session': 'جاري التحقق...'
   },
   en: {
     'nav-home': 'Home', 'nav-products': 'Products', 'nav-login': 'Login',
@@ -102,11 +101,11 @@ const translations = {
     'signup-title': '✨ Create New Account', 'signup-desc': 'Join the anime community.',
     'name-label': 'Name', 'name-placeholder': 'Enter your name', 'signup-button': 'Create Account',
     'login-link': 'Already have an account? Login',
-    'signup-success': 'Account created successfully!', 'signup-loading': 'Creating account...',
+    'signup-success': 'Account created successfully! Check your email if confirmation is required.', 'signup-loading': 'Creating account...',
     'fill-all-fields': 'Please fill in all fields', 'generic-error': 'An unexpected error occurred',
     'profile-title': 'My Account', 'orders-title': 'My Orders', 'no-orders': 'No orders yet',
     'logout': 'Logout', 'order-pending': 'Processing',
-    'order-shipped': 'On the way', 'order-delivered': 'Delivered', 'order-cancelled': 'Cancelled',
+    'order-shipped': 'On the way', 'order-delivered': 'Delivered',
     'wishlist-title': 'Wishlist', 'wishlist-empty': 'Your wishlist is empty',
     'move-to-cart': 'Move to Cart', 'remove': 'Remove',
     'search-placeholder': 'Search anime products...', 'all-categories': 'All Categories',
@@ -130,14 +129,12 @@ const translations = {
     'product-price': 'Price', 'product-old-price': 'Old Price', 'product-category': 'Category',
     'product-stock': 'Stock', 'product-image': 'Image URL', 'product-sizes': 'Sizes',
     'product-badge': 'Badge', 'save': 'Save',
-    'hero-main-title': '🚀 The Biggest Anime Store',
-    'hero-subtitle': 'Fast shipping nationwide • Cash on delivery • Premium quality',
-    'sidebar-categories': '📁 Categories', 'cat-all': '🔥 All',
-    'cat-swords': '⚔️ Swords', 'cat-figures': '🗿 Figures', 'cat-posters': '🖼️ Posters',
-    'cat-clothing': '👕 Clothing', 'cat-accessories': '💎 Accessories', 'cat-manga': '📚 Manga',
-    'all-products': '🔥 All Products',
-    'nav-swords': '⚔️ Swords', 'nav-figures': '🗿 Figures', 'nav-manga': '📚 Manga',
-    'search-results': '🔍 Search results for'
+    'not-admin-msg': 'This account is not an admin account.',
+    'admin-orders': 'Manage Orders', 'update-status': 'Update', 'order-status-col': 'Status',
+    'login-required-review': 'You must be logged in to write a review',
+    'edit-profile': 'Edit My Info', 'save-changes': 'Save Changes',
+    'profile-updated': 'Your info was saved successfully!', 'my-name': 'Name', 'my-phone': 'Phone',
+    'checking-session': 'Checking...'
   }
 };
 
@@ -173,17 +170,7 @@ function getStars(r) {
   return '★'.repeat(f) + (h ? '½' : '') + '☆'.repeat(e);
 }
 function formatPrice(p) { return p.toLocaleString() + ' ' + t('currency'); }
-function getProductById(id) {
-  let p = PRODUCTS.find(p => p.id === parseInt(id));
-  if (!p) {
-    // Check localStorage for admin-added products
-    try {
-      const saved = JSON.parse(localStorage.getItem('anime-products') || '[]');
-      p = saved.find(p => p.id === parseInt(id));
-    } catch {}
-  }
-  return p;
-}
+function getProductById(id) { return PRODUCTS.find(p => p.id === parseInt(id)); }
 function getUrlParam(n) { return new URLSearchParams(window.location.search).get(n); }
 
 // ==============================
@@ -244,19 +231,6 @@ function toggleWishlist(id) {
   });
 }
 function isWishlisted(id) { return getWishlist().includes(id); }
-
-// ==============================
-// REVIEWS (localStorage fallback)
-// ==============================
-function getReviewsLocal(productId) {
-  try { return JSON.parse(localStorage.getItem('anime-reviews-' + productId)) || []; } catch { return []; }
-}
-function saveReviewLocal(productId, review) {
-  const reviews = getReviewsLocal(productId);
-  reviews.unshift(review);
-  localStorage.setItem('anime-reviews-' + productId, JSON.stringify(reviews));
-  showToast(t('review-added'));
-}
 
 // ==============================
 // PRODUCT CARD
@@ -331,7 +305,7 @@ function initSearch() {
 }
 
 // ==============================
-// AUTH
+// AUTH (تسجيل الدخول/إنشاء الحساب الحقيقي عبر Supabase Auth)
 // ==============================
 function initLoginForm() {
   const form = document.getElementById('loginForm'); if (!form) return;
@@ -341,12 +315,18 @@ function initLoginForm() {
     const email = document.getElementById('email')?.value || '';
     const pw = document.getElementById('password')?.value || '';
     if (msg) { msg.style.color = 'var(--neon-yellow)'; msg.textContent = t('login-loading'); }
-    if (!supabaseClient) { localStorage.setItem('anime-user', JSON.stringify({email,name:'User'})); window.location.href='index.html'; return; }
+    if (!supabaseClient) { if (msg) { msg.style.color = 'var(--neon-red)'; msg.textContent = t('generic-error'); } return; }
     try {
-      const {data,error} = await supabaseClient.auth.signInWithPassword({email,password:pw});
-      if (error) { if(msg){msg.style.color='var(--neon-red)';msg.textContent=error.message;} }
-      else { localStorage.setItem('anime-user',JSON.stringify({email,name:data.user.user_metadata?.full_name||'User',id:data.user.id})); if(msg){msg.style.color='var(--neon-green)';msg.textContent=t('login-success');} setTimeout(()=>window.location.href='index.html',800); }
-    } catch { if(msg){msg.style.color='var(--neon-red)';msg.textContent=t('generic-error');} }
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pw });
+      if (error) {
+        if (msg) { msg.style.color = 'var(--neon-red)'; msg.textContent = error.message; }
+      } else {
+        if (msg) { msg.style.color = 'var(--neon-green)'; msg.textContent = t('login-success'); }
+        setTimeout(() => window.location.href = 'index.html', 800);
+      }
+    } catch {
+      if (msg) { msg.style.color = 'var(--neon-red)'; msg.textContent = t('generic-error'); }
+    }
   });
 }
 
@@ -355,145 +335,175 @@ function initSignupForm() {
   const msg = document.getElementById('message');
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    const name = document.getElementById('signup-name')?.value||'';
-    const email = document.getElementById('signup-email')?.value||'';
-    const pw = document.getElementById('signup-password')?.value||'';
-    if (!name||!email||!pw) { if(msg){msg.style.color='var(--neon-red)';msg.textContent=t('fill-all-fields');} return; }
-    if (msg) { msg.style.color = 'var(--neon-yellow)'; msg.textContent=t('signup-loading'); }
-    if (!supabaseClient) { localStorage.setItem('anime-user',JSON.stringify({email,name})); if(msg){msg.style.color='var(--neon-green)';msg.textContent=t('signup-success');} setTimeout(()=>window.location.href='index.html',800); return; }
+    const name = document.getElementById('signup-name')?.value || '';
+    const email = document.getElementById('signup-email')?.value || '';
+    const pw = document.getElementById('signup-password')?.value || '';
+    if (!name || !email || !pw) { if (msg) { msg.style.color = 'var(--neon-red)'; msg.textContent = t('fill-all-fields'); } return; }
+    if (msg) { msg.style.color = 'var(--neon-yellow)'; msg.textContent = t('signup-loading'); }
+    if (!supabaseClient) { if (msg) { msg.style.color = 'var(--neon-red)'; msg.textContent = t('generic-error'); } return; }
     try {
-      const {data,error} = await supabaseClient.auth.signUp({email,password:pw,options:{data:{full_name:name}}});
-      if (error) { if(msg){msg.style.color='var(--neon-red)';msg.textContent=error.message;} }
-      else { localStorage.setItem('anime-user',JSON.stringify({email,name,id:data.user?.id})); if(msg){msg.style.color='var(--neon-green)';msg.textContent=t('signup-success');} setTimeout(()=>window.location.href='index.html',800); }
-    } catch { if(msg){msg.style.color='var(--neon-red)';msg.textContent=t('generic-error');} }
-  });
-}
-
-// ==============================
-// CHECKOUT (form handler is now inside renderCheckout in checkout.html)
-// ==============================
-function initCheckout() {
-  // No-op: checkout.html's renderCheckout() attaches the submit handler
-  // This avoids double-attachment issues on language switch
-}
-
-// ==============================
-// PROFILE
-// ==============================
-function initProfile() {
-  const c = document.getElementById('profile-content'); if (!c) return;
-  const user = JSON.parse(localStorage.getItem('anime-user')||'null');
-  const orders = JSON.parse(localStorage.getItem('anime-orders')||'[]');
-  if (!user) { c.innerHTML = `<p style="text-align:center;color:var(--text-dim);padding:32px;">${t('login-desc')}</p><div style="text-align:center;"><a href="login.html" class="btn">${t('login-button')}</a></div>`; return; }
-  const sm = {pending:'order-pending',shipped:'order-shipped',delivered:'order-delivered',cancelled:'order-cancelled'};
-  const userOrders = orders.filter(o => o.userId === user.id || o.email === user.email);
-  const allOrders = orders; // show all orders for the logged-in user
-
-  c.innerHTML = `
-    <div class="profile-header">
-      <div class="profile-avatar">${(user.name||'U')[0].toUpperCase()}</div>
-      <div class="profile-info"><h2>${user.name||'User'}</h2><p>${user.email||''}</p></div>
-    </div>
-
-    <!-- Edit Profile -->
-    <div class="admin-form" style="margin-bottom:20px;">
-      <h3>${currentLang==='ar'?'تعديل البيانات الشخصية':'Edit Profile'}</h3>
-      <div class="form-row">
-        <div class="form-group"><label>${t('name-label')}</label><input type="text" id="profile-name" value="${user.name||''}"></div>
-        <div class="form-group"><label>${t('email-label')}</label><input type="email" id="profile-email" value="${user.email||''}"></div>
-      </div>
-      <div class="form-group"><label>${currentLang==='ar'?'كلمة مرور جديدة (اختياري)':'New Password (optional)'}</label><input type="password" id="profile-new-pw" placeholder="${currentLang==='ar'?'اتركها فارغة إذا لا تريد تغييرها':'Leave empty to keep current'}"></div>
-      <button class="btn btn-primary" onclick="saveProfile()">✓ ${t('save')}</button>
-    </div>
-
-    <!-- Orders -->
-    <div class="section-title"><h2>${t('orders-title')}</h2></div>
-    ${allOrders.length===0?`<p style="color:var(--text-dim);text-align:center;padding:24px;">${t('no-orders')}</p>`
-    :`<div class="orders-list">${allOrders.map(o=>`<div class="order-card"><div class="order-header"><span class="order-id">${o.id||'ORD'}</span><span class="order-status ${o.status||'pending'}">${t(sm[o.status]||'order-pending')}</span></div><div class="order-items-list">${(o.items||[]).map(i=>`${i.title?.[currentLang]||i.title||'Product'} × ${i.quantity}`).join('<br>')}</div><div class="order-total"><span>${t('total')}</span><span style="color:var(--neon-yellow);">${formatPrice(o.total)}</span></div></div>`).join('')}</div>`}
-
-    <!-- Actions -->
-    <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-danger" onclick="logout()">${t('logout')}</button>
-      <button class="btn outline" onclick="deleteAccount()">${currentLang==='ar'?'حذف الحساب':'Delete Account'}</button>
-    </div>`;
-}
-
-function saveProfile() {
-  const user = JSON.parse(localStorage.getItem('anime-user')||'null');
-  if (!user) return;
-  const name = document.getElementById('profile-name')?.value?.trim();
-  const email = document.getElementById('profile-email')?.value?.trim();
-  const newPw = document.getElementById('profile-new-pw')?.value;
-  if (name) user.name = name;
-  if (email) user.email = email;
-  localStorage.setItem('anime-user', JSON.stringify(user));
-  if (newPw && newPw.length >= 4 && supabaseClient) {
-    supabaseClient.auth.updateUser({ password: newPw }).then(() => {
-      showToast(currentLang==='ar'?'تم حفظ التعديلات':'Profile updated');
-      initProfile();
-    }).catch(() => {
-      showToast(currentLang==='ar'?'خطأ في تغيير كلمة المرور':'Password change failed');
-    });
-  } else {
-    showToast(currentLang==='ar'?'تم حفظ التعديلات':'Profile updated');
-    initProfile();
-  }
-}
-
-function deleteAccount() {
-  if (!confirm(currentLang==='ar'?'هل أنت متأكد من حذف حسابك؟ سيتم حذف كل بياناتك.':'Are you sure you want to delete your account? All your data will be removed.')) return;
-  localStorage.removeItem('anime-user');
-  if (supabaseClient) supabaseClient.auth.signOut();
-  window.location.href = 'index.html';
-}
-
-function logout() { localStorage.removeItem('anime-user'); if(supabaseClient) supabaseClient.auth.signOut(); window.location.href='index.html'; }
-
-// ==============================
-// ADMIN
-// ==============================
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'admin123';
-
-function initAdminLogin() {
-  const form = document.getElementById('adminLoginForm'); if (!form) return;
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const u = document.getElementById('admin-user')?.value;
-    const p = document.getElementById('admin-pass')?.value;
-    const storedPass = localStorage.getItem('anime-admin-pass');
-    const validPass = storedPass || ADMIN_PASS;
-    if (u === ADMIN_USER && p === validPass) {
-      localStorage.setItem('anime-admin', 'true');
-      window.location.href = 'admin.html';
-    } else {
-      const msg = document.getElementById('admin-msg');
-      if (msg) { msg.textContent = currentLang === 'ar' ? 'بيانات غير صحيحة' : 'Invalid credentials'; msg.style.color = 'var(--neon-red)'; }
+      const { data, error } = await supabaseClient.auth.signUp({ email, password: pw, options: { data: { full_name: name } } });
+      if (error) {
+        if (msg) { msg.style.color = 'var(--neon-red)'; msg.textContent = error.message; }
+      } else {
+        if (msg) { msg.style.color = 'var(--neon-green)'; msg.textContent = t('signup-success'); }
+        setTimeout(() => window.location.href = 'index.html', 1200);
+      }
+    } catch {
+      if (msg) { msg.style.color = 'var(--neon-red)'; msg.textContent = t('generic-error'); }
     }
   });
 }
 
-function initAdminDashboard() {
-  const c = document.getElementById('admin-content'); if (!c) return;
-  if (localStorage.getItem('anime-admin') !== 'true') { window.location.href = 'admin-login.html'; return; }
-  renderAdminDashboard();
+// ==============================
+// CHECKOUT
+// ==============================
+function initCheckout() {
+  const form = document.getElementById('checkoutForm'); if (!form) return;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const cart = getCart(); if (!cart.length) return;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    const order = {
+      name: document.getElementById('checkout-name')?.value,
+      phone: document.getElementById('checkout-phone')?.value,
+      address: document.getElementById('checkout-address')?.value,
+      city: document.getElementById('checkout-city')?.value,
+      notes: document.getElementById('checkout-notes')?.value || '',
+      items: cart.map(i => { const p = getProductById(i.id); return { id: i.id, title: p?.title, price: p?.price, quantity: i.quantity, size: i.size }; }),
+      total: getCartTotal(), status: 'pending'
+    };
+
+    // تحديث المخزون والمبيعات في قاعدة البيانات (بيظهر لكل الزوار مش بس عندك)
+    for (const i of cart) { await dbDecrementStock(i.id, i.quantity); }
+
+    const savedOrder = await saveOrder(order);
+    localStorage.setItem('anime-cart', '[]'); updateCartCount();
+
+    const main = document.querySelector('main');
+    if (main) main.innerHTML = `<div style="text-align:center;padding:48px 16px;">
+      <div style="font-size:4rem;margin-bottom:16px;">🎉</div>
+      <h2 style="margin-bottom:10px;">${t('order-success')}</h2>
+      <p style="color:var(--text-dim);margin-bottom:20px;">${t('order-success-desc')}</p>
+      <p style="margin-bottom:24px;font-weight:800;">${t('order-id')}: <span style="color:var(--neon-yellow);">${savedOrder.id}</span></p>
+      <a href="index.html" class="btn">${t('back-to-home')}</a></div>`;
+  });
 }
 
-function getOrders() { try { return JSON.parse(localStorage.getItem('anime-orders') || '[]'); } catch { return []; } }
-function saveOrders(orders) { localStorage.setItem('anime-orders', JSON.stringify(orders)); }
+// ==============================
+// PROFILE (بيانات حقيقية من Supabase + تعديل ذاتي)
+// ==============================
+async function initProfile() {
+  const c = document.getElementById('profile-content'); if (!c) return;
+  c.innerHTML = `<p style="text-align:center;color:var(--text-dim);padding:32px;">${t('checking-session')}</p>`;
 
-function renderAdminDashboard() {
+  const user = await getCurrentUser();
+  if (!user) {
+    c.innerHTML = `<p style="text-align:center;color:var(--text-dim);padding:32px;">${t('login-desc')}</p><div style="text-align:center;"><a href="login.html" class="btn">${t('login-button')}</a></div>`;
+    return;
+  }
+
+  const orders = await getMyOrders();
+  const sm = { pending: 'order-pending', shipped: 'order-shipped', delivered: 'order-delivered' };
+
+  c.innerHTML = `
+    <div class="profile-header">
+      <div class="profile-avatar">${(user.name || user.email || 'U')[0].toUpperCase()}</div>
+      <div class="profile-info"><h2>${user.name || user.email}</h2><p>${user.email || ''}</p></div>
+    </div>
+
+    <div class="section-title"><h2>${t('edit-profile')}</h2></div>
+    <div class="checkout-form" style="margin-bottom:30px;">
+      <div class="form-row">
+        <div class="form-group"><label>${t('my-name')}</label><input type="text" id="profile-name" value="${(user.name || '').replace(/"/g,'&quot;')}"></div>
+        <div class="form-group"><label>${t('my-phone')}</label><input type="tel" id="profile-phone" value="${(user.phone || '').replace(/"/g,'&quot;')}"></div>
+      </div>
+      <button class="btn" onclick="handleSaveProfile()">${t('save-changes')}</button>
+      <p id="profile-save-msg" style="margin-top:8px;font-weight:700;"></p>
+    </div>
+
+    <div class="section-title"><h2>${t('orders-title')}</h2></div>
+    ${orders.length === 0
+      ? `<p style="color:var(--text-dim);text-align:center;padding:24px;">${t('no-orders')}</p>`
+      : `<div class="orders-list">${orders.map(o => `
+          <div class="order-card">
+            <div class="order-header">
+              <span class="order-id">${o.id || 'ORD'}</span>
+              <span class="order-status ${o.status || 'pending'}">${t(sm[o.status] || 'order-pending')}</span>
+            </div>
+            <div class="order-items-list">${(o.items || []).map(i => `${i.title?.[currentLang] || i.title} × ${i.quantity}`).join('<br>')}</div>
+            <div class="order-total"><span>${t('total')}</span><span style="color:var(--neon-yellow);">${formatPrice(o.total)}</span></div>
+          </div>`).join('')}</div>`}
+
+    <div style="margin-top:20px;"><button class="btn btn-danger" onclick="logout()">${t('logout')}</button></div>`;
+}
+
+async function handleSaveProfile() {
+  const name = document.getElementById('profile-name')?.value?.trim() || '';
+  const phone = document.getElementById('profile-phone')?.value?.trim() || '';
+  const msg = document.getElementById('profile-save-msg');
+  const ok = await updateMyProfile({ name, phone });
+  if (msg) {
+    msg.style.color = ok ? 'var(--neon-green)' : 'var(--neon-red)';
+    msg.textContent = ok ? t('profile-updated') : t('generic-error');
+  }
+  if (ok) initProfile();
+}
+
+async function logout() {
+  await logoutUser();
+  window.location.href = 'index.html';
+}
+
+// ==============================
+// ADMIN (دخول حقيقي بالإيميل/الباسورد + صلاحية role=admin محمية من السيرفر)
+// ==============================
+function initAdminLogin() {
+  const form = document.getElementById('adminLoginForm'); if (!form) return;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('admin-user')?.value;
+    const pw = document.getElementById('admin-pass')?.value;
+    const msg = document.getElementById('admin-msg');
+    if (!supabaseClient) { if (msg) { msg.textContent = t('generic-error'); msg.style.color = 'var(--neon-red)'; } return; }
+
+    try {
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pw });
+      if (error) { if (msg) { msg.textContent = error.message; msg.style.color = 'var(--neon-red)'; } return; }
+
+      const isAdmin = await isAdminUser();
+      if (!isAdmin) {
+        if (msg) { msg.textContent = t('not-admin-msg'); msg.style.color = 'var(--neon-red)'; }
+        await logoutUser();
+        return;
+      }
+      window.location.href = 'admin.html';
+    } catch {
+      if (msg) { msg.textContent = t('generic-error'); msg.style.color = 'var(--neon-red)'; }
+    }
+  });
+}
+
+async function initAdminDashboard() {
   const c = document.getElementById('admin-content'); if (!c) return;
+  const isAdmin = await isAdminUser();
+  if (!isAdmin) { window.location.href = 'admin-login.html'; return; }
+  await renderAdminDashboard();
+}
+
+async function renderAdminDashboard() {
+  const c = document.getElementById('admin-content'); if (!c) return;
+  const isAdmin = await isAdminUser();
+  if (!isAdmin) return;
+
+  const allOrders = await getAllOrders();
   const totalProducts = PRODUCTS.length;
   const totalSold = PRODUCTS.reduce((s, p) => s + p.sold, 0);
   const totalRevenue = PRODUCTS.reduce((s, p) => s + p.price * p.sold, 0);
-  const orders = getOrders();
-  const totalOrders = orders.length;
-
-  // Tab buttons
-  const tabAr = { products: 'المنتجات', orders: 'الطلبات', settings: 'الإعدادات' };
-  const tabEn = { products: 'Products', orders: 'Orders', settings: 'Settings' };
-  const tabLabels = currentLang === 'ar' ? tabAr : tabEn;
+  const totalOrders = allOrders.length;
+  const sm = { pending: 'order-pending', shipped: 'order-shipped', delivered: 'order-delivered' };
 
   c.innerHTML = `
     <div class="admin-stats">
@@ -502,24 +512,7 @@ function renderAdminDashboard() {
       <div class="stat-card"><div class="stat-value">${formatPrice(totalRevenue)}</div><div class="stat-label">${t('total-revenue')}</div></div>
       <div class="stat-card"><div class="stat-value">${totalOrders}</div><div class="stat-label">${t('total-orders')}</div></div>
     </div>
-    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
-      <button class="btn sm" onclick="showAdminTab('products')">${tabLabels.products}</button>
-      <button class="btn sm secondary" onclick="showAdminTab('orders')">${tabLabels.orders}</button>
-      <button class="btn sm outline" onclick="showAdminTab('settings')">${tabLabels.settings}</button>
-    </div>
-    <div id="admin-tab-content"></div>`;
-  showAdminTab('products');
-}
 
-function showAdminTab(tab) {
-  const tc = document.getElementById('admin-tab-content'); if (!tc) return;
-  if (tab === 'products') renderAdminProducts(tc);
-  else if (tab === 'orders') renderAdminOrders(tc);
-  else if (tab === 'settings') renderAdminSettings(tc);
-}
-
-function renderAdminProducts(tc) {
-  tc.innerHTML = `
     <div class="admin-form" id="add-product-form">
       <h3>${t('add-product')}</h3>
       <div class="form-row">
@@ -549,178 +542,72 @@ function renderAdminProducts(tc) {
       </div>
       <button class="btn btn-primary" onclick="adminAddProduct()">✓ ${t('add-product')}</button>
     </div>
+
     <div class="section-title"><h3>${t('admin-products')}</h3></div>
     <div style="overflow-x:auto;">
     <table class="admin-table">
-      <thead><tr><th>#</th><th>${currentLang==='ar'?'المنتج':'Product'}</th><th>${t('product-category')}</th><th>${t('product-price')}</th><th>${t('product-stock')}</th><th>${t('sold')}</th><th></th><th></th></tr></thead>
-      <tbody>${PRODUCTS.map(p => `<tr>
-        <td>${p.id}</td><td>${p.title[currentLang]}</td><td>${p.category}</td><td>${formatPrice(p.price)}</td><td>${p.stock}</td><td>${p.sold}</td>
-        <td><button class="btn sm outline" onclick="adminEditProduct(${p.id})">${currentLang==='ar'?'تعديل':'Edit'}</button></td>
-        <td><button class="btn sm btn-danger" onclick="adminDeleteProduct(${p.id})">${t('delete-product')}</button></td>
-      </tr>`).join('')}</tbody>
-    </table></div>`;
-}
+      <thead><tr><th>#</th><th>المنتج</th><th>${t('product-category')}</th><th>${t('product-price')}</th><th>${t('product-stock')}</th><th>${t('sold')}</th><th></th></tr></thead>
+      <tbody>${PRODUCTS.map(p => `<tr><td>${p.id}</td><td>${p.title[currentLang]}</td><td>${p.category}</td><td>${formatPrice(p.price)}</td><td>${p.stock}</td><td>${p.sold}</td><td><button class="btn sm btn-danger" onclick="adminDeleteProduct(${p.id})">${t('delete-product')}</button></td></tr>`).join('')}</tbody>
+    </table></div>
 
-function renderAdminOrders(tc) {
-  const orders = getOrders();
-  const statusAr = { pending: 'قيد التجهيز', shipped: 'في الطريق', delivered: 'تم التوصيل', cancelled: 'ملغي' };
-  const statusEn = { pending: 'Processing', shipped: 'On the way', delivered: 'Delivered', cancelled: 'Cancelled' };
-  const labels = currentLang === 'ar' ? statusAr : statusEn;
-  if (orders.length === 0) {
-    tc.innerHTML = `<p style="text-align:center;color:var(--text-dim);padding:24px;">${currentLang==='ar'?'لا توجد طلبات بعد':'No orders yet'}</p>`;
-    return;
-  }
-  tc.innerHTML = `
+    <div class="section-title" style="margin-top:30px;"><h3>${t('admin-orders')}</h3></div>
     <div style="overflow-x:auto;">
     <table class="admin-table">
-      <thead><tr><th>${t('order-id')}</th><th>${t('name')}</th><th>${t('phone')}</th><th>${t('city')}</th><th>${t('total')}</th><th>${currentLang==='ar'?'الحالة':'Status'}</th><th>${currentLang==='ar'?'تاريخ':'Date'}</th><th></th></tr></thead>
-      <tbody>${orders.map((o, idx) => `<tr>
-        <td>${o.id || 'ORD'}</td>
-        <td>${o.name || '-'}</td>
-        <td>${o.phone || '-'}</td>
-        <td>${o.city || '-'}</td>
-        <td style="color:var(--neon-yellow);font-weight:800;">${formatPrice(o.total)}</td>
-        <td><select onchange="updateOrderStatus(${idx}, this.value)" style="padding:4px 8px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border);color:#fff;font-family:inherit;">
-          <option value="pending" ${o.status==='pending'?'selected':''}>${labels.pending}</option>
-          <option value="shipped" ${o.status==='shipped'?'selected':''}>${labels.shipped}</option>
-          <option value="delivered" ${o.status==='delivered'?'selected':''}>${labels.delivered}</option>
-          <option value="cancelled" ${o.status==='cancelled'?'selected':''}>${labels.cancelled || 'ملغي'}</option>
-        </select></td>
-        <td style="font-size:0.78rem;">${o.created_at ? new Date(o.created_at).toLocaleDateString() : '-'}</td>
-        <td><button class="btn sm btn-danger" onclick="adminDeleteOrder(${idx})">🗑️</button></td>
-      </tr>`).join('')}</tbody>
+      <thead><tr><th>${t('order-id')}</th><th>${t('name')}</th><th>${t('phone')}</th><th>${t('total')}</th><th>${t('order-status-col')}</th><th></th></tr></thead>
+      <tbody>${allOrders.length === 0 ? `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);">${t('no-orders')}</td></tr>` : allOrders.map(o => `
+        <tr>
+          <td>${o.id}</td><td>${o.name || ''}</td><td>${o.phone || ''}</td><td>${formatPrice(o.total || 0)}</td>
+          <td>
+            <select id="order-status-${o.id}">
+              <option value="pending" ${o.status==='pending'?'selected':''}>${t('order-pending')}</option>
+              <option value="shipped" ${o.status==='shipped'?'selected':''}>${t('order-shipped')}</option>
+              <option value="delivered" ${o.status==='delivered'?'selected':''}>${t('order-delivered')}</option>
+            </select>
+          </td>
+          <td><button class="btn sm" onclick="adminUpdateOrderStatus('${o.id}')">${t('update-status')}</button></td>
+        </tr>`).join('')}</tbody>
     </table></div>
-    <div style="margin-top:12px;">
-      <h3 style="margin-bottom:8px;">${currentLang==='ar'?'تفاصيل الطلبات':'Order Details'}</h3>
-      ${orders.map(o => `<div class="order-card" style="margin-bottom:8px;">
-        <div class="order-header"><span class="order-id">${o.id}</span><span class="order-status ${o.status||'pending'}">${labels[o.status]||o.status}</span></div>
-        <div class="order-items-list">${(o.items||[]).map(i => `${i.title?.[currentLang]||i.title||i.id} × ${i.quantity} = ${formatPrice((i.price||0)*(i.quantity||1))}`).join('<br>')}</div>
-        <div class="order-total"><span>${t('total')}</span><span style="color:var(--neon-yellow);">${formatPrice(o.total)}</span></div>
-      </div>`).join('')}
-    </div>`;
+
+    <div style="margin-top:20px;"><button class="btn btn-danger" onclick="logout()">${t('logout')}</button></div>`;
 }
 
-function renderAdminSettings(tc) {
-  const user = JSON.parse(localStorage.getItem('anime-user') || 'null');
-  tc.innerHTML = `
-    <div class="admin-form">
-      <h3>${currentLang==='ar'?'إعدادات المدير':'Admin Settings'}</h3>
-      <p style="color:var(--text-dim);margin-bottom:12px;">${currentLang==='ar'?'تغيير كلمة مرور المدير':'Change admin password'}</p>
-      <div class="form-group"><label>${currentLang==='ar'?'كلمة المرور الحالية':'Current Password'}</label><input type="password" id="admin-old-pw"></div>
-      <div class="form-group"><label>${currentLang==='ar'?'كلمة المرور جديدة':'New Password'}</label><input type="password" id="admin-new-pw"></div>
-      <button class="btn btn-primary" onclick="changeAdminPassword()">${t('save')}</button>
-    </div>
-    <div class="admin-form" style="margin-top:16px;">
-      <h3>${currentLang==='ar'?'إدارة البيانات':'Data Management'}</h3>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn sm outline" onclick="exportData()">${currentLang==='ar'?'تصدير البيانات':'Export Data'}</button>
-        <button class="btn sm btn-danger" onclick="clearAllOrders()">${currentLang==='ar'?'حذف كل الطلبات':'Clear All Orders'}</button>
-        <button class="btn sm btn-danger" onclick="resetProducts()">${currentLang==='ar'?'إعادة تعيين المنتجات':'Reset Products'}</button>
-      </div>
-    </div>`;
+async function adminAddProduct() {
+  const nameAr = document.getElementById('ap-name-ar')?.value?.trim();
+  const nameEn = document.getElementById('ap-name-en')?.value?.trim();
+  if (!nameAr || !nameEn) { showToast(t('fill-all-fields')); return; }
+  const newProduct = {
+    title: { ar: nameAr, en: nameEn },
+    description: { ar: document.getElementById('ap-desc-ar')?.value || nameAr, en: document.getElementById('ap-desc-en')?.value || nameEn },
+    price: parseFloat(document.getElementById('ap-price')?.value) || 0,
+    oldPrice: parseFloat(document.getElementById('ap-old-price')?.value) || null,
+    category: document.getElementById('ap-category')?.value || 'accessories',
+    images: [document.getElementById('ap-image')?.value || 'https://images.unsplash.com/photo-1608889825103-5041190c1d9f?auto=format&fit=crop&w=800&q=80'],
+    sizes: (document.getElementById('ap-sizes')?.value || '').split(',').map(s => s.trim()).filter(Boolean),
+    badge: document.getElementById('ap-badge')?.value || null,
+    stock: parseInt(document.getElementById('ap-stock')?.value) || 10
+  };
+  const saved = await dbAddProduct(newProduct);
+  if (!saved) { showToast(t('generic-error')); return; }
+  PRODUCTS.push(saved);
+  showToast(t('add-product') + ' ✓');
+  renderAdminDashboard();
 }
 
-function updateOrderStatus(idx, status) {
-  const orders = getOrders();
-  if (orders[idx]) { orders[idx].status = status; saveOrders(orders); showToast(currentLang==='ar'?'تم تحديث الحالة':'Status updated'); }
+async function adminDeleteProduct(id) {
+  const ok = await dbDeleteProduct(id);
+  if (!ok) { showToast(t('generic-error')); return; }
+  const idx = PRODUCTS.findIndex(p => p.id === id);
+  if (idx > -1) PRODUCTS.splice(idx, 1);
+  showToast(t('delete-product') + ' ✓');
+  renderAdminDashboard();
 }
 
-function adminDeleteOrder(idx) {
-  const orders = getOrders();
-  if (idx >= 0 && idx < orders.length) { orders.splice(idx, 1); saveOrders(orders); showToast(currentLang==='ar'?'تم حذف الطلب':'Order deleted'); showAdminTab('orders'); }
+async function adminUpdateOrderStatus(orderId) {
+  const sel = document.getElementById(`order-status-${orderId}`);
+  if (!sel) return;
+  const ok = await updateOrderStatus(orderId, sel.value);
+  showToast(ok ? '✓' : t('generic-error'));
 }
-
-function changeAdminPassword() {
-  const oldPw = document.getElementById('admin-old-pw')?.value;
-  const newPw = document.getElementById('admin-new-pw')?.value;
-  if (oldPw !== ADMIN_PASS) { showToast(currentLang==='ar'?'كلمة المرور الحالية غير صحيحة':'Wrong current password'); return; }
-  if (!newPw || newPw.length < 4) { showToast(currentLang==='ar'?'كلمة المرور قصيرة جداً':'Password too short'); return; }
-  localStorage.setItem('anime-admin-pass', newPw);
-  showToast(currentLang==='ar'?'تم تغيير كلمة المرور':'Password changed');
-}
-
-function exportData() {
-  const data = { products: PRODUCTS, orders: getOrders() };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'anime-store-data.json'; a.click();
-  URL.revokeObjectURL(url);
-}
-
-function clearAllOrders() {
-  if (!confirm(currentLang==='ar'?'هل أنت متأكد من حذف كل الطلبات؟':'Are you sure you want to delete all orders?')) return;
-  saveOrders([]); showToast(currentLang==='ar'?'تم حذف كل الطلبات':'All orders deleted'); showAdminTab('orders');
-}
-
-function resetProducts() {
-  if (!confirm(currentLang==='ar'?'هل أنت متأكد؟ سيتم إعادة المنتجات للوضع الأصلي':'Are you sure? Products will be reset to default.')) return;
-  localStorage.removeItem('anime-products'); window.location.reload();
-}
-
-function adminEditProduct(id) {
-  const p = getProductById(id); if (!p) return;
-  const tc = document.getElementById('admin-tab-content'); if (!tc) return;
-  tc.innerHTML = `
-    <div class="admin-form">
-      <h3>${currentLang==='ar'?'تعديل منتج #':'Edit Product #'}${p.id}</h3>
-      <div class="form-row">
-        <div class="form-group"><label>${t('product-name-ar')}</label><input type="text" id="ep-name-ar" value="${p.title.ar||''}"></div>
-        <div class="form-group"><label>${t('product-name-en')}</label><input type="text" id="ep-name-en" value="${p.title.en||''}"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>${t('product-desc-ar')}</label><textarea id="ep-desc-ar">${p.description?.ar||''}</textarea></div>
-        <div class="form-group"><label>${t('product-desc-en')}</label><textarea id="ep-desc-en">${p.description?.en||''}</textarea></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>${t('product-price')}</label><input type="number" id="ep-price" value="${p.price}"></div>
-        <div class="form-group"><label>${t('product-old-price')}</label><input type="number" id="ep-old-price" value="${p.oldPrice||''}"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>${t('product-category')}</label>
-          <select id="ep-category">
-            ${CATEGORIES.map(c => `<option value="${c.id}" ${c.id===p.category?'selected':''}>${c.name[currentLang]}</option>`).join('')}
-          </select>
-        </div>
-        <div class="form-group"><label>${t('product-stock')}</label><input type="number" id="ep-stock" value="${p.stock}"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>${t('product-image')}</label><input type="text" id="ep-image" value="${p.images?.[0]||''}"></div>
-        <div class="form-group"><label>${t('product-sizes')}</label><input type="text" id="ep-sizes" value="${(p.sizes||[]).join(', ')}"></div>
-      </div>
-      <div class="form-group"><label>${t('product-badge')}</label>
-        <select id="ep-badge">
-          <option value="" ${!p.badge?'selected':''}>بدون</option>
-          <option value="bestseller" ${p.badge==='bestseller'?'selected':''}>الأكثر مبيعاً</option>
-          <option value="new" ${p.badge==='new'?'selected':''}>جديد</option>
-          <option value="sale" ${p.badge==='sale'?'selected':''}>عرض</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-primary" onclick="adminSaveProduct(${p.id})">✓ ${t('save')}</button>
-        <button class="btn outline" onclick="showAdminTab('products')">${currentLang==='ar'?'رجوع':'Back'}</button>
-      </div>
-    </div>`;
-}
-
-function adminSaveProduct(id) {
-  const p = PRODUCTS.find(x => x.id === id); if (!p) return;
-  p.title.ar = document.getElementById('ep-name-ar')?.value?.trim() || p.title.ar;
-  p.title.en = document.getElementById('ep-name-en')?.value?.trim() || p.title.en;
-  p.description.ar = document.getElementById('ep-desc-ar')?.value?.trim() || p.description.ar;
-  p.description.en = document.getElementById('ep-desc-en')?.value?.trim() || p.description.en;
-  p.price = parseFloat(document.getElementById('ep-price')?.value) || p.price;
-  p.oldPrice = parseFloat(document.getElementById('ep-old-price')?.value) || null;
-  p.category = document.getElementById('ep-category')?.value || p.category;
-  p.stock = parseInt(document.getElementById('ep-stock')?.value) || 0;
-  p.images = [document.getElementById('ep-image')?.value || p.images[0]];
-  p.sizes = (document.getElementById('ep-sizes')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
-  p.badge = document.getElementById('ep-badge')?.value || null;
-  localStorage.setItem('anime-products', JSON.stringify(PRODUCTS));
-  showToast(currentLang==='ar'?'تم حفظ التعديلات':'Changes saved');
-  showAdminTab('products');
-}
-
-function adminLogout() { localStorage.removeItem('anime-admin'); window.location.href = 'admin-login.html'; }
 
 // ==============================
 // WHATSAPP
@@ -737,46 +624,25 @@ function addWhatsAppBtn() {
 }
 
 // ==============================
-// SAKURA PETALS ANIMATION
+// INIT
 // ==============================
-function initSakuraPetals() {
-  const petals = ['🌸', '✿', '❀'];
-  let count = 0;
-  const maxPetals = 10;
-  setInterval(() => {
-    document.querySelectorAll('.sakura-petal').forEach(p => { if (parseFloat(getComputedStyle(p).opacity) < 0.05) { p.remove(); count--; } });
-    if (count >= maxPetals) return;
-    const petal = document.createElement('span');
-    petal.className = 'sakura-petal';
-    petal.textContent = petals[Math.floor(Math.random() * petals.length)];
-    petal.style.left = Math.random() * 100 + 'vw';
-    petal.style.animationDuration = (7 + Math.random() * 5) + 's';
-    petal.style.fontSize = (11 + Math.random() * 8) + 'px';
-    document.body.appendChild(petal);
-    count++;
-    setTimeout(() => { petal.remove(); count = Math.max(0, count - 1); }, 13000);
-  }, 2500);
-}
-document.addEventListener('DOMContentLoaded', () => {
-  // Language switcher click handlers
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
-  });
-
-  // Load persisted products
-  const saved = localStorage.getItem('anime-products');
-  if (saved) { try { const parsed = JSON.parse(saved); if (parsed.length) { PRODUCTS.length = 0; PRODUCTS.push(...parsed); } } catch {} }
+document.addEventListener('DOMContentLoaded', async () => {
+  // لازم نستنى المنتجات تتحمل من قاعدة البيانات الأول قبل أي عرض
+  await loadProducts();
 
   setLanguage(currentLang);
   initSearch();
   initLoginForm();
   initSignupForm();
   initCheckout();
-  initProfile();
+  await initProfile();
   initAdminLogin();
-  initAdminDashboard();
+  await initAdminDashboard();
   initCountdown();
   updateCartCount();
   addWhatsAppBtn();
-  initSakuraPetals();
+
+  for (const fn of ['renderProducts', 'renderCart', 'renderWishlist', 'renderProductDetail']) {
+    if (typeof window[fn] === 'function') await window[fn]();
+  }
 });

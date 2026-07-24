@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>السلة - World Of Anime</title>
   <meta name="description" content="راجع المنتجات المضافة لسلة التسوق وتابع لإتمام الطلب.">
+  <link rel="stylesheet" href="../Css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a href="#main-content" class="skip-link">تخطي للمحتوى</a>
@@ -71,7 +71,7 @@
   </div>
 </footer>
 
-<script src="data.js"></script>
+<script src="../js/data.js"></script>
 <script>
   function renderCart() {
     const main = document.getElementById('main-content');
@@ -127,7 +127,7 @@
           </div>
           <div class="cart-summary-row">
             <span data-i18n="shipping">${t('shipping')}</span>
-            <span style="color:var(--neon-green);" data-i18n="free-shipping">${t('free-shipping')}</span>
+            <span style="color:var(--success);" data-i18n="free-shipping">${t('free-shipping')}</span>
           </div>
           <div class="cart-summary-row total">
             <span data-i18n="total">${t('total')}</span>
@@ -140,16 +140,7 @@
   }
 
   window.renderCart = renderCart;
-
-  // Safety net: ensure page renders even if script.js is delayed
-  document.addEventListener('DOMContentLoaded', () => {
-    if (typeof getCart === 'undefined') return; // script.js hasn't loaded yet
-    const saved = localStorage.getItem('anime-products');
-    if (saved) { try { const parsed = JSON.parse(saved); if (parsed.length) { PRODUCTS.length = 0; PRODUCTS.push(...parsed); } } catch {} }
-    const main = document.getElementById('main-content');
-    if (main && !main.innerHTML.trim()) renderCart();
-  });
 </script>
-<script src="script.js"></script>
+<script src="../js/script.js"></script>
 </body>
 </html>

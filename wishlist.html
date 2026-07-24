@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>المفضلة - World Of Anime</title>
   <meta name="description" content="تصفح قائمة المفضلة وأضف المنتجات للسلة.">
+  <link rel="stylesheet" href="../Css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a href="#main-content" class="skip-link">تخطي للمحتوى</a>
@@ -71,7 +71,7 @@
   </div>
 </footer>
 
-<script src="data.js"></script>
+<script src="../js/data.js"></script>
 <script>
   function renderWishlist() {
     const main = document.getElementById('main-content');
@@ -121,13 +121,7 @@
   }
 
   window.renderWishlist = renderWishlist;
-
-  document.addEventListener('DOMContentLoaded', () => {
-    if (typeof getWishlist === 'undefined') return;
-    const main = document.getElementById('main-content');
-    if (main && !main.innerHTML.trim()) renderWishlist();
-  });
 </script>
-<script src="script.js"></script>
+<script src="../js/script.js"></script>
 </body>
 </html>

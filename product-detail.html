@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تفاصيل المنتج - World Of Anime</title>
   <meta name="description" content="تصفح واشتري منتجات الأنمي الأصلية من World Of Anime">
+  <link rel="stylesheet" href="../Css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a href="#main-content" class="skip-link">تخطي للمحتوى</a>
@@ -71,7 +71,7 @@
   </div>
 </footer>
 
-<script src="data.js"></script>
+<script src="../js/data.js"></script>
 <script>
   async function renderProductDetail() {
     const id = getUrlParam('id');
@@ -92,9 +92,10 @@
       { author: currentLang === 'ar' ? 'سارة ع.' : 'Sara A.', rating: 4, text: currentLang === 'ar' ? 'حلو أوي بس التغليف ممكن يكون أحسن. عموماً مبسوطة.' : 'Very nice but packaging could be better. Overall happy.' },
       { author: currentLang === 'ar' ? 'محمد ك.' : 'Mohamed K.', rating: 5, text: currentLang === 'ar' ? 'أفضل منتج اشتريته من الموقع، هطلب تاني أكيد!' : 'Best product I bought from the site, will definitely order again!' }
     ];
-    // Real customer reviews now come from the central database (Supabase)
-    // instead of this browser's own localStorage.
+    // التقييمات الحقيقية بتيجي من قاعدة البيانات المركزية (Supabase) مش من متصفح الزائر بس
     const customerReviews = await getReviews(product.id);
+    // نتأكد هل في مستخدم مسجل دخول عشان نعرضله فورم التقييم ولا رسالة تسجيل دخول
+    const currentUser = await getCurrentUser();
 
     main.innerHTML = `
       <div class="product-detail">
@@ -157,6 +158,7 @@
           ${customerReviews.map(r => `<div class="review-card"><div class="review-header"><span class="review-author">${r.author}</span><span class="stars">${getStars(r.rating)}</span></div><p style="color:var(--muted);">${r.text}</p></div>`).join('')}
         </div>
 
+        ${currentUser ? `
         <div class="review-form">
           <h3>${t('write-review')}</h3>
           <div style="margin-bottom:10px;">
@@ -174,7 +176,11 @@
             <textarea id="review-text" rows="3"></textarea>
           </div>
           <button class="btn sm" onclick="submitReview(${product.id})">${t('submit-review')}</button>
-        </div>
+        </div>` : `
+        <div class="review-form" style="text-align:center;">
+          <p style="color:var(--muted);margin-bottom:12px;">${t('login-required-review')}</p>
+          <a href="login.html" class="btn sm">${t('login-button')}</a>
+        </div>`}
       </div>
 
       <!-- RELATED PRODUCTS -->
@@ -206,15 +212,6 @@
 
   window.renderProductDetail = renderProductDetail;
 
-  // Safety net: ensure page renders even if script.js is delayed
-  document.addEventListener('DOMContentLoaded', async () => {
-    if (typeof getProductById === 'undefined') return; // script.js hasn't loaded yet
-    const saved = localStorage.getItem('anime-products');
-    if (saved) { try { const parsed = JSON.parse(saved); if (parsed.length) { PRODUCTS.length = 0; PRODUCTS.push(...parsed); } } catch {} }
-    const main = document.getElementById('main-content');
-    if (main && !main.innerHTML.trim()) await renderProductDetail();
-  });
-
   let selectedRating = 0;
   function setRating(n) {
     selectedRating = n;
@@ -228,16 +225,17 @@
     if (!selectedRating) return;
     const text = document.getElementById('review-text')?.value?.trim();
     if (!text) return;
-    const user = JSON.parse(localStorage.getItem('anime-user') || '{}');
-    await saveReview(productId, {
-      author: user.name || (currentLang === 'ar' ? 'زائر' : 'Guest'),
+    const user = await getCurrentUser();
+    if (!user) { showToast(t('login-required-review')); return; }
+    const ok = await saveReview(productId, {
+      author: user.name || user.email || (currentLang === 'ar' ? 'زائر' : 'Guest'),
       rating: selectedRating,
-      text: text,
-      date: new Date().toISOString()
+      text: text
     });
+    if (ok) showToast(t('review-added'));
     await renderProductDetail();
   }
 </script>
-<script src="script.js"></script>
+<script src="../js/script.js"></script>
 </body>
 </html>
