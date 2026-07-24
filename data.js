@@ -68,10 +68,24 @@ async function saveOrder(orderData) {
 // ==========================================================================
 
 async function getGojoReply(userQuery) {
-  const queryLower = userQuery.toLowerCase().trim();
+  const query = userQuery.toLowerCase().trim();
   const currentLang = (typeof window.currentLang !== 'undefined') ? window.currentLang : 'ar';
 
-  // 1. البحث المحلي في المنتجات أولاً
+  // 1. إجابات سريعة ومباشرة محلياً (تشتغل حتى لو السيرفر واقف) ⚡
+  if (query.includes('شحن') || query.includes('توصيل') || query.includes('shipping')) {
+    return "التوصيل عندنا في **World Of Anime** بياخد من 2 لـ 5 أيام عمل فقط لجميع المحافظات! 🚚💨";
+  }
+  if (query.includes('دفع') || query.includes('payment') || query.includes('كاش')) {
+    return "الدفع عند الاستلام بعد ما تعاين حاجتك وتتأكد إنها تمام! 💵✅";
+  }
+  if (query.includes('تواصل') || query.includes('واتس') || query.includes('رقم') || query.includes('whatsapp')) {
+    return "تقدر تتواصل معانا فوراً عبر الواتساب على الرقم ده: **01149243249** 📱✨";
+  }
+  if (query.includes('مين') || query.includes('من انت') || query.includes('اسمك')) {
+    return "أنا المعلم **غوجو ساتورو (Gojo Satoru)** 😎.. أقوى ساحر ومساعدك الشخصي في متجر World Of Anime!";
+  }
+
+  // 2. البحث في المنتجات محلياً
   if (typeof PRODUCTS !== 'undefined' && Array.isArray(PRODUCTS)) {
     let currentProducts = PRODUCTS;
     try {
@@ -79,64 +93,53 @@ async function getGojoReply(userQuery) {
       if (localProds) currentProducts = JSON.parse(localProds);
     } catch (e) {}
 
-    const matchedProduct = currentProducts.find(p => {
-      const titleAr = p.title && p.title.ar ? p.title.ar.toLowerCase() : '';
-      const titleEn = p.title && p.title.en ? p.title.en.toLowerCase() : '';
-      return titleAr.includes(queryLower) || titleEn.includes(queryLower);
+    const matched = currentProducts.find(p => {
+      const tAr = p.title && p.title.ar ? p.title.ar.toLowerCase() : '';
+      const tEn = p.title && p.title.en ? p.title.en.toLowerCase() : '';
+      return tAr.includes(query) || tEn.includes(query);
     });
 
-    if (matchedProduct) {
-      const title = matchedProduct.title && matchedProduct.title[currentLang] ? matchedProduct.title[currentLang] : (matchedProduct.title && matchedProduct.title.ar ? matchedProduct.title.ar : matchedProduct.title);
+    if (matched) {
+      const title = matched.title && matched.title[currentLang] ? matched.title[currentLang] : (matched.title.ar || matched.title);
       const curr = (typeof t === 'function') ? t('currency') : 'ج.م';
-      if (currentLang === 'en') {
-        return `I searched with my Six Eyes and found this product! 👁️✨\n📌 Name: ${title}\n💰 Price: ${matchedProduct.price} ${curr}\n📦 Status: ${matchedProduct.stock > 0 ? 'Available ✅' : 'Out of Stock ❌'}`;
-      }
-      return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matchedProduct.price} ${curr}\n📦 الحالة: ${matchedProduct.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
+      return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matched.price} ${curr}\n📦 الحالة: ${matched.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
     }
   }
 
-  // 2. إرسال السؤال إلى OpenRouter مع تجربة أكثر من موديل مجاني
+  // 3. الاتصال بالذكاء الاصطناعي كخيار أخير مع حماية كاملة
   const apiKey = (typeof OPENROUTER_API_KEY !== 'undefined') ? OPENROUTER_API_KEY : "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";
 
-  // قائمة موديلات مجانية سريعة كبدائل
-  const freeModels = [
-    "google/gemini-2.0-flash-exp:free",
-    "meta-llama/llama-3.3-70b-instruct:free",
-    "mistralai/mistral-7b-instruct:free"
-  ];
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.0-flash-exp:free",
+        messages: [
+          { 
+            role: "system", 
+            content: "أنت المعلم غوجو ساتورو (Gojo Satoru) من أنمي Jujutsu Kaisen، المساعد الذكي لمتجر World Of Anime. أسلوبك مرح ومصرّي وواثق من نفسك. أجب باختصار." 
+          },
+          { role: "user", content: userQuery }
+        ]
+      })
+    });
 
-  const langInstruction = currentLang === 'en' ? 'Respond in English. ' : 'أجب بالعربية/المصرية. ';
-  const systemPrompt = `أنت المعلم غوجو ساتورو (Gojo Satoru) من أنمي Jujutsu Kaisen، المساعد الذكي والمرح لمتجر World Of Anime.
-شخصيتك: واثق جداً بنفسك، مرح، تستخدم عبارات مثل "أنا الأقوى" و"Six Eyes"، وتتحدث باللهجة المصرية/العربية الودودة.
-${langInstruction}مهمتك: الإجابة على أي سؤال بأسلوب غوجو ساتورو. للشحن والدفع بالمتجر: الشحن خلال 2-5 أيام والدفع عند الاستلام وواتساب 01149243249. أجب باختصار ووضوح.`;
+    if (!response.ok) throw new Error("Server response not ok");
 
-  for (const modelName of freeModels) {
-    try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: modelName,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userQuery }
-          ]
-        })
-      });
-
-      const data = await response.json();
-      if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
-        return data.choices[0].message.content;
-      }
-    } catch (err) {
-      console.warn(`Model ${modelName} failed, trying next...`);
+    const data = await response.json();
+    if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+      return data.choices[0].message.content;
     }
+  } catch (err) {
+    console.warn("AI Fallback active:", err);
   }
 
-  return "يوه! السيرفرات الرسمية للذكاء الاصطناعي عليها ضغط حالياً، اسألني كمان دقيقة يا بطل أو راسلنا واتساب 01149243249 💬";
+  // رد حمايتي أخير ولطيف في حال تعثر السيرفر بدلاً من إظهار رسالة خطأ
+  return "أهلاً بك يا بطل! أنا المعلم غوجو 😎.. لو بتسأل عن الشحن فهو من 2-5 أيام، والدفع عند الاستلام. تقدر كمان تتواصل معانا على الواتس: 01149243249 ⚡";
 }
 
 // ==========================================================================

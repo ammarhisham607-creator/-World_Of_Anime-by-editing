@@ -911,7 +911,7 @@ function adminAddProduct() {
     title: { ar: nameAr, en: nameEn },
     description: { ar: descAr, en: descEn },
     price, oldPrice, category, stock,
-    images: [image || 'https://via.placeholder.com/400x300/1a162e/a855f7?text=Anime+Product'],
+    images: [image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%231a162e" width="400" height="300"/%3E%3Ctext x="200" y="150" fill="%23a855f7" font-size="24" text-anchor="middle" dy=".3em" font-family="sans-serif"%3EAnime Product%3C/text%3E%3C/svg%3E'],
     sizes, badge,
     rating: 4.5, reviews: 0, sold: 0
   };
