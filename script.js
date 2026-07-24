@@ -550,12 +550,14 @@ function initAdminLogin() {
   const form = document.getElementById('adminLoginForm'); if (!form) return;
   form.addEventListener('submit', e => {
     e.preventDefault();
-    const u = document.getElementById('admin-user')?.value;
+    const u = document.getElementById('admin-user')?.value?.trim();
     const p = document.getElementById('admin-pass')?.value;
-    const storedPass = localStorage.getItem('anime-admin-pass');
-    const validPass = storedPass || ADMIN_PASS;
-    if (u === ADMIN_USER && p === validPass) {
+    const emailMatch = u.toLowerCase() === ADMIN_USER.toLowerCase();
+    const passMatch = p === ADMIN_PASS;
+    if (emailMatch && passMatch) {
       localStorage.setItem('anime-admin', 'true');
+      localStorage.removeItem('anime-admin-pass');
+      sessionStorage.setItem('admin_authenticated', 'true');
       window.location.href = 'Okaa30-4-2011.html';
     } else {
       const msg = document.getElementById('admin-msg');
@@ -773,12 +775,7 @@ function adminDeleteOrder(idx) {
 }
 
 function changeAdminPassword() {
-  const oldPw = document.getElementById('admin-old-pw')?.value;
-  const newPw = document.getElementById('admin-new-pw')?.value;
-  if (oldPw !== ADMIN_PASS) { showToast(currentLang==='ar'?'كلمة المرور الحالية غير صحيحة':'Wrong current password'); return; }
-  if (!newPw || newPw.length < 4) { showToast(currentLang==='ar'?'كلمة المرور قصيرة جداً':'Password too short'); return; }
-  localStorage.setItem('anime-admin-pass', newPw);
-  showToast(currentLang==='ar'?'تم تغيير كلمة المرور':'Password changed');
+  showToast(currentLang==='ar'?'كلمة المرور ثابتة ولا يمكن تغييرها من هنا':'Password is fixed and cannot be changed from here');
 }
 
 function exportData() {
