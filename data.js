@@ -69,111 +69,81 @@ async function saveOrder(orderData) {
 
 async function getGojoReply(userQuery) {
   const queryLower = userQuery.toLowerCase().trim();
-  const currentLang = typeof window.currentLang !== 'undefined' ? window.currentLang : 'ar';
+  const currentLang = (typeof window.currentLang !== 'undefined') ? window.currentLang : 'ar';
 
-  // أ) فحص سريع لو كان السؤال عن منتج موجود في المتجر
-  let currentProducts = PRODUCTS;
-  try {
-    const localProds = localStorage.getItem('anime-products');
-    if (localProds) currentProducts = JSON.parse(localProds);
-  } catch (e) {}
+  // 1. البحث المحلي في المنتجات أولاً
+  if (typeof PRODUCTS !== 'undefined' && Array.isArray(PRODUCTS)) {
+    let currentProducts = PRODUCTS;
+    try {
+      const localProds = localStorage.getItem('anime-products');
+      if (localProds) currentProducts = JSON.parse(localProds);
+    } catch (e) {}
 
-  const matchedProduct = currentProducts.find(p => {
-    const titleAr = p.title && p.title.ar ? p.title.ar.toLowerCase() : '';
-    const titleEn = p.title && p.title.en ? p.title.en.toLowerCase() : '';
-    return titleAr.includes(queryLower) || titleEn.includes(queryLower);
-  });
-
-  if (matchedProduct) {
-    const title = matchedProduct.title && matchedProduct.title[currentLang] ? matchedProduct.title[currentLang] : (matchedProduct.title && matchedProduct.title.ar ? matchedProduct.title.ar : matchedProduct.title);
-    const curr = typeof t === 'function' ? t('currency') : 'ج.م';
-    if (currentLang === 'en') {
-      return `I searched with my Six Eyes and found this product! 👁️✨\n📌 Name: ${title}\n💰 Price: ${matchedProduct.price} ${curr}\n📦 Status: ${matchedProduct.stock > 0 ? 'Available ✅' : 'Out of Stock ❌'}`;
-    }
-    return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matchedProduct.price} ${curr}\n📦 الحالة: ${matchedProduct.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
-  }
-
-  // ب) إرسال أي سؤال إلى OpenRouter AI ليجيب بشخصية غوجو ساتورو
-  if (!OPENROUTER_API_KEY) {
-    return currentLang === 'en'
-      ? "Oops! Cursed energy seems down, contact us on WhatsApp: 01149243249 💬"
-      : "يوه! يبدو أن الطاقة الملعونة منقطعة، يمكنك مراسلتنا عبر الواتساب: 01149243249 💬";
-  }
-
-  try {
-    const langInstruction = currentLang === 'en' ? 'Respond in English. ' : 'أجب بالعربية/المصرية. ';
-    const systemPrompt = `أنت المعلم غوجو ساتورو (Gojo Satoru) من أنمي Jujutsu Kaisen، المساعد الذكي والمرح لمتجر World Of Anime.
-شخصيتك: واثق جداً بنفسك، مرح، تستخدم عبارات مثل "أنا الأقوى" و"Six Eyes"، وتتحدث باللهجة المصرية/العربية الودودة الممتعة.
-${langInstruction}مهمتك: الإجابة على أي سؤال في العالم يقدمه المستخدم (سواء كان في الأنمي، علوم، تاريخ، برمجة، دراسة، ثقافة، أو دردشة عادية) بأسلوب غوجو ساتورو، وإذا كان السؤال متعلقاً بالشحن والدفع بالمتجر: الشحن خلال 2-5 أيام والدفع عند الاستلام والدعم عبر واتساب 01149243249. أجب باختصار ووضوح وبطريقة ممتعة.`;
-
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "meta-llama/llama-3.3-70b-instruct:free",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userQuery }
-        ]
-      })
+    const matchedProduct = currentProducts.find(p => {
+      const titleAr = p.title && p.title.ar ? p.title.ar.toLowerCase() : '';
+      const titleEn = p.title && p.title.en ? p.title.en.toLowerCase() : '';
+      return titleAr.includes(queryLower) || titleEn.includes(queryLower);
     });
 
-    const data = await response.json();
-    if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
-      return data.choices[0].message.content;
-    } else if (data.error) {
-      console.error("OpenRouter Error Detail:", data.error);
-      return `يوه! حدث خطأ من السيرفر: ${data.error.message || 'المفتاح يتطلب تفعيل'}`;
-    } else {
-      return currentLang === 'en'
-        ? "Yo! My Six Eyes encountered a small glitch, ask again champ! 😎✨"
-        : "يوه! عين السادسة (Six Eyes) واجهت تشويشاً بسيطاً، أعد سؤالك مرة أخرى يا بطل! 😎✨";
+    if (matchedProduct) {
+      const title = matchedProduct.title && matchedProduct.title[currentLang] ? matchedProduct.title[currentLang] : (matchedProduct.title && matchedProduct.title.ar ? matchedProduct.title.ar : matchedProduct.title);
+      const curr = (typeof t === 'function') ? t('currency') : 'ج.م';
+      if (currentLang === 'en') {
+        return `I searched with my Six Eyes and found this product! 👁️✨\n📌 Name: ${title}\n💰 Price: ${matchedProduct.price} ${curr}\n📦 Status: ${matchedProduct.stock > 0 ? 'Available ✅' : 'Out of Stock ❌'}`;
+      }
+      return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matchedProduct.price} ${curr}\n📦 الحالة: ${matchedProduct.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
     }
-  } catch (error) {
-    console.error("OpenRouter Error:", error);
-    return currentLang === 'en'
-      ? "The Infinity technique seems to have glitched, try again and I'll answer right away! 😎⚡"
-      : "يبدو أن تقنية العزلة تعطلت لحظياً، جرب السؤال مرة أخرى وسأجيبك فوراً! 😎⚡";
   }
+
+  // 2. إرسال السؤال إلى OpenRouter مع تجربة أكثر من موديل مجاني
+  const apiKey = (typeof OPENROUTER_API_KEY !== 'undefined') ? OPENROUTER_API_KEY : "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";
+
+  // قائمة موديلات مجانية سريعة كبدائل
+  const freeModels = [
+    "google/gemini-2.0-flash-exp:free",
+    "meta-llama/llama-3.3-70b-instruct:free",
+    "mistralai/mistral-7b-instruct:free"
+  ];
+
+  const langInstruction = currentLang === 'en' ? 'Respond in English. ' : 'أجب بالعربية/المصرية. ';
+  const systemPrompt = `أنت المعلم غوجو ساتورو (Gojo Satoru) من أنمي Jujutsu Kaisen، المساعد الذكي والمرح لمتجر World Of Anime.
+شخصيتك: واثق جداً بنفسك، مرح، تستخدم عبارات مثل "أنا الأقوى" و"Six Eyes"، وتتحدث باللهجة المصرية/العربية الودودة.
+${langInstruction}مهمتك: الإجابة على أي سؤال بأسلوب غوجو ساتورو. للشحن والدفع بالمتجر: الشحن خلال 2-5 أيام والدفع عند الاستلام وواتساب 01149243249. أجب باختصار ووضوح.`;
+
+  for (const modelName of freeModels) {
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userQuery }
+          ]
+        })
+      });
+
+      const data = await response.json();
+      if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+        return data.choices[0].message.content;
+      }
+    } catch (err) {
+      console.warn(`Model ${modelName} failed, trying next...`);
+    }
+  }
+
+  return "يوه! السيرفرات الرسمية للذكاء الاصطناعي عليها ضغط حالياً، اسألني كمان دقيقة يا بطل أو راسلنا واتساب 01149243249 💬";
 }
 
 // ==========================================================================
 // 6. واجهة غوجو ساتورو (رسم SVG مباشر ومضمون 100%)
 // ==========================================================================
 
-const GOJO_SVG_AVATAR = `
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;border-radius:50%;background:#0a1620;">
-  <!-- الشعر الأبيض -->
-  <path d="M15,45 Q20,10 50,10 Q80,10 85,45 Q90,25 75,15 Q50,0 25,15 Q10,25 15,45 Z" fill="#ffffff"/>
-  <path d="M10,40 Q25,20 40,15 Q20,35 15,55 Z" fill="#e2e8f0"/>
-  <path d="M90,40 Q75,20 60,15 Q80,35 85,55 Z" fill="#e2e8f0"/>
-  
-  <!-- الوجه -->
-  <ellipse cx="50" cy="55" rx="28" ry="30" fill="#fde047" opacity="0.1"/>
-  <path d="M25,50 Q50,90 75,50 Q75,35 25,35 Z" fill="#fce7f3"/>
-  
-  <!-- عيون غوجو الزرقاء المتوهجة Six Eyes -->
-  <circle cx="38" cy="52" r="7" fill="#38bdf8"/>
-  <circle cx="38" cy="52" r="4" fill="#0284c7"/>
-  <circle cx="38" cy="52" r="2" fill="#ffffff"/>
-  
-  <circle cx="62" cy="52" r="7" fill="#38bdf8"/>
-  <circle cx="62" cy="52" r="4" fill="#0284c7"/>
-  <circle cx="62" cy="52" r="2" fill="#ffffff"/>
-
-  <!-- عصابة العين السوداء المرفوعة جزئياً / النظارة -->
-  <path d="M20,40 Q50,30 80,40 L82,48 Q50,38 18,48 Z" fill="#1e1b4b"/>
-  
-  <!-- الابتسامة الشقية -->
-  <path d="M42,68 Q50,75 58,68" stroke="#06b6d4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  
-  <!-- إطار التوهج -->
-  <circle cx="50" cy="50" r="48" fill="none" stroke="#06b6d4" stroke-width="3" opacity="0.8"/>
-</svg>
-`;
+const GOJO_AVATAR = `<img src="1273638.png" alt="Gojo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
 
 function initGojoBotUI() {
   if (document.getElementById('gojo-bot-widget')) return;
@@ -190,14 +160,14 @@ function initGojoBotUI() {
   const botContainer = document.createElement('div');
   botContainer.id = 'gojo-bot-widget';
   botContainer.innerHTML = `
-    <button id="gojo-bot-toggle" title="${isEn ? 'Gojo Satoru AI' : 'المعلم غوجو ساتورو'}" style="position:fixed;bottom:85px;right:20px;z-index:9999;width:65px;height:65px;border-radius:50%;background:#0c1824;border:2px solid #06b6d4;box-shadow:0 0 20px rgba(6,182,212,0.6);cursor:pointer;padding:0;overflow:hidden;transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-      ${GOJO_SVG_AVATAR}
+    <button id="gojo-bot-toggle" title="${isEn ? 'Gojo Satoru AI' : 'المعلم غوجو ساتورو'}" style="position:fixed;bottom:25px;right:20px;z-index:9999;width:70px;height:70px;border-radius:50%;background:#0c1824;border:3px solid #06b6d4;box-shadow:0 0 20px rgba(6,182,212,0.6);cursor:pointer;padding:0;overflow:hidden;transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+      ${GOJO_AVATAR}
     </button>
-    <div id="gojo-bot-window" style="display:none;position:fixed;bottom:160px;right:20px;z-index:10000;width:330px;height:450px;background:#0a1620;border:1px solid #06b6d4;border-radius:20px;box-shadow:0 0 30px rgba(6,182,212,0.25);flex-direction:column;overflow:hidden;font-family:sans-serif;">
+    <div id="gojo-bot-window" style="display:none;position:fixed;bottom:105px;right:20px;z-index:10000;width:330px;height:450px;background:#0a1620;border:1px solid #06b6d4;border-radius:20px;box-shadow:0 0 30px rgba(6,182,212,0.25);flex-direction:column;overflow:hidden;font-family:sans-serif;">
       <div style="background:linear-gradient(135deg, #0c2d3f, #081828);padding:14px;color:#fff;font-weight:bold;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(6,182,212,0.3);">
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="width:40px;height:40px;border-radius:50%;border:2px solid #06b6d4;overflow:hidden;box-shadow:0 0 10px #06b6d4;flex-shrink:0;">
-            ${GOJO_SVG_AVATAR}
+            ${GOJO_AVATAR}
           </div>
           <div>
             <div style="font-size:0.95rem;color:#67e8f9;font-weight:bold;">${isEn ? 'Gojo Sensei' : 'المعلم غوجو'}</div>
