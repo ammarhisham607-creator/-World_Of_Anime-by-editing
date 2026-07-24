@@ -1,5 +1,5 @@
 /* ==========================================================================
-   World Of Anime - بيانات المنتجات + Supabase + Gojo Satoru AI Assistant
+   World Of Anime - بيانات المنتجات + Supabase + Gojo Satoru AI Assistant (Gemini)
    ========================================================================== */
 
 // 1. Supabase Config
@@ -10,6 +10,9 @@ let supabaseClient = null;
 if (typeof supabase !== 'undefined') {
   supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
+
+// 🔑 مفتاح Gemini API الخاص بك مفعل ومربوط جاهز
+const GEMINI_API_KEY = "AQ.Ab8RN6LZdKHgdLiTjzVJeRb4q4wivjvyGuU5vpVqLvSLy0S1sA";
 
 // 2. التصنيفات
 const CATEGORIES = [
@@ -125,113 +128,71 @@ async function saveOrder(orderData) {
 }
 
 // ==========================================================================
-// 5. محرك وقواعد إجابات المعلم غوجو ساتورو
+// 5. محرك الذكاء الاصطناعي الخارق للمعلم غوجو ساتورو (Gemini AI Integration)
 // ==========================================================================
 
-const GOJO_KNOWLEDGE_BASE = [
-  {
-    keywords: ['عامل ايه', 'اخبارك', 'شلونك', 'ازيك', 'كيفك', 'عامل إيه', 'أخبارك', 'طمنى', 'شخبار'],
-    replies: [
-      'أنا تمام وزي الفل دائماً طبعاً! ما أنا الأقوى 😎✨.. أنت اخبارك إيه يا بطل؟',
-      'في أفضل حالاتي طبعاً! قاعد أستمتع ببعض الحلويات وبخدم معجبين الأنمي العظماء مثلك 🍰😎',
-      'زي العسل! الهالة بتاعتي في قمتها النهار ده ⚡.. قولي بتدور على إيه في المتجر؟'
-    ]
-  },
-  {
-    keywords: ['مرحبا', 'اهلا', 'أهلا', 'سلام', 'السلام عليكم', 'صباح الخير', 'مساء الخير', 'hi', 'hello', 'غوجو', 'جوچو', 'gojo', 'يا غوجو'],
-    replies: [
-      'يوه! 👋 أنا المعلم غوجو ساتورو، الأقوى هنا 😎! مرحباً بك في World Of Anime.. كلي آذان صاغية!',
-      'أهلاً يا صديقي! غوجو ساتورو في خدمتك ⚡ اسألني عن أي حاجة وستبهرك إجابتي!',
-      'يا هلا والله! مرحباً بك في عالم الأنمي.. نورت المتجر ✨'
-    ]
-  },
-  {
-    keywords: ['شكرا', 'شكراً', 'تسلم', 'حبيبي', 'جامد', 'عاش', 'كفو', 'شكرا ليك', 'ربنا يخليك'],
-    replies: [
-      'العفو يا بطل! هذا واجبي دائماً كالمعلم الأقوى 😎✨',
-      'حبيبي يا غالي! دائماً في الخدمة ⚡',
-      'أي خدمة! لا تتردد تسألني في أي وقت 🕶️'
-    ]
-  },
-  {
-    keywords: ['شحن', 'توصيل', 'بكام الشحن', 'نوصل', 'الوقت', 'مصاريف', 'كام يوم', 'delivery', 'shipping'],
-    replies: [
-      '⚡ التوصيل أسرع من تقنية الانتقال اللحظي! يوصلك الطلب حتى باب بيتك خلال 2 إلى 5 أيام عمل فقط لجميع المحافظات.'
-    ]
-  },
-  {
-    keywords: ['دفع', 'طريقه الدفع', 'فلوس', 'فودافون', 'كاش', 'عند الاستلام', 'فيزا', 'payment', 'cod'],
-    replies: [
-      '💵 يمكنك الدفع بكل أريحية (كاش عند الاستلام) بعد التأكد من طلبيتك بنفسك عند الاستلام!'
-    ]
-  },
-  {
-    keywords: ['سيوف', 'سيف', 'كاتانا', 'sword', 'swords', 'زورو', 'تانجيرو'],
-    replies: [
-      '⚔️ السيوف عندنا غير! كاتانات حقيقية وخامة ستانلس ستيل فاخرة جداً.. تفقد قسم السيوف في المتجر الآن!'
-    ]
-  },
-  {
-    keywords: ['مجسمات', 'مجسم', 'فيجر', 'figure', 'figures', 'لوفي', 'ناروتو'],
-    replies: [
-      '🗿 مجسمات الأنمي لدينا مصممة بأعلى جودة PVC وتفاصيل خرافية كأنها حية!'
-    ]
-  },
-  {
-    keywords: ['ملابس', 'هودي', 'تيشيرت', 'هوديز', 'تيشيرتات', 'مقاس', 'مقاسات', 'tshirt', 'hoodie'],
-    replies: [
-      '👕 تشكيلة الملابس والـ Hoodies مصنوعة من القطن الفاخر 100% والمقاسات متوفرة من S حتى XXL.'
-    ]
-  },
-  {
-    keywords: ['مانجا', 'كتب', 'كتاب', 'مجلد', 'روايات', 'manga'],
-    replies: [
-      '📚 مجلدات المانجا المترجمة بالعربية متوفرة بوضوح ممتاز وطباعة غلاف فاخرة!'
-    ]
-  },
-  {
-    keywords: ['واتس', 'تواصل', 'رقم', 'دعم', 'مشكله', 'تلفون', 'اتصل', 'whatsapp'],
-    replies: [
-      '💬 يمكنك مراسلتنا فوراً عبر الواتساب على الرقم: 01149243249 وسنقوم بخدمتك مباشرة!'
-    ]
+async function getGojoReply(userQuery) {
+  const queryLower = userQuery.toLowerCase().trim();
+
+  // أ) فحص سريع وسريع جداً لو كان السؤال عن منتج موجود في المتجر
+  let currentProducts = PRODUCTS;
+  try {
+    const localProds = localStorage.getItem('anime-products');
+    if (localProds) currentProducts = JSON.parse(localProds);
+  } catch (e) {}
+
+  const matchedProduct = currentProducts.find(p => {
+    const titleAr = p.title && p.title.ar ? p.title.ar.toLowerCase() : '';
+    const titleEn = p.title && p.title.en ? p.title.en.toLowerCase() : '';
+    return titleAr.includes(queryLower) || titleEn.includes(queryLower);
+  });
+
+  if (matchedProduct) {
+    const title = matchedProduct.title && matchedProduct.title.ar ? matchedProduct.title.ar : matchedProduct.title;
+    return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matchedProduct.price} ج.م\n📦 الحالة: ${matchedProduct.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
   }
-];
 
-function getGojoReply(userQuery) {
-  const query = userQuery.toLowerCase().trim();
+  // ب) إرسال أي سؤال آخر في العالم إلى Gemini AI ليجيب بشخصية غوجو ساتورو
+  if (!GEMINI_API_KEY) {
+    return "يوه! يبدو أن الطاقة الملعونة منقطعة، يمكنك مراسلتنا عبر الواتساب: 01149243249 💬";
+  }
 
-  for (let item of GOJO_KNOWLEDGE_BASE) {
-    if (item.keywords.some(kw => query.includes(kw))) {
-      const randomIndex = Math.floor(Math.random() * item.replies.length);
-      return item.replies[randomIndex];
+  try {
+    const systemPrompt = `أنت المعلم غوجو ساتورو (Gojo Satoru) من أنمي Jujutsu Kaisen، المساعد الذكي والمرح لمتجر World Of Anime.
+شخصيتك: واثق جداً بنفسك، مرح، تستخدم عبارات مثل "أنا الأقوى" و"Six Eyes"، وتتحدث باللهجة المصرية/العربية الودودة الممتعة.
+مهمتك: الإجابة على أي سؤال في العالم يقدمه المستخدم (سواء كان في الأنمي، علوم، تاريخ، برمجة، دراسة، ثقافة، أو دردشة عادية) بأسلوب غوجو ساتورو، وإذا كان السؤال متعلقاً بالشحن والدفع بالمتجر: الشحن خلال 2-5 أيام والدفع عند الاستلام والدعم عبر واتساب 01149243249. أجب باختصار ووضوح وبطريقة ممتعة.`;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: `${systemPrompt}\n\nسؤال المستخدم: ${userQuery}` }
+            ]
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      return data.candidates[0].content.parts[0].text;
+    } else {
+      return "يوه! عين السادسة (Six Eyes) واجهت تشويشاً بسيطاً، أعد سؤالك مرة أخرى يا بطل! 😎✨";
     }
+  } catch (error) {
+    console.error("Gemini Error:", error);
+    return "يبدو أن تقنية العزلة تعطلت لحظياً، جرب السؤال مرة أخرى وسأجيبك فوراً! 😎⚡";
   }
-
-  const matchedProducts = PRODUCTS.filter(p => 
-    p.title.ar.toLowerCase().includes(query) || 
-    p.title.en.toLowerCase().includes(query) ||
-    query.split(' ').some(word => word.length > 2 && p.title.ar.toLowerCase().includes(word))
-  );
-
-  if (matchedProducts.length > 0) {
-    const p = matchedProducts[0];
-    return `بحثت لك بعيني السحرية ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${p.title.ar}\n💰 السعر: ${p.price} ج.م\n📦 الحالة: ${p.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
-  }
-
-  const fallbackReplies = [
-    'ممم.. مش متأكد تماماً من اللي تقصده، بس تقدر تسألني عن أي منتج زي "سيوف"، "مجسمات"، "هوديز"، أو كلمنا واتساب على: 01149243249 💬',
-    'سؤال مميز! بس تقدر توضحلي أكتر؟ أو ابحث عن اسم أنمي أو منتج معُين وسأساعدك فوراً! 😎',
-    'عين السادسة (Six Eyes) بتدور على إجابتك!.. جرب تكتب كلمة زي "شحن"، "دفع"، أو اسم المنتج اللي عايزه ✨'
-  ];
-
-  return fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
 }
 
 // ==========================================================================
-// 6. واجهة غوجو ساتورو (رسم SVG مباشر ومضمون 100% لغوجو و Six Eyes)
+// 6. واجهة غوجو ساتورو (رسم SVG مباشر ومضمون 100%)
 // ==========================================================================
 
-// كود SVG احترافي يرسم وجه غوجو ساتورو مع النظارة والنظرة الزرقاء المتوهجة
 const GOJO_SVG_AVATAR = `
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;border-radius:50%;background:#090514;">
   <!-- الشعر الأبيض -->
@@ -285,7 +246,7 @@ function initGojoBotUI() {
           </div>
           <div>
             <div style="font-size:0.95rem;color:#c084fc;font-weight:bold;">المعلم غوجو</div>
-            <div style="font-size:0.7rem;color:#38bdf8;">World Of Anime Bot ⚡</div>
+            <div style="font-size:0.7rem;color:#38bdf8;">World Of Anime AI Bot ⚡</div>
           </div>
         </div>
         <button id="gojo-bot-close" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.3rem;">✕</button>
@@ -294,13 +255,13 @@ function initGojoBotUI() {
       <!-- منطقة الرسائل -->
       <div id="gojo-bot-messages" style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;font-size:0.88rem;background:#131024;">
         <div style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);padding:10px 14px;border-radius:14px;align-self:flex-start;color:#f3e8ff;line-height:1.5;">
-          أهلاً بك في <b>World Of Anime</b>! 👋<br>أنا المعلم <b>غوجو ساتورو</b> 😎.. اسألني، دردش معايا، أو استفسر عن أي منتج وسأساعدك فوراً!
+          أهلاً بك في <b>World Of Anime</b>! 👋<br>أنا المعلم <b>غوجو ساتورو</b> 😎.. اسألني عن أي حاجة في الدنيا، منتج، أنمي، أو دراسة وسأجيبك فوراً بذكائي الخارق!
         </div>
       </div>
 
       <!-- خانة الكتابة والإرسال -->
       <div style="padding:10px;display:flex;gap:8px;background:#0f0c1b;border-top:1px solid rgba(168,85,247,0.2);">
-        <input type="text" id="gojo-bot-input" placeholder="اسأل المعلم غوجو..." style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(168,85,247,0.3);background:#1a162e;color:#fff;font-size:0.85rem;outline:none;" />
+        <input type="text" id="gojo-bot-input" placeholder="اسأل المعلم غوجو أي شيء..." style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(168,85,247,0.3);background:#1a162e;color:#fff;font-size:0.85rem;outline:none;" />
         <button id="gojo-bot-send" style="background:linear-gradient(135deg, #a855f7, #6366f1);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;box-shadow:0 0 10px rgba(168,85,247,0.4);">إرسال</button>
       </div>
 
@@ -322,10 +283,11 @@ function initGojoBotUI() {
   toggleBtn?.addEventListener('click', toggleDisplay);
   closeBtn?.addEventListener('click', toggleDisplay);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const txt = botInput.value.trim();
     if (!txt) return;
 
+    // عرض رسالة المستخدم
     const userMsg = document.createElement('div');
     userMsg.style.cssText = 'background:#a855f7;color:#fff;padding:8px 14px;border-radius:12px;align-self:flex-end;max-width:82%;word-break:break-word;font-weight:500;box-shadow:0 2px 8px rgba(168,85,247,0.3);';
     userMsg.textContent = txt;
@@ -334,14 +296,23 @@ function initGojoBotUI() {
     botInput.value = '';
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    setTimeout(() => {
-      const replyTxt = getGojoReply(txt);
-      const botMsg = document.createElement('div');
-      botMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(168,85,247,0.2);color:#e9d5ff;padding:10px 14px;border-radius:12px;align-self:flex-start;max-width:82%;white-space:pre-line;line-height:1.5;';
-      botMsg.textContent = replyTxt;
-      messagesBox.appendChild(botMsg);
-      messagesBox.scrollTop = messagesBox.scrollHeight;
-    }, 300);
+    // مؤشر جاري التفكير / الرد
+    const loadingMsg = document.createElement('div');
+    loadingMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(168,85,247,0.2);color:#e9d5ff;padding:8px 14px;border-radius:12px;align-self:flex-start;max-width:82%;font-style:italic;';
+    loadingMsg.textContent = "غوجو يفكر بعين السادسة (Six Eyes)... 👁️✨";
+    messagesBox.appendChild(loadingMsg);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+
+    // استدعاء دالة الـ AI المحدثة
+    const replyTxt = await getGojoReply(txt);
+    
+    // إزالة مؤشر التفكير وعرض الرد النهائي
+    messagesBox.removeChild(loadingMsg);
+    const botMsg = document.createElement('div');
+    botMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(168,85,247,0.2);color:#e9d5ff;padding:10px 14px;border-radius:12px;align-self:flex-start;max-width:82%;white-space:pre-line;line-height:1.5;';
+    botMsg.textContent = replyTxt;
+    messagesBox.appendChild(botMsg);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
   };
 
   sendBtn?.addEventListener('click', handleSend);

@@ -6,6 +6,8 @@
   <title>إتمام الطلب - World Of Anime</title>
   <meta name="description" content="أتمم طلبك بسهولة - دفع عند الاستلام، شحن مجاني لكل مصر.">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -48,6 +50,74 @@
 
 <script src="data.js"></script>
 <script>
+  let checkoutMap = null;
+  let checkoutMarker = null;
+  let selectedLat = null;
+  let selectedLng = null;
+
+  function initCheckoutMap() {
+    if (checkoutMap) { checkoutMap.remove(); checkoutMap = null; }
+    const mapEl = document.getElementById('checkout-map');
+    if (!mapEl) return;
+
+    checkoutMap = L.map('checkout-map').setView([30.0444, 31.2357], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      maxZoom: 18
+    }).addTo(checkoutMap);
+
+    // Custom neon marker icon
+    const neonIcon = L.divIcon({
+      html: '<div style="width:20px;height:20px;background:rgba(6,182,212,0.9);border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px rgba(6,182,212,0.8),0 0 24px rgba(6,182,212,0.4);"></div>',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      className: 'neon-map-marker'
+    });
+
+    checkoutMap.on('click', function(e) {
+      selectedLat = e.latlng.lat.toFixed(6);
+      selectedLng = e.latlng.lng.toFixed(6);
+
+      if (checkoutMarker) checkoutMap.removeLayer(checkoutMarker);
+      checkoutMarker = L.marker([e.latlng.lat, e.latlng.lng], { icon: neonIcon }).addTo(checkoutMap);
+
+      // Update hidden fields
+      const latInput = document.getElementById('checkout-lat');
+      const lngInput = document.getElementById('checkout-lng');
+      const statusEl = document.getElementById('map-status');
+      if (latInput) latInput.value = selectedLat;
+      if (lngInput) lngInput.value = selectedLng;
+      if (statusEl) {
+        statusEl.textContent = '✅ ' + t('location-selected') + ' (' + selectedLat + ', ' + selectedLng + ')';
+        statusEl.style.color = 'var(--neon-green)';
+      }
+    });
+
+    // Try to get user location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        checkoutMap.setView([lat, lng], 14);
+        selectedLat = lat.toFixed(6);
+        selectedLng = lng.toFixed(6);
+        if (checkoutMarker) checkoutMap.removeLayer(checkoutMarker);
+        checkoutMarker = L.marker([lat, lng], { icon: neonIcon }).addTo(checkoutMap);
+        const latInput = document.getElementById('checkout-lat');
+        const lngInput = document.getElementById('checkout-lng');
+        const statusEl = document.getElementById('map-status');
+        if (latInput) latInput.value = selectedLat;
+        if (lngInput) lngInput.value = selectedLng;
+        if (statusEl) {
+          statusEl.textContent = '📍 ' + t('location-selected');
+          statusEl.style.color = 'var(--neon-green)';
+        }
+      }, function() {}, { timeout: 5000 });
+    }
+
+    setTimeout(() => checkoutMap.invalidateSize(), 300);
+  }
+
   function renderCheckout() {
     const main = document.getElementById('main-content');
     if (!main) return;
@@ -103,6 +173,15 @@
             </div>
           </div>
 
+          <!-- Map Location Picker -->
+          <div class="map-picker-section">
+            <label>📍 ${t('pick-location')}</label>
+            <p class="map-hint" id="map-status">${t('location-hint')}</p>
+            <div id="checkout-map" class="checkout-map-container"></div>
+            <input type="hidden" id="checkout-lat" name="lat">
+            <input type="hidden" id="checkout-lng" name="lng">
+          </div>
+
           <div class="payment-method">
             <span class="payment-method-icon">💵</span>
             <div>
@@ -111,7 +190,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn block" style="padding:16px;font-size:1.1rem;" data-i18n="place-order">
+          <button type="submit" class="btn block" data-i18n="place-order">
             ${t('place-order')} ✓
           </button>
         </form>
@@ -130,6 +209,9 @@
         </div>
       </div>`;
 
+    // Init map after DOM is ready
+    setTimeout(initCheckoutMap, 200);
+
     // Attach form submit handler
     const form = document.getElementById('checkoutForm');
     if (form) {
@@ -140,6 +222,8 @@
         const address = document.getElementById('checkout-address')?.value?.trim();
         const city = document.getElementById('checkout-city')?.value?.trim();
         const notes = document.getElementById('checkout-notes')?.value?.trim() || '';
+        const lat = document.getElementById('checkout-lat')?.value || '';
+        const lng = document.getElementById('checkout-lng')?.value || '';
 
         if (!name || !phone || !address || !city) {
           showToast(t('fill-all-fields'));
@@ -156,6 +240,7 @@
           userId: user?.id || null,
           email: user?.email || '',
           name, phone, address, city, notes,
+          location: lat && lng ? { lat: parseFloat(lat), lng: parseFloat(lng) } : null,
           items: cart.map(item => {
             const p = getProductById(item.id);
             return { id: item.id, title: p?.title || {}, price: p?.price || 0, quantity: item.quantity, size: item.size };
@@ -180,6 +265,7 @@
             <h2 style="color:var(--neon-green);margin-bottom:12px;">${t('order-success')}</h2>
             <p style="color:var(--text-dim);margin-bottom:8px;">${t('order-success-desc')}</p>
             <p style="color:var(--neon-yellow);font-weight:bold;font-size:1.1rem;margin-bottom:24px;">${t('order-id')}: ${orderId}</p>
+            ${lat && lng ? '<p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:16px;">📍 ' + lat + ', ' + lng + '</p>' : ''}
             <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
               <a href="index.html" class="btn">${t('back-to-home')}</a>
               <a href="products.html" class="btn secondary">${t('continue-shopping')}</a>
