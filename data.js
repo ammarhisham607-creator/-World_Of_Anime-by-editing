@@ -148,19 +148,28 @@ async function getGojoReply(userQuery) {
   });
 
   if (matchedProduct) {
-    const title = matchedProduct.title && matchedProduct.title.ar ? matchedProduct.title.ar : matchedProduct.title;
-    return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matchedProduct.price} ج.م\n📦 الحالة: ${matchedProduct.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
+    const title = matchedProduct.title && matchedProduct.title[currentLang] ? matchedProduct.title[currentLang] : (matchedProduct.title && matchedProduct.title.ar ? matchedProduct.title.ar : matchedProduct.title);
+    const curr = typeof t === 'function' ? t('currency') : 'ج.م';
+    if (currentLang === 'en') {
+      return `I searched with my Six Eyes and found this product! 👁️✨\n📌 Name: ${title}\n💰 Price: ${matchedProduct.price} ${curr}\n📦 Status: ${matchedProduct.stock > 0 ? 'Available ✅' : 'Out of Stock ❌'}`;
+    }
+    return `بحثت لك بعيني السحرية (Six Eyes) ووجدت هذا المنتج! 👁️✨\n📌 الاسم: ${title}\n💰 السعر: ${matchedProduct.price} ${curr}\n📦 الحالة: ${matchedProduct.stock > 0 ? 'متوفر حالياً ✅' : 'نفذت الكمية ❌'}`;
   }
 
   // ب) إرسال أي سؤال آخر في العالم إلى Gemini AI ليجيب بشخصية غوجو ساتورو
   if (!GEMINI_API_KEY) {
-    return "يوه! يبدو أن الطاقة الملعونة منقطعة، يمكنك مراسلتنا عبر الواتساب: 01149243249 💬";
+    return currentLang === 'en'
+      ? "Oops! Cursed energy seems down, contact us on WhatsApp: 01149243249 💬"
+      : "يوه! يبدو أن الطاقة الملعونة منقطعة، يمكنك مراسلتنا عبر الواتساب: 01149243249 💬";
   }
 
   try {
+    const langInstruction = currentLang === 'en'
+      ? 'Respond in English. '
+      : 'أجب بالعربية/المصرية. ';
     const systemPrompt = `أنت المعلم غوجو ساتورو (Gojo Satoru) من أنمي Jujutsu Kaisen، المساعد الذكي والمرح لمتجر World Of Anime.
 شخصيتك: واثق جداً بنفسك، مرح، تستخدم عبارات مثل "أنا الأقوى" و"Six Eyes"، وتتحدث باللهجة المصرية/العربية الودودة الممتعة.
-مهمتك: الإجابة على أي سؤال في العالم يقدمه المستخدم (سواء كان في الأنمي، علوم، تاريخ، برمجة، دراسة، ثقافة، أو دردشة عادية) بأسلوب غوجو ساتورو، وإذا كان السؤال متعلقاً بالشحن والدفع بالمتجر: الشحن خلال 2-5 أيام والدفع عند الاستلام والدعم عبر واتساب 01149243249. أجب باختصار ووضوح وبطريقة ممتعة.`;
+${langInstruction}مهمتك: الإجابة على أي سؤال في العالم يقدمه المستخدم (سواء كان في الأنمي، علوم، تاريخ، برمجة، دراسة، ثقافة، أو دردشة عادية) بأسلوب غوجو ساتورو، وإذا كان السؤال متعلقاً بالشحن والدفع بالمتجر: الشحن خلال 2-5 أيام والدفع عند الاستلام والدعم عبر واتساب 01149243249. أجب باختصار ووضوح وبطريقة ممتعة.`;
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
@@ -181,11 +190,15 @@ async function getGojoReply(userQuery) {
     if (data.candidates && data.candidates[0].content.parts[0].text) {
       return data.candidates[0].content.parts[0].text;
     } else {
-      return "يوه! عين السادسة (Six Eyes) واجهت تشويشاً بسيطاً، أعد سؤالك مرة أخرى يا بطل! 😎✨";
+      return currentLang === 'en'
+        ? "Yo! My Six Eyes encountered a small glitch, ask again champ! 😎✨"
+        : "يوه! عين السادسة (Six Eyes) واجهت تشويشاً بسيطاً، أعد سؤالك مرة أخرى يا بطل! 😎✨";
     }
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "يبدو أن تقنية العزلة تعطلت لحظياً، جرب السؤال مرة أخرى وسأجيبك فوراً! 😎⚡";
+    return currentLang === 'en'
+      ? "The Infinity technique seems to have glitched, try again and I'll answer right away! 😎⚡"
+      : "يبدو أن تقنية العزلة تعطلت لحظياً، جرب السؤال مرة أخرى وسأجيبك فوراً! 😎⚡";
   }
 }
 
@@ -227,44 +240,42 @@ const GOJO_SVG_AVATAR = `
 function initGojoBotUI() {
   if (document.getElementById('gojo-bot-widget')) return;
 
+  const isEn = currentLang === 'en';
+  const welcomeMsg = isEn
+    ? 'Welcome to <b>World Of Anime</b>! 👋<br>I am <b>Gojo Satoru</b> 😎.. Ask me anything about anime, products, or studies and I\'ll answer with my super intelligence!'
+    : 'أهلاً بك في <b>World Of Anime</b>! 👋<br>أنا المعلم <b>غوجو ساتورو</b> 😎.. اسألني عن أي حاجة في الدنيا، منتج، أنمي، أو دراسة وسأجيبك فوراً بذكائي الخارق!';
+  const placeholder = isEn ? 'Ask Gojo anything...' : 'اسأل المعلم غوجو أي شيء...';
+  const sendText = isEn ? 'Send' : 'إرسال';
+  const thinkingText = isEn ? 'Gojo is thinking with Six Eyes... 👁️✨' : 'غوجو يفكر بعين السادسة (Six Eyes)... 👁️✨';
+
   const botContainer = document.createElement('div');
   botContainer.id = 'gojo-bot-widget';
   botContainer.innerHTML = `
-    <!-- زر فتح البوت بأيقونة SVG غوجو -->
-    <button id="gojo-bot-toggle" title="المعلم غوجو ساتورو" style="position:fixed;bottom:85px;right:20px;z-index:9999;width:65px;height:65px;border-radius:50%;background:#0c1824;border:2px solid #06b6d4;box-shadow:0 0 20px rgba(6,182,212,0.6);cursor:pointer;padding:0;overflow:hidden;transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    <button id="gojo-bot-toggle" title="${isEn ? 'Gojo Satoru AI' : 'المعلم غوجو ساتورو'}" style="position:fixed;bottom:85px;right:20px;z-index:9999;width:65px;height:65px;border-radius:50%;background:#0c1824;border:2px solid #06b6d4;box-shadow:0 0 20px rgba(6,182,212,0.6);cursor:pointer;padding:0;overflow:hidden;transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
       ${GOJO_SVG_AVATAR}
     </button>
-    
-    <!-- نافذة الشات بستايل teal neon -->
     <div id="gojo-bot-window" style="display:none;position:fixed;bottom:160px;right:20px;z-index:10000;width:330px;height:450px;background:#0a1620;border:1px solid #06b6d4;border-radius:20px;box-shadow:0 0 30px rgba(6,182,212,0.25);flex-direction:column;overflow:hidden;font-family:sans-serif;">
-      
-      <!-- هيدر الشات مع صورة غوجو المباشرة -->
       <div style="background:linear-gradient(135deg, #0c2d3f, #081828);padding:14px;color:#fff;font-weight:bold;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(6,182,212,0.3);">
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="width:40px;height:40px;border-radius:50%;border:2px solid #06b6d4;overflow:hidden;box-shadow:0 0 10px #06b6d4;flex-shrink:0;">
             ${GOJO_SVG_AVATAR}
           </div>
           <div>
-            <div style="font-size:0.95rem;color:#67e8f9;font-weight:bold;">المعلم غوجو</div>
+            <div style="font-size:0.95rem;color:#67e8f9;font-weight:bold;">${isEn ? 'Gojo Sensei' : 'المعلم غوجو'}</div>
             <div style="font-size:0.7rem;color:#4ade80;">World Of Anime AI Bot ⚡</div>
           </div>
         </div>
         <button id="gojo-bot-close" style="background:none;border:none;color:#aaa;cursor:pointer;font-size:1.3rem;">✕</button>
       </div>
-
-      <!-- منطقة الرسائل -->
       <div id="gojo-bot-messages" style="flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;font-size:0.88rem;background:#0d1a24;">
         <div style="background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.25);padding:10px 14px;border-radius:14px;align-self:flex-start;color:#e0f2fe;line-height:1.5;">
-          أهلاً بك في <b>World Of Anime</b>! 👋<br>أنا المعلم <b>غوجو ساتورو</b> 😎.. اسألني عن أي حاجة في الدنيا، منتج، أنمي، أو دراسة وسأجيبك فوراً بذكائي الخارق!
+          ${welcomeMsg}
         </div>
       </div>
-
-      <!-- خانة الكتابة والإرسال -->
       <div style="padding:10px;display:flex;gap:8px;background:#081828;border-top:1px solid rgba(6,182,212,0.2);">
-        <input type="text" id="gojo-bot-input" placeholder="اسأل المعلم غوجو أي شيء..." style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(6,182,212,0.3);background:#0a1620;color:#fff;font-size:0.85rem;outline:none;" />
-        <button id="gojo-bot-send" style="background:linear-gradient(135deg, #06b6d4, #0891b2);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;box-shadow:0 0 10px rgba(6,182,212,0.3);">إرسال</button>
+        <input type="text" id="gojo-bot-input" placeholder="${placeholder}" style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(6,182,212,0.3);background:#0a1620;color:#fff;font-size:0.85rem;outline:none;" />
+        <button id="gojo-bot-send" style="background:linear-gradient(135deg, #06b6d4, #0891b2);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;box-shadow:0 0 10px rgba(6,182,212,0.3);">${sendText}</button>
       </div>
-
     </div>
   `;
   document.body.appendChild(botContainer);
@@ -299,7 +310,7 @@ function initGojoBotUI() {
     // مؤشر جاري التفكير / الرد
     const loadingMsg = document.createElement('div');
     loadingMsg.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(6,182,212,0.2);color:#e0f2fe;padding:8px 14px;border-radius:12px;align-self:flex-start;max-width:82%;font-style:italic;';
-    loadingMsg.textContent = "غوجو يفكر بعين السادسة (Six Eyes)... 👁️✨";
+    loadingMsg.textContent = thinkingText;
     messagesBox.appendChild(loadingMsg);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 

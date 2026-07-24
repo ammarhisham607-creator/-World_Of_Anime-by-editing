@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم - World Of Anime</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (function checkAdminAccess() {
+      const isAuth = sessionStorage.getItem('admin_authenticated');
+      if (!isAuth) {
+        const password = prompt("أدخل كلمة سر الإدارة للوصول:");
+        if (password === '1/11/2012') {
+          sessionStorage.setItem('admin_authenticated', 'true');
+        } else {
+          alert("كلمة السر خاطئة!");
+          window.location.href = "index.html";
+        }
+      }
+    })();
+  </script>
+</head>
+<body>
+<a href="#main-content" class="skip-link">تخطي للمحتوى</a>
+<div class="loader hidden" id="app-loader"><div class="loader-core"></div></div>
+
+<header>
+  <div class="header-top">
+    <a href="Okaa30-4-2011.html" class="brand"><span class="brand-mark">⛩️</span><span>World Of Anime - Admin</span></a>
+    <div class="header-actions">
+      <a href="index.html" class="header-btn">🏠 <span data-i18n="nav-home">الرئيسية</span></a>
+      <a href="products.html" class="header-btn">📦 <span data-i18n="nav-products">المنتجات</span></a>
+    </div>
+  </div>
+  <div class="header-nav">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn sm btn-primary" onclick="showAdminTab('products')">📦 <span data-i18n="admin-products">المنتجات</span></button>
+      <button class="btn sm secondary" onclick="showAdminTab('orders')">📋 <span data-i18n="orders-title">الطلبات</span></button>
+      <button class="btn sm outline" onclick="showAdminTab('settings')">⚙️ <span data-i18n="settings-label">الإعدادات</span></button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="theme-toggle-btn" title="Toggle Theme" style="background:rgba(10,22,32,0.8);border:1px solid rgba(6,182,212,0.25);color:#aaa;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:1rem;transition:0.2s;">☀️</button>
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="ar">العربية</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
+      <button class="btn sm btn-danger" onclick="adminLogout()">🚪 <span data-i18n="logout">خروج</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main-content">
+  <div class="section-title"><h2 data-i18n="admin-dashboard">📊 لوحة التحكم</h2></div>
+  <div id="admin-content"></div>
+</main>
+
+<script src="data.js"></script>
+<script>window.renderProducts=function(){};</script>
+<script src="script.js"></script>
+</body>
+</html>

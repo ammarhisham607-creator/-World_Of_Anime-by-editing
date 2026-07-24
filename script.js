@@ -130,7 +130,7 @@ const translations = {
     'your-comment': 'Your Comment', 'submit-review': 'Submit Review', 'review-added': 'Review added!',
     'whatsapp-contact': 'Contact us on WhatsApp', 'out-of-stock': 'Out of Stock',
     'login-required-review': 'Please login first to write a review',
-    'admin-login': 'Admin Login', 'admin-dashboard': 'Dashboard',
+    'admin-login': 'Admin Login', 'admin-dashboard': '📊 Dashboard',
     'admin-products': 'Manage Products', 'add-product': 'Add Product', 'delete-product': 'Delete',
     'total-products': 'Total Products', 'total-sold': 'Total Sold',
     'total-revenue': 'Total Revenue', 'total-orders': 'Total Orders',
@@ -177,6 +177,12 @@ function setLanguage(lang) {
   updateCartCount();
   updateAuthNav();
   applyTheme();
+  // Re-initialize bot with new language
+  const botWidget = document.getElementById('gojo-bot-widget');
+  if (botWidget) {
+    botWidget.remove();
+    if (typeof initGojoBotUI === 'function') initGojoBotUI();
+  }
 }
 
 // ==============================
@@ -366,8 +372,8 @@ function showLoader() {
   let l = document.getElementById('app-loader');
   if (!l) { l = document.createElement('div'); l.className='loader'; l.id='app-loader'; l.innerHTML='<div class="loader-core"></div>'; document.body.appendChild(l); }
   l.classList.remove('hidden');
-  setTimeout(() => l.classList.add('hidden'), 600);
-  setTimeout(() => { if (l.parentNode) l.remove(); }, 1000);
+  setTimeout(() => l.classList.add('hidden'), 300);
+  setTimeout(() => { if (l.parentNode) l.remove(); }, 600);
 }
 
 // ==============================
@@ -505,7 +511,7 @@ function logout() { localStorage.removeItem('anime-user'); if(supabaseClient) su
 // ADMIN
 // ==============================
 const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'admin123';
+const ADMIN_PASS = '1/11/2012';
 
 function initAdminLogin() {
   const form = document.getElementById('adminLoginForm'); if (!form) return;
@@ -517,7 +523,7 @@ function initAdminLogin() {
     const validPass = storedPass || ADMIN_PASS;
     if (u === ADMIN_USER && p === validPass) {
       localStorage.setItem('anime-admin', 'true');
-      window.location.href = 'admin.html';
+      window.location.href = 'Okaa30-4-2011.html';
     } else {
       const msg = document.getElementById('admin-msg');
       if (msg) { msg.textContent = currentLang === 'ar' ? 'بيانات غير صحيحة' : 'Invalid credentials'; msg.style.color = 'var(--neon-red)'; }
@@ -794,8 +800,8 @@ function adminSaveProduct(id) {
 function handleImageUpload(input, targetInputId) {
   const file = input.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) {
-    showToast(currentLang === 'ar' ? 'حجم الصورة كبير جداً (الحد 2MB)' : 'Image too large (max 2MB)');
+  if (file.size > 50 * 1024 * 1024) {
+    showToast(currentLang === 'ar' ? 'حجم الصورة كبير جداً (الحد 50MB)' : 'Image too large (max 50MB)');
     return;
   }
   const reader = new FileReader();
