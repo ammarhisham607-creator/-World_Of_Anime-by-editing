@@ -18,6 +18,30 @@
   --success: #7fe0b8;
 }
 
+/* ==============================
+   SITE VIDEO BACKGROUND
+   ============================== */
+.site-video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  pointer-events: none;
+}
+.site-video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(8, 15, 22, 0.7);
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* Neon red pulsing animation for dark theme */
 @keyframes neonRedPulse {
   0%, 100% { 

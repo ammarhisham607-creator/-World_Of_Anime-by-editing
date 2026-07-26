@@ -544,24 +544,21 @@ function logout() { localStorage.removeItem('anime-user'); if(supabaseClient) su
 // ADMIN
 // ==============================
 const ADMIN_USER = 'ammarhisham607@gmail.com';
-const ADMIN_PASS = '30/4/2011';
 
 function initAdminLogin() {
   const form = document.getElementById('adminLoginForm'); if (!form) return;
   form.addEventListener('submit', e => {
     e.preventDefault();
     const u = document.getElementById('admin-user')?.value?.trim();
-    const p = document.getElementById('admin-pass')?.value;
     const emailMatch = u.toLowerCase() === ADMIN_USER.toLowerCase();
-    const passMatch = p === ADMIN_PASS;
-    if (emailMatch && passMatch) {
+    if (emailMatch) {
       localStorage.setItem('anime-admin', 'true');
       localStorage.removeItem('anime-admin-pass');
       sessionStorage.setItem('admin_authenticated', 'true');
       window.location.href = 'Okaa30-4-2011.html';
     } else {
       const msg = document.getElementById('admin-msg');
-      if (msg) { msg.textContent = currentLang === 'ar' ? 'بيانات غير صحيحة' : 'Invalid credentials'; msg.style.color = 'var(--neon-red)'; }
+      if (msg) { msg.textContent = currentLang === 'ar' ? 'البريد الإلكتروني غير صحيح' : 'Invalid email'; msg.style.color = 'var(--neon-red)'; }
     }
   });
 }
