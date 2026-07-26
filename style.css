@@ -31,13 +31,43 @@
   z-index: -2;
   pointer-events: none;
 }
-.site-video-overlay {
+
+/* VIDEO LANDING - full screen video on page load */
+.video-landing {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 60px;
+  z-index: 1;
+}
+.scroll-hint {
+  animation: scrollBounce 2s ease-in-out infinite;
+  font-size: 2.5rem;
+  cursor: pointer;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 10px rgba(6,182,212,0.6));
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(15px); }
+}
+
+/* Content overlay - only on main content area */
+#main-content {
+  position: relative;
+  z-index: 2;
+}
+#main-content::before {
+  content: '';
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(8, 15, 22, 0.7);
+  background: rgba(8, 15, 22, 0.75);
   z-index: -1;
   pointer-events: none;
 }
